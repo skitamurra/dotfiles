@@ -27,10 +27,9 @@ vim.keymap.set("n", "<leader>cd", function()
 end, { desc = "Set CWD to parent of current file" })
 
 vim.keymap.set("n", "<leader>f", "<cmd>NvimTreeFindFile<CR>", { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>h', vim.diagnostic.open_float)
+vim.keymap.set('n', '<leader>F', vim.diagnostic.open_float)
 vim.keymap.set("n", "<leader>w", "<C-w>", { silent = true })
 vim.keymap.set("n", "<leader>v", "<C-w>v", { silent = true })
-vim.keymap.set("n", "<leader>h", "<C-w>h", { silent = true })
 vim.keymap.set("n", "<leader>j", "<C-w>j", { silent = true })
 vim.keymap.set("n", "<leader>k", "<C-w>k", { silent = true })
 vim.keymap.set("n", "<leader>l", "<C-w>l", { silent = true })
@@ -75,6 +74,18 @@ vim.wo.number = true
 vim.wo.relativenumber = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
+vim.opt.sessionoptions = {
+  "buffers",      -- 開いていたバッファ
+  "curdir",       -- カレントディレクトリ
+  "tabpages",     -- タブページ
+  "winsize",      -- ウィンドウサイズ
+  "help",         -- ヘルプバッファ
+  "globals",      -- グローバル変数 (g:var 保存対象)
+  "folds",        -- 折り畳み状態
+  "localoptions", -- buffer/window ローカルオプション
+}
+vim.opt.shell = "/bin/bash"
+vim.env.BASH_ENV = vim.fn.expand("~/.bash_aliases")
 
 vim.o.autoindent = true
 vim.o.smartindent = true
@@ -92,12 +103,6 @@ vim.o.clipboard = 'unnamedplus'
 vim.g.clever_f_across_no_line = 0
 vim.g.clever_f_smart_case = 1
 
-vim.api.nvim_create_autocmd("BufReadPost", {
-  callback = function()
-    vim.bo.fileformat = "unix"
-  end,
-})
-
 vim.lsp.handlers["textDocument/semanticTokens/full"] = function(_, result, ctx, _)
   local client = vim.lsp.get_client_by_id(ctx.client_id)
   if not client or not result then return end
@@ -109,17 +114,5 @@ vim.lsp.handlers["textDocument/semanticTokens/full"] = function(_, result, ctx, 
 end
 
 require("plugins")
-require("nvim-tree").setup({
-  update_cwd = true,
-  respect_buf_cwd = true,
-  view = {
-    width = 30,
-    side = "left",
-    number = false,
-    relativenumber = false,
-  },
-  sync_root_with_cwd = true,
-})
-
 require("config.lsp")
 require("config.cmp")

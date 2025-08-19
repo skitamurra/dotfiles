@@ -18,13 +18,6 @@ require("lazy").setup({
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
-    config = function()
-      require("config.nvim-treesitter")
-    end
-  },
-  {
-    "nvim-treesitter/nvim-treesitter",
-    build = ":TSUpdate",
     dependencies = {
       "nvim-treesitter/nvim-treesitter-context"
     },
@@ -58,7 +51,6 @@ require("lazy").setup({
       require("config.nvim-autopairs")
     end
   },
-
   -- 自動補完系
   { "hrsh7th/nvim-cmp", config = function() require("config.cmp") end },
   { "hrsh7th/cmp-nvim-lsp" },
@@ -66,24 +58,10 @@ require("lazy").setup({
   { "hrsh7th/cmp-path" },
   { "hrsh7th/cmp-cmdline" },
   { "saadparwaiz1/cmp_luasnip" },
-
   -- スニペット
   { "L3MON4D3/LuaSnip" },
-
   -- アイコン表示
   { "onsails/lspkind.nvim" },
-
-  {
-    "navarasu/onedark.nvim",
-    priority = 1000, -- make sure to load this before all the other start plugins
-    config = function()
-      require('onedark').setup {
-        style = 'darker'
-      }
-      -- Enable theme
-    --require('onedark').load()
-    end
-  },
   {
     "folke/tokyonight.nvim",
     lazy = false,
@@ -101,32 +79,84 @@ require("lazy").setup({
       vim.cmd.colorscheme("tokyonight")
     end,
   },
- --  {
- --    "sekke276/dark_flat.nvim",
- --    lazy = false,
- --    priority = 1000,
- --    config = function()
- --      require("dark_flat").setup({
- --        transparent = true, -- 透明背景にしたいなら true
- --        italics = false,      -- 斜体を無効にするなら false
- --        colors = {},         -- カラーの上書き { name = "#RRGGBB", ... }
- --        themes = function(colors)
- --          -- 任意: ハイライトの個別上書き（例）
- --          -- return { Comment = { fg = "#6a6a6a", italic = true } }
- --          return {}
- --        end,
- --      })
- --      vim.cmd.colorscheme("dark_flat")
- --    end,
- --  },
   {
-      'MeanderingProgrammer/render-markdown.nvim',
-      dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim' }, -- if you use the mini.nvim suite
-      -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
-      -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
-      ---@module 'render-markdown'
-      ---@type render.md.UserConfig
-      opts = {},
+    "lewis6991/gitsigns.nvim",
+    event = { "BufReadPre", "BufNewFile" },
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      require("gitsigns").setup({
+        current_line_blame = true,
+        current_line_blame_opts = { delay = 250, virt_text_pos = "eol" },
+      })
+    end,
+  },
+  {
+    "norcalli/nvim-colorizer.lua",
+    config = function()
+      require("colorizer").setup({
+        "*"; -- 全ファイルタイプ対象
+        css = { rgb_fn = true }; 
+        html = { names = true }; 
+      }, { mode = "background" })
+    end
+  },
+  {
+    "rmagatti/auto-session",
+    config = function()
+      require("auto-session").setup({
+        log_level = "info",
+        auto_session_enabled = true,
+        auto_save_enabled = true,   
+        auto_restore_enabled = true,
+      })
+    end,
+  },
+  {
+    "akinsho/bufferline.nvim",
+    version = "*",  
+    dependencies = "nvim-tree/nvim-web-devicons",
+    config = function()
+      local function to_hex(n) return n and string.format("#%06x", n) or nil end
+      local function hl(name)
+        local ok, h = pcall(vim.api.nvim_get_hl, 0, { name = name, link = false })
+        return ok and h or {}
+      end
+      local TabLineSel   = hl("TabLineSel")
+      local bg_selected  = to_hex(TabLineSel.bg or StatusLine.bg or Normal.bg)
+
+      require("bufferline").setup {
+        options = {
+          mode = "buffers",
+          numbers = "none",
+          separator_style = { "/", "/" },
+          show_buffer_close_icons = false,
+          offsets = {
+            { filetype = "NvimTree" },
+          },
+        },
+        highlights = {
+         buffer_selected = { bg = bg_selected,  bold = true, italic = false },
+        },
+      }
+      local keymap = vim.keymap.set
+      local opts = { silent = true, noremap = true }
+      keymap("n", "<leader>h", "<cmd>BufferLineCyclePrev<CR>", opts)
+      keymap("n", "<leader>l", "<cmd>BufferLineCycleNext<CR>", opts)
+      keymap("n", "<leader>w", "<cmd>bdelete<CR>", opts)
+    end,
+  },
+  { 'echasnovski/mini.cursorword',
+    version = '*',
+    config = function()
+      require("mini.cursorword").setup()
+    end
+  },
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
+    opts = {
+      scope = {enabled = true}
+    },
   },
 })
 

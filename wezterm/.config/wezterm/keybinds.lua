@@ -120,6 +120,7 @@ return {
     { key = 'u', mods = 'SHIFT|CTRL', action = act.CharSelect{ copy_on_select = true, copy_to =  'ClipboardAndPrimarySelection' } },
     { key = 'v', mods = 'SHIFT|CTRL', action = act.PasteFrom 'Clipboard' },
     { key = 'v', mods = 'SUPER', action = act.PasteFrom 'Clipboard' },
+    { key = "h", mods = "LEADER", action = wezterm.action.SplitVertical { domain = "CurrentPaneDomain" } },
     { key = "v", mods = "LEADER", action = wezterm.action.SplitHorizontal { domain = "CurrentPaneDomain" } },
     { key = "q", mods = "LEADER", action = wezterm.action.CloseCurrentPane { confirm = false } },
     { key = 'w', mods = 'CTRL', action = act.CloseCurrentTab{ confirm = false } },

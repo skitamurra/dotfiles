@@ -34,9 +34,19 @@ config.initial_rows = 28
 config.color_scheme = 'AdventureTime'
 
 config.default_prog = { 'wsl' }
+-- config.default_domain = "WSL:Ubuntu-24.04"
+-- 
+-- config.wsl_domains = {
+--   {
+--    name = "WSL:Ubuntu-24.04",
+--    distribution = "Ubuntu-24.04",
+--    default_cwd = "~",
+--    default_prog = { "bash", "-lc", "zellij attach --create main" },
+--  },
+-- }
 
 config.automatically_reload_config = true
-config.font_size = 10.0
+config.font_size = 12.0
 config.use_ime = true
 config.window_background_image = wezterm.home_dir .. ''
 config.window_background_opacity = 0.8
