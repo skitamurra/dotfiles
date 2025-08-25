@@ -189,6 +189,31 @@ require("lazy").setup({
         width = "block",
       },
     },
-  }
+  },
+  {
+    "levouh/tint.nvim",
+    config = function()
+      require("tint").setup({
+        tint = -45
+      })
+    end
+  },
+  {
+    "dstein64/vim-startuptime"
+  },
+  {
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    opts = {},
+    keys = {
+      {
+        "<leader>?",
+        function()
+          require("which-key").show({ global = false })
+        end,
+        desc = "Buffer Local Keymaps (which-key)",
+      },
+    },
+  },
 })
 
