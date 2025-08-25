@@ -1,6 +1,5 @@
 -- ~/.config/nvim/lua/plugins.lua
 
--- lazy.nvimのパスを設定して存在確認
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -12,7 +11,6 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- プラグイン一覧
 require("lazy").setup({
   "nvim-lualine/lualine.nvim",
   {
@@ -27,7 +25,10 @@ require("lazy").setup({
   },
   {
     "nvim-telescope/telescope.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" }
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      require("config.nvim-telescope")
+    end
   },
   "rhysd/clever-f.vim",
   "tpope/vim-surround",
@@ -52,7 +53,12 @@ require("lazy").setup({
     end
   },
   -- 自動補完系
-  { "hrsh7th/nvim-cmp", config = function() require("config.cmp") end },
+  { 
+    "hrsh7th/nvim-cmp",
+    config = function()
+      require("config.cmp")
+    end
+  },
   { "hrsh7th/cmp-nvim-lsp" },
   { "hrsh7th/cmp-buffer" },
   { "hrsh7th/cmp-path" },
@@ -67,8 +73,8 @@ require("lazy").setup({
     lazy = false,
     priority = 1000,
     opts = {
-      style = "moon",       -- 他に "night", "day", "moon" がある
-      transparent = true,    -- 背景透過
+      style = "moon",       -- "night", "day", "moon"
+      transparent = true,
       styles = {
         sidebars = "transparent",
         floats = "transparent",
@@ -94,7 +100,7 @@ require("lazy").setup({
     "norcalli/nvim-colorizer.lua",
     config = function()
       require("colorizer").setup({
-        "*"; -- 全ファイルタイプ対象
+        "*";
         css = { rgb_fn = true }; 
         html = { names = true }; 
       }, { mode = "background" })
@@ -134,9 +140,9 @@ require("lazy").setup({
             { filetype = "NvimTree" },
           },
         },
-        highlights = {
-         buffer_selected = { bg = bg_selected,  bold = true, italic = false },
-        },
+        --highlights = {
+        -- buffer_selected = { bg = bg_selected,  bold = true, italic = false },
+        --},
       }
       local keymap = vim.keymap.set
       local opts = { silent = true, noremap = true }
@@ -152,11 +158,37 @@ require("lazy").setup({
     end
   },
   {
-    "lukas-reineke/indent-blankline.nvim",
-    main = "ibl",
+    "nvimdev/indentmini.nvim",
+    config = function()
+      require("indentmini").setup({
+        exclude = { "markdown" }
+      })
+    end
+  },
+  {
+    "akinsho/toggleterm.nvim",
+    version = "*",
     opts = {
-      scope = {enabled = true}
+      --direction = "float",
+      --float_opts = { border = "curved" },
+      start_in_insert = true,
+      open_mapping = [[<C-i>]],
     },
   },
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    opts = {
+      heading = {
+        width = "block",
+        left_pad = 0,
+        right_pad = 4,
+        icons = {},
+      },
+      code = {
+        width = "block",
+      },
+    },
+  }
 })
 

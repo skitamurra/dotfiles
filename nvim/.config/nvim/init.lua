@@ -20,12 +20,6 @@ keymap.set("n", "<leader>t", function()
   api.tree.toggle()
 end, { noremap = true, silent = true, desc = "Toggle nvim-tree with buffer dir" })
 
-vim.keymap.set("n", "<leader>cd", function()
-  local api = require("nvim-tree.api")
-  api.tree.find_file({ open = true })       -- 開いているファイルをツリー上で探す
-  api.tree.change_root_to_node()            -- そのノード（ディレクトリ）を cwd にする
-end, { desc = "Set CWD to parent of current file" })
-
 vim.keymap.set("n", "<leader>f", "<cmd>NvimTreeFindFile<CR>", { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>F', vim.diagnostic.open_float)
 vim.keymap.set("n", "<leader>w", "<C-w>", { silent = true })
@@ -52,6 +46,21 @@ vim.keymap.set('n', '<C-p>', function()
     builtin.find_files()
   end
 end, { desc = 'Files (git-aware)' })
+
+vim.keymap.set('n', '<C-S-f>', function()
+  local builtin = require('telescope.builtin')
+
+  -- Git管理下か判定
+  vim.fn.system('git rev-parse --show-toplevel')
+  local in_git = (vim.v.shell_error == 0)
+
+  if in_git then
+    local git_root = vim.fn.systemlist('git rev-parse --show-toplevel')[1]
+    builtin.live_grep({ search_dirs = { git_root } })
+  else
+    builtin.live_grep()
+  end
+end, { desc = 'Live Grep (git-aware)' })
 
 keymap.set("i", "jj", "<esc>", { silent = true })
 
