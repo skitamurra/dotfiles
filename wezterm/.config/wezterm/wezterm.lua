@@ -1,6 +1,33 @@
 -- ✅ WSL上の config ディレクトリを require パスに追加
 local wezterm = require 'wezterm'
 
+-- この config ファイルの絶対パスと、そのディレクトリ（UNCに正規化）
+local cfg_file = wezterm.config_file
+local cfg_dir  = cfg_file:gsub('[^/\\]+$', ''):gsub('\\', '/')
+
+-- Lua-only searcher を先頭に挿入（WSL ~/.config/wezterm と ~/.config/wezterm/lua を探索）
+local function wsl_searcher(modname)
+  local rel = modname:gsub('%.', '/')
+  local candidates = {
+    cfg_dir .. rel .. '.lua',
+    cfg_dir .. rel .. '/init.lua',
+    cfg_dir .. 'lua/' .. rel .. '.lua',
+    cfg_dir .. 'lua/' .. rel .. '/init.lua',
+  }
+  for _, path in ipairs(candidates) do
+    local f = io.open(path, 'r')
+    if f then f:close()
+      local chunk, err = loadfile(path)
+      if chunk then return chunk end
+      return "\n\tload error: " .. tostring(err)
+    end
+  end
+  return "\n\tno wsl candidate for: " .. modname
+end
+table.insert(package.searchers, 1, wsl_searcher)
+
+local session_manager = require('wezterm-session-manager.session-manager')
+
 -- この config ファイルの絶対パスと、そのディレクトリ
 local cfg_file = wezterm.config_file
 local cfg_dir  = cfg_file:gsub('[^/\\]+$', ''):gsub('\\', '/')  -- 末尾のファイル名を削除、/ に正規化
@@ -18,8 +45,6 @@ package.path = table.concat({
 local function watch(p)
   wezterm.add_to_config_reload_watch_list((cfg_dir .. p):gsub('\\','/'))
 end
-
-local wezterm = require 'wezterm'
 
 -- This will hold the configuration.
 local config = wezterm.config_builder()
@@ -118,6 +143,10 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
     { Text = SOLID_RIGHT_ARROW },
   }
 end)
+
+wezterm.on("save_session", function(window) session_manager.save_state(window) end)
+wezterm.on("load_session", function(window) session_manager.load_state(window) end)
+wezterm.on("restore_session", function(window) session_manager.restore_state(window) end)
 
 ----------------------------------------------------
 -- keybinds
