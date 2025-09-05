@@ -232,6 +232,18 @@ require("lazy").setup({
         silent = true,
     })
   },
-  {"sindrets/diffview.nvim"}
+  {"sindrets/diffview.nvim"},
+  {
+    "phaazon/hop.nvim",
+    branch = "v2",
+    config = function()
+      require("hop").setup {
+        multi_windows = true,
+      }
+    end,
+    vim.keymap.set("n", "<leader>a", "<cmd>HopWord<CR>", {
+        silent = true,
+    }),
+  },
 })
 
