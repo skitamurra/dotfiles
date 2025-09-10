@@ -19,7 +19,7 @@ stow -vt ~ nvim wezterm starship yazi
 ```bash
 git clone git@github.com:skitamurra/dotfiles.git ~/dotfiles
 cd ~/dotfiles
-stow -vt ~ nvim wezterm starship yazi
+stow -vt ~ nvim wezterm starship
 ```
 
 ---

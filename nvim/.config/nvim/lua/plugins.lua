@@ -194,7 +194,7 @@ require("lazy").setup({
     "levouh/tint.nvim",
     config = function()
       require("tint").setup({
-        tint = -45
+        tint = -80
       })
     end
   },
@@ -216,6 +216,22 @@ require("lazy").setup({
     },
   },
   {
+    "nvim-lualine/lualine.nvim",
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = function()
+      require("lualine").setup()
+    end
+  },
+  { "simeji/winresizer" },
+  {
+    'nvimdev/lspsaga.nvim',
+    config = function()
+        require('lspsaga').setup({})
+    end,
+    dependencies = {
+        'nvim-treesitter/nvim-treesitter', -- optional
+        'nvim-tree/nvim-web-devicons',     -- optional
+    },
     "bassamsdata/namu.nvim",
     opts = {
         global = { },
