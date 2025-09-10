@@ -232,6 +232,34 @@ require("lazy").setup({
         'nvim-treesitter/nvim-treesitter', -- optional
         'nvim-tree/nvim-web-devicons',     -- optional
     },
+    "bassamsdata/namu.nvim",
+    opts = {
+        global = { },
+        namu_symbols = {
+            options = {},
+        },
+    },
+    vim.keymap.set("n", "<leader>ss", ":Namu symbols<cr>", {
+        desc = "Jump to LSP symbol",
+        silent = true,
+    }),
+    vim.keymap.set("n", "<leader>sw", ":Namu workspace<cr>", {
+        desc = "LSP Symbols - Workspace",
+        silent = true,
+    })
+  },
+  {"sindrets/diffview.nvim"},
+  {
+    "phaazon/hop.nvim",
+    branch = "v2",
+    config = function()
+      require("hop").setup {
+        multi_windows = true,
+      }
+    end,
+    vim.keymap.set("n", "<leader>a", "<cmd>HopWord<CR>", {
+        silent = true,
+    }),
   },
 })
 
