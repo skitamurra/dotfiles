@@ -32,7 +32,11 @@ vim.keymap.set("n", "<leader>o", "<C-w>o", { silent = true })
 
 vim.api.nvim_create_autocmd("InsertLeave", {
   pattern = "*",
-  command = "w"
+  callback = function()
+    if vim.bo.buftype == "" then
+      vim.cmd("silent! write")
+    end
+  end,
 })
 
 vim.keymap.set('n', '<C-p>', function()
