@@ -46,6 +46,33 @@ require("lazy").setup({
     end
   },
   {
+    "williamboman/mason.nvim",
+    build = ":MasonUpdate",
+    opts = {
+      ui = { border = "rounded" },
+      PATH = "append",
+    },
+  },
+  {
+    "williamboman/mason-lspconfig.nvim",
+    dependencies = { "williamboman/mason.nvim" },
+    opts = {
+      ensure_installed = { "pyright", "ts_ls", "vue_ls" },
+      automatic_installation = true,
+    },
+  },
+  {
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
+    dependencies = { "williamboman/mason.nvim" },
+    opts = {
+      ensure_installed = {
+        "prettier",
+        "eslint_d",
+      },
+      run_on_start = true,
+    },
+  },
+  {
     "windwp/nvim-autopairs",
     event = "InsertEnter",
     config = function()

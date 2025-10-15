@@ -132,5 +132,4 @@ vim.lsp.handlers["textDocument/semanticTokens/full"] = function(_, result, ctx, 
 end
 
 require("plugins")
-require("config.lsp")
 require("config.cmp")
