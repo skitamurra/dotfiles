@@ -59,7 +59,7 @@ config.initial_rows = 28
 config.color_scheme = 'AdventureTime'
 
 config.default_prog = { 'wsl' }
--- config.default_domain = "WSL:Ubuntu-24.04"
+config.default_domain = "WSL:Ubuntu-24.04"
 -- 
 -- config.wsl_domains = {
 --   {
@@ -82,17 +82,15 @@ config.color_scheme = 'Tokyo Night Moon'
 ----------------------------------------------------
 -- Tab
 ----------------------------------------------------
-function split(str, ts)
-  -- 引数がないときは空tableを返す
-  if ts == nil then return {} end
-
-  local t = {} ;
-  i=1
-  for s in string.gmatch(str, "([^"..ts.."]+)") do
-    t[i] = s
-    i = i + 1
+local function split(str, ts)
+  if type(str) ~= "string" or str == "" then return {} end
+  ts = ts or "/"
+  local esc = ts:gsub("(%W)", "%%%1")
+  local pat = "([^" .. esc .. "]+)"
+  local t = {}
+  for s in string.gmatch(str, pat) do
+    t[#t + 1] = s
   end
-
   return t
 end
 
@@ -101,17 +99,29 @@ local title_cache = {}
 
 wezterm.on('update-status', function(window, pane)
   local pane_id = pane:pane_id()
-  title_cache[pane_id] = "-"
-  local process_info = pane:get_foreground_process_info()
+  local process_info = pane:get_current_working_dir()
   if process_info then
-    local cwd = process_info.cwd
-    -- 文字列を削除している
-    -- 環境に応じて変えること
-    local rm_home = string.gsub(cwd, os.getenv 'HOME', '')
-    local prj = string.gsub(rm_home, '/development', '')
-    local dirs = split(prj, '/')
-    local root_dir = dirs[1]
+    local cwd = tostring(process_info)
+    cwd = cwd:gsub("^file://[^/]*", "")
+
+    if cwd:find('home/skitamura', 1, true) then
+      cwd = cwd:gsub('home/skitamura', '')
+    end
+
+    if cwd:find('/develop', 1, true) then
+      cwd = cwd:gsub('/develop', '')
+    end
+
+    if cwd == '' then
+      title_cache[pane_id] = "-"
+      return
+    end
+
+    local dirs = split(cwd, '/')
+    local root_dir = dirs[1] or '-'
     title_cache[pane_id] = root_dir
+  else
+    title_cache[pane_id] = "not info"
   end
 end)
 -- タイトルバーを非表示
@@ -166,11 +176,11 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
   local pane = tab.active_pane
   local pane_id = pane.pane_id
 
-  local cwd = "none"
+  local cwd
   if title_cache[pane_id] then
     cwd = title_cache[pane_id]
   else
-    cwd = "-"
+    cwd = pane_id
   end
 
   local title = "  " .. "  " .. cwd .. "  " .. "  "
