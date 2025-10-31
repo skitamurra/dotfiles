@@ -30,14 +30,14 @@ vim.keymap.set("n", "<leader>l", "<C-w>l", { silent = true })
 vim.keymap.set("n", "<leader>q", "<C-w>q", { silent = true })
 vim.keymap.set("n", "<leader>o", "<C-w>o", { silent = true })
 
-vim.api.nvim_create_autocmd("InsertLeave", {
-  pattern = "*",
-  callback = function()
-    if vim.bo.buftype == "" then
-      vim.cmd("silent! write")
-    end
-  end,
-})
+-- vim.api.nvim_create_autocmd("InsertLeave", {
+--   pattern = "*",
+--   callback = function()
+--     if vim.bo.buftype == "" then
+--       vim.cmd("silent! write")
+--     end
+--   end,
+-- })
 
 vim.keymap.set('n', '<C-p>', function()
   local builtin = require('telescope.builtin')

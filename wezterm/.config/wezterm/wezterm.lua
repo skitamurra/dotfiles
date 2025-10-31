@@ -82,6 +82,38 @@ config.color_scheme = 'Tokyo Night Moon'
 ----------------------------------------------------
 -- Tab
 ----------------------------------------------------
+function split(str, ts)
+  -- 引数がないときは空tableを返す
+  if ts == nil then return {} end
+
+  local t = {} ;
+  i=1
+  for s in string.gmatch(str, "([^"..ts.."]+)") do
+    t[i] = s
+    i = i + 1
+  end
+
+  return t
+end
+
+-- 各タブの「ディレクトリ名」を記憶しておくテーブル
+local title_cache = {}
+
+wezterm.on('update-status', function(window, pane)
+  local pane_id = pane:pane_id()
+  title_cache[pane_id] = "-"
+  local process_info = pane:get_foreground_process_info()
+  if process_info then
+    local cwd = process_info.cwd
+    -- 文字列を削除している
+    -- 環境に応じて変えること
+    local rm_home = string.gsub(cwd, os.getenv 'HOME', '')
+    local prj = string.gsub(rm_home, '/development', '')
+    local dirs = split(prj, '/')
+    local root_dir = dirs[1]
+    title_cache[pane_id] = root_dir
+  end
+end)
 -- タイトルバーを非表示
 config.window_decorations = "RESIZE"
 -- タブバーの表示
@@ -130,7 +162,18 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
     foreground = "#FFFFFF"
   end
   local edge_foreground = background
-  local title = "   " .. wezterm.truncate_right(tab.active_pane.title, max_width - 1) .. "   "
+
+  local pane = tab.active_pane
+  local pane_id = pane.pane_id
+
+  local cwd = "none"
+  if title_cache[pane_id] then
+    cwd = title_cache[pane_id]
+  else
+    cwd = "-"
+  end
+
+  local title = "  " .. "  " .. cwd .. "  " .. "  "
   return {
     { Background = { Color = edge_background } },
     { Foreground = { Color = edge_foreground } },

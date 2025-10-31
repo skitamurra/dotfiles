@@ -50,7 +50,7 @@ require("lazy").setup({
     build = ":MasonUpdate",
     opts = {
       ui = { border = "rounded" },
-      PATH = "append",
+      PATH = "prepend",
     },
   },
   {
