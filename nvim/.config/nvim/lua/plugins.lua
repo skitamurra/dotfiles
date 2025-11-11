@@ -197,10 +197,10 @@ require("lazy").setup({
     "akinsho/toggleterm.nvim",
     version = "*",
     opts = {
-      --direction = "float",
-      --float_opts = { border = "curved" },
+      direction = "float",
+      float_opts = { border = "curved" },
       start_in_insert = true,
-      open_mapping = [[<C-i>]],
+      open_mapping = [[<C-\>]],
     },
   },
   {
