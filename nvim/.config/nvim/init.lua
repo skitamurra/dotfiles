@@ -8,7 +8,76 @@ keymap.set("n", "H", "^", { noremap = true, silent = true })
 keymap.set("n", "L", "$", { noremap = true, silent = true })
 keymap.set("n", "J", "5j", { noremap = true, silent = true })
 keymap.set("n", "K", "5k", { noremap = true, silent = true })
-keymap.set('n', 'gd', vim.lsp.buf.definition)
+local function centered_float_definition()
+  local params = vim.lsp.util.make_position_params()
+
+  vim.lsp.buf_request(0, 'textDocument/definition', params, function(err, result, ctx, _)
+    if err or not result or vim.tbl_isempty(result) then
+      vim.notify('No definition found', vim.log.levels.INFO)
+      return
+    end
+
+    local loc = result[1]
+    if loc.targetUri then
+      loc = { uri = loc.targetUri, range = loc.targetRange }
+    end
+
+    local uri = loc.uri or loc.targetUri
+    if not uri then
+      vim.notify('Invalid LSP location', vim.log.levels.WARN)
+      return
+    end
+
+    local bufnr = vim.uri_to_bufnr(uri)
+    vim.fn.bufload(bufnr)
+
+    local ui = vim.api.nvim_list_uis()[1]
+    local width = math.floor(ui.width * 0.8)
+    local height = math.floor(ui.height * 0.8)
+    local row = math.floor((ui.height - height) / 2)
+    local col = math.floor((ui.width - width) / 2)
+
+    local orig_win = vim.api.nvim_get_current_win()
+
+    local win = vim.api.nvim_open_win(bufnr, true, {
+      relative = 'editor',
+      width = width,
+      height = height,
+      row = row,
+      col = col,
+      style = 'minimal',
+      border = 'rounded',
+    })
+
+    local client = ctx and vim.lsp.get_client_by_id(ctx.client_id)
+    local enc = client and client.offset_encoding or 'utf-16'
+
+    vim.api.nvim_set_current_win(win)
+    vim.lsp.util.jump_to_location(loc, enc)
+
+    -- <CR>（Enter）で定義を通常ウィンドウに開く
+    vim.keymap.set('n', '<CR>', function()
+      if vim.api.nvim_win_is_valid(win) then
+        vim.api.nvim_win_close(win, true)
+      end
+      if vim.api.nvim_win_is_valid(orig_win) then
+        vim.api.nvim_set_current_win(orig_win)
+      end
+      vim.lsp.util.jump_to_location(loc, enc)
+    end, { buffer = bufnr, nowait = true, silent = true })
+
+    local function close_float()
+      if vim.api.nvim_win_is_valid(win) then
+        vim.api.nvim_win_close(win, true)
+      end
+    end
+
+    vim.keymap.set('n', 'q', close_float, { buffer = bufnr, nowait = true, silent = true })
+    vim.keymap.set('n', '<Esc>', close_float, { buffer = bufnr, nowait = true, silent = true })
+  end)
+end
+
+vim.keymap.set('n', 'gd', centered_float_definition)
 keymap.set("n", "<leader>t", function()
   local api = require("nvim-tree.api")
   local bufname = vim.api.nvim_buf_get_name(0)
