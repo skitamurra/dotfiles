@@ -9,26 +9,48 @@ keymap.set("n", "L", "$", { noremap = true, silent = true })
 keymap.set("n", "J", "5j", { noremap = true, silent = true })
 keymap.set("n", "K", "5k", { noremap = true, silent = true })
 local function centered_float_definition()
-  local params = vim.lsp.util.make_position_params()
+  -- ★ 正しいクライアント取得（非推奨API回避）
+  local clients = vim.lsp.get_clients({ bufnr = 0 })
+  local client = clients[1]
+  local enc = (client and client.offset_encoding) or "utf-16"
 
-  vim.lsp.buf_request(0, 'textDocument/definition', params, function(err, result, ctx, _)
+  -- ★ position_encoding を必ず渡す
+  local params = vim.lsp.util.make_position_params(0, enc)
+
+  vim.lsp.buf_request(0, "textDocument/definition", params, function(err, result, ctx, _)
     if err or not result or vim.tbl_isempty(result) then
-      vim.notify('No definition found', vim.log.levels.INFO)
+      vim.notify("No definition found", vim.log.levels.INFO)
       return
     end
 
-    local loc = result[1]
-    if loc.targetUri then
-      loc = { uri = loc.targetUri, range = loc.targetRange }
+    local function normalize_loc(loc)
+      return loc.targetUri and {
+        uri = loc.targetUri,
+        range = loc.targetSelectionRange or loc.targetRange or loc.range,
+      } or {
+        uri = loc.uri,
+        range = loc.range,
+      }
     end
 
-    local uri = loc.uri or loc.targetUri
-    if not uri then
-      vim.notify('Invalid LSP location', vim.log.levels.WARN)
+    local first = normalize_loc(result[1])
+    if not first or not first.uri or not first.range then
+      vim.notify("Invalid LSP location", vim.log.levels.WARN)
       return
     end
 
-    local bufnr = vim.uri_to_bufnr(uri)
+    local locs = {}
+    for _, loc in ipairs(result) do
+      local nloc = normalize_loc(loc)
+      if nloc.uri == first.uri then
+        table.insert(locs, nloc)
+      end
+    end
+    if #locs == 0 then
+      locs = { first }
+    end
+
+    local bufnr = vim.uri_to_bufnr(first.uri)
     vim.fn.bufload(bufnr)
 
     local ui = vim.api.nvim_list_uis()[1]
@@ -40,30 +62,42 @@ local function centered_float_definition()
     local orig_win = vim.api.nvim_get_current_win()
 
     local win = vim.api.nvim_open_win(bufnr, true, {
-      relative = 'editor',
+      relative = "editor",
       width = width,
       height = height,
       row = row,
       col = col,
-      style = 'minimal',
-      border = 'rounded',
+      style = "minimal",
+      border = "rounded",
     })
 
-    local client = ctx and vim.lsp.get_client_by_id(ctx.client_id)
-    local enc = client and client.offset_encoding or 'utf-16'
+    local idx = 1
 
-    vim.api.nvim_set_current_win(win)
-    vim.lsp.util.jump_to_location(loc, enc)
+    local function jump_preview()
+      if not (vim.api.nvim_win_is_valid(win) and vim.api.nvim_buf_is_valid(bufnr)) then
+        return
+      end
+      local r = locs[idx].range
+      vim.api.nvim_set_current_win(win)
+      vim.api.nvim_win_set_cursor(win, { r.start.line + 1, r.start.character })
+      vim.cmd("normal! zz")
+    end
 
-    vim.keymap.set('n', '<CR>', function()
-      if vim.api.nvim_win_is_valid(win) then
-        vim.api.nvim_win_close(win, true)
+    jump_preview()
+
+    vim.keymap.set("n", "<C-n>", function()
+      if #locs > 1 then
+        idx = idx % #locs + 1
+        jump_preview()
       end
-      if vim.api.nvim_win_is_valid(orig_win) then
-        vim.api.nvim_set_current_win(orig_win)
+    end, { buffer = bufnr })
+
+    vim.keymap.set("n", "<C-p>", function()
+      if #locs > 1 then
+        idx = (idx - 2) % #locs + 1
+        jump_preview()
       end
-      vim.lsp.util.jump_to_location(loc, enc)
-    end, { buffer = bufnr, nowait = true, silent = true })
+    end, { buffer = bufnr })
 
     local function close_float()
       if vim.api.nvim_win_is_valid(win) then
@@ -74,11 +108,29 @@ local function centered_float_definition()
       end
     end
 
-    vim.keymap.set('n', 'q', close_float, { buffer = bufnr, nowait = true, silent = true })
-    vim.keymap.set('n', '<Esc>', close_float, { buffer = bufnr, nowait = true, silent = true })
+    vim.keymap.set("n", "q", close_float, { buffer = bufnr })
+    vim.keymap.set("n", "<Esc>", close_float, { buffer = bufnr })
+
+    vim.keymap.set("n", "<CR>", function()
+      close_float()
+      if vim.api.nvim_win_is_valid(orig_win) then
+        vim.api.nvim_set_current_win(orig_win)
+      end
+
+      local r = locs[idx].range
+
+      vim.lsp.util.show_document({
+        uri = locs[idx].uri,
+        position = {
+          line = r.start.line,
+          character = r.start.character,
+        },
+      })
+    end, { buffer = bufnr })
   end)
 end
-keymap.set('n', 'gd', centered_float_definition)
+
+vim.keymap.set("n", "gd", centered_float_definition)
 
 keymap.set("n", "<leader>t", function()
   local api = require("nvim-tree.api")
