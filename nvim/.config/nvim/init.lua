@@ -8,6 +8,7 @@ keymap.set("n", "H", "^", { noremap = true, silent = true })
 keymap.set("n", "L", "$", { noremap = true, silent = true })
 keymap.set("n", "J", "5j", { noremap = true, silent = true })
 keymap.set("n", "K", "5k", { noremap = true, silent = true })
+keymap.set('n', 'gd', vim.lsp.buf.definition)
 keymap.set("n", "<leader>t", function()
   local api = require("nvim-tree.api")
   local bufname = vim.api.nvim_buf_get_name(0)
@@ -20,26 +21,21 @@ keymap.set("n", "<leader>t", function()
   api.tree.toggle()
 end, { noremap = true, silent = true, desc = "Toggle nvim-tree with buffer dir" })
 
-vim.keymap.set("n", "<leader>f", "<cmd>NvimTreeFindFile<CR>", { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>F', vim.diagnostic.open_float)
-vim.keymap.set("n", "<leader>w", "<C-w>", { silent = true })
-vim.keymap.set("n", "<leader>v", "<C-w>v", { silent = true })
-vim.keymap.set("n", "<leader>j", "<C-w>j", { silent = true })
-vim.keymap.set("n", "<leader>k", "<C-w>k", { silent = true })
-vim.keymap.set("n", "<leader>l", "<C-w>l", { silent = true })
-vim.keymap.set("n", "<leader>q", "<C-w>q", { silent = true })
-vim.keymap.set("n", "<leader>o", "<C-w>o", { silent = true })
+keymap.set("n", "<leader>f", "<cmd>NvimTreeFindFile<CR>", { noremap = true, silent = true })
+keymap.set('n', '<leader>F', vim.diagnostic.open_float)
+keymap.set("n", "<leader>w", "<C-w>", { silent = true })
+keymap.set("n", "<leader>v", "<C-w>v", { silent = true })
+keymap.set("n", "<leader>j", "<C-w>j", { silent = true })
+keymap.set("n", "<leader>k", "<C-w>k", { silent = true })
+keymap.set("n", "<leader>l", "<C-w>l", { silent = true })
+keymap.set("n", "<leader>q", "<C-w>q", { silent = true })
+keymap.set("n", "<leader>o", "<C-w>o", { silent = true })
+keymap.set("n", "<leader>y", function()
+  vim.fn.setreg("+", vim.fn.expand("%:p"))
+  vim.notify("Copied: " .. vim.fn.expand("%:p"))
+end, { desc = "Copy file path" })
 
--- vim.api.nvim_create_autocmd("InsertLeave", {
---   pattern = "*",
---   callback = function()
---     if vim.bo.buftype == "" then
---       vim.cmd("silent! write")
---     end
---   end,
--- })
-
-vim.keymap.set('n', '<C-p>', function()
+keymap.set('n', '<C-p>', function()
   local builtin = require('telescope.builtin')
 
   -- Git管理下か判定
@@ -56,7 +52,7 @@ vim.keymap.set('n', '<C-p>', function()
   end
 end, { desc = 'Files (git-aware)' })
 
-vim.keymap.set('n', '<C-S-f>', function()
+keymap.set('n', '<C-S-f>', function()
   local builtin = require('telescope.builtin')
 
   -- Git管理下か判定

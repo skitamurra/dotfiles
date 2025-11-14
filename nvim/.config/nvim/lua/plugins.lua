@@ -142,7 +142,12 @@ require("lazy").setup({
   {
     "rmagatti/auto-session",
     config = function()
-      require("auto-session").setup()
+      require("auto-session").setup({
+        enable = true,
+        auto_save = true,
+        auto_restore = true,
+        auto_create = true,
+      })
     end,
   },
   {
