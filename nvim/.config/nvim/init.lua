@@ -8,6 +8,130 @@ keymap.set("n", "H", "^", { noremap = true, silent = true })
 keymap.set("n", "L", "$", { noremap = true, silent = true })
 keymap.set("n", "J", "5j", { noremap = true, silent = true })
 keymap.set("n", "K", "5k", { noremap = true, silent = true })
+local function centered_float_definition()
+  -- ★ 正しいクライアント取得（非推奨API回避）
+  local clients = vim.lsp.get_clients({ bufnr = 0 })
+  local client = clients[1]
+  local enc = (client and client.offset_encoding) or "utf-16"
+
+  -- ★ position_encoding を必ず渡す
+  local params = vim.lsp.util.make_position_params(0, enc)
+
+  vim.lsp.buf_request(0, "textDocument/definition", params, function(err, result, ctx, _)
+    if err or not result or vim.tbl_isempty(result) then
+      vim.notify("No definition found", vim.log.levels.INFO)
+      return
+    end
+
+    local function normalize_loc(loc)
+      return loc.targetUri and {
+        uri = loc.targetUri,
+        range = loc.targetSelectionRange or loc.targetRange or loc.range,
+      } or {
+        uri = loc.uri,
+        range = loc.range,
+      }
+    end
+
+    local first = normalize_loc(result[1])
+    if not first or not first.uri or not first.range then
+      vim.notify("Invalid LSP location", vim.log.levels.WARN)
+      return
+    end
+
+    local locs = {}
+    for _, loc in ipairs(result) do
+      local nloc = normalize_loc(loc)
+      if nloc.uri == first.uri then
+        table.insert(locs, nloc)
+      end
+    end
+    if #locs == 0 then
+      locs = { first }
+    end
+
+    local bufnr = vim.uri_to_bufnr(first.uri)
+    vim.fn.bufload(bufnr)
+
+    local ui = vim.api.nvim_list_uis()[1]
+    local width = math.floor(ui.width * 0.8)
+    local height = math.floor(ui.height * 0.8)
+    local row = math.floor((ui.height - height) / 2)
+    local col = math.floor((ui.width - width) / 2)
+
+    local orig_win = vim.api.nvim_get_current_win()
+
+    local win = vim.api.nvim_open_win(bufnr, true, {
+      relative = "editor",
+      width = width,
+      height = height,
+      row = row,
+      col = col,
+      style = "minimal",
+      border = "rounded",
+    })
+
+    local idx = 1
+
+    local function jump_preview()
+      if not (vim.api.nvim_win_is_valid(win) and vim.api.nvim_buf_is_valid(bufnr)) then
+        return
+      end
+      local r = locs[idx].range
+      vim.api.nvim_set_current_win(win)
+      vim.api.nvim_win_set_cursor(win, { r.start.line + 1, r.start.character })
+      vim.cmd("normal! zz")
+    end
+
+    jump_preview()
+
+    vim.keymap.set("n", "<C-n>", function()
+      if #locs > 1 then
+        idx = idx % #locs + 1
+        jump_preview()
+      end
+    end, { buffer = bufnr })
+
+    vim.keymap.set("n", "<C-p>", function()
+      if #locs > 1 then
+        idx = (idx - 2) % #locs + 1
+        jump_preview()
+      end
+    end, { buffer = bufnr })
+
+    local function close_float()
+      if vim.api.nvim_win_is_valid(win) then
+        vim.api.nvim_win_close(win, true)
+      end
+      if vim.api.nvim_buf_is_valid(bufnr) then
+        vim.api.nvim_buf_delete(bufnr, { force = true })
+      end
+    end
+
+    vim.keymap.set("n", "q", close_float, { buffer = bufnr })
+    vim.keymap.set("n", "<Esc>", close_float, { buffer = bufnr })
+
+    vim.keymap.set("n", "<CR>", function()
+      close_float()
+      if vim.api.nvim_win_is_valid(orig_win) then
+        vim.api.nvim_set_current_win(orig_win)
+      end
+
+      local r = locs[idx].range
+
+      vim.lsp.util.show_document({
+        uri = locs[idx].uri,
+        position = {
+          line = r.start.line,
+          character = r.start.character,
+        },
+      })
+    end, { buffer = bufnr })
+  end)
+end
+
+vim.keymap.set("n", "gd", centered_float_definition)
+
 keymap.set("n", "<leader>t", function()
   local api = require("nvim-tree.api")
   local bufname = vim.api.nvim_buf_get_name(0)
@@ -20,22 +144,21 @@ keymap.set("n", "<leader>t", function()
   api.tree.toggle()
 end, { noremap = true, silent = true, desc = "Toggle nvim-tree with buffer dir" })
 
-vim.keymap.set("n", "<leader>f", "<cmd>NvimTreeFindFile<CR>", { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>F', vim.diagnostic.open_float)
-vim.keymap.set("n", "<leader>w", "<C-w>", { silent = true })
-vim.keymap.set("n", "<leader>v", "<C-w>v", { silent = true })
-vim.keymap.set("n", "<leader>j", "<C-w>j", { silent = true })
-vim.keymap.set("n", "<leader>k", "<C-w>k", { silent = true })
-vim.keymap.set("n", "<leader>l", "<C-w>l", { silent = true })
-vim.keymap.set("n", "<leader>q", "<C-w>q", { silent = true })
-vim.keymap.set("n", "<leader>o", "<C-w>o", { silent = true })
+keymap.set("n", "<leader>f", "<cmd>NvimTreeFindFile<CR>", { noremap = true, silent = true })
+keymap.set('n', '<leader>F', vim.diagnostic.open_float)
+keymap.set("n", "<leader>w", "<C-w>", { silent = true })
+keymap.set("n", "<leader>v", "<C-w>v", { silent = true })
+keymap.set("n", "<leader>j", "<C-w>j", { silent = true })
+keymap.set("n", "<leader>k", "<C-w>k", { silent = true })
+keymap.set("n", "<leader>l", "<C-w>l", { silent = true })
+keymap.set("n", "<leader>q", "<C-w>q", { silent = true })
+keymap.set("n", "<leader>o", "<C-w>o", { silent = true })
+keymap.set("n", "<leader>y", function()
+  vim.fn.setreg("+", vim.fn.expand("%:p"))
+  vim.notify("Copied: " .. vim.fn.expand("%:p"))
+end, { desc = "Copy file path" })
 
-vim.api.nvim_create_autocmd("InsertLeave", {
-  pattern = "*",
-  command = "w"
-})
-
-vim.keymap.set('n', '<C-p>', function()
+keymap.set('n', '<C-p>', function()
   local builtin = require('telescope.builtin')
 
   -- Git管理下か判定
@@ -52,7 +175,7 @@ vim.keymap.set('n', '<C-p>', function()
   end
 end, { desc = 'Files (git-aware)' })
 
-vim.keymap.set('n', '<C-S-f>', function()
+keymap.set('n', '<C-S-f>', function()
   local builtin = require('telescope.builtin')
 
   -- Git管理下か判定
@@ -128,5 +251,4 @@ vim.lsp.handlers["textDocument/semanticTokens/full"] = function(_, result, ctx, 
 end
 
 require("plugins")
-require("config.lsp")
 require("config.cmp")

@@ -59,7 +59,7 @@ config.initial_rows = 28
 config.color_scheme = 'AdventureTime'
 
 config.default_prog = { 'wsl' }
--- config.default_domain = "WSL:Ubuntu-24.04"
+config.default_domain = "WSL:Ubuntu-24.04"
 -- 
 -- config.wsl_domains = {
 --   {
@@ -82,6 +82,48 @@ config.color_scheme = 'Tokyo Night Moon'
 ----------------------------------------------------
 -- Tab
 ----------------------------------------------------
+local function split(str, ts)
+  if type(str) ~= "string" or str == "" then return {} end
+  ts = ts or "/"
+  local esc = ts:gsub("(%W)", "%%%1")
+  local pat = "([^" .. esc .. "]+)"
+  local t = {}
+  for s in string.gmatch(str, pat) do
+    t[#t + 1] = s
+  end
+  return t
+end
+
+-- 各タブの「ディレクトリ名」を記憶しておくテーブル
+local title_cache = {}
+
+wezterm.on('update-status', function(window, pane)
+  local pane_id = pane:pane_id()
+  local process_info = pane:get_current_working_dir()
+  if process_info then
+    local cwd = tostring(process_info)
+    cwd = cwd:gsub("^file://[^/]*", "")
+
+    if cwd:find('home/skitamura', 1, true) then
+      cwd = cwd:gsub('home/skitamura', '')
+    end
+
+    if cwd:find('/develop', 1, true) then
+      cwd = cwd:gsub('/develop', '')
+    end
+
+    if cwd == '' then
+      title_cache[pane_id] = "-"
+      return
+    end
+
+    local dirs = split(cwd, '/')
+    local root_dir = dirs[1] or '-'
+    title_cache[pane_id] = root_dir
+  else
+    title_cache[pane_id] = "not info"
+  end
+end)
 -- タイトルバーを非表示
 config.window_decorations = "RESIZE"
 -- タブバーの表示
@@ -130,7 +172,18 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
     foreground = "#FFFFFF"
   end
   local edge_foreground = background
-  local title = "   " .. wezterm.truncate_right(tab.active_pane.title, max_width - 1) .. "   "
+
+  local pane = tab.active_pane
+  local pane_id = pane.pane_id
+
+  local cwd
+  if title_cache[pane_id] then
+    cwd = title_cache[pane_id]
+  else
+    cwd = pane_id
+  end
+
+  local title = "  " .. "  " .. cwd .. "  " .. "  "
   return {
     { Background = { Color = edge_background } },
     { Foreground = { Color = edge_foreground } },

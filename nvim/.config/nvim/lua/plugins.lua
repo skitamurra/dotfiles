@@ -46,6 +46,33 @@ require("lazy").setup({
     end
   },
   {
+    "williamboman/mason.nvim",
+    build = ":MasonUpdate",
+    opts = {
+      ui = { border = "rounded" },
+      PATH = "prepend",
+    },
+  },
+  {
+    "williamboman/mason-lspconfig.nvim",
+    dependencies = { "williamboman/mason.nvim" },
+    opts = {
+      ensure_installed = { "pyright", "ts_ls", "vue_ls" },
+      automatic_installation = true,
+    },
+  },
+  {
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
+    dependencies = { "williamboman/mason.nvim" },
+    opts = {
+      ensure_installed = {
+        "prettier",
+        "eslint_d",
+      },
+      run_on_start = true,
+    },
+  },
+  {
     "windwp/nvim-autopairs",
     event = "InsertEnter",
     config = function()
@@ -85,6 +112,12 @@ require("lazy").setup({
       vim.cmd.colorscheme("tokyonight")
     end,
   },
+  -- { 
+  --   "EdenEast/nightfox.nvim",
+  --   config = function()
+  --     vim.cmd.colorscheme("nightfox")
+  --   end,
+  -- },
   {
     "lewis6991/gitsigns.nvim",
     event = { "BufReadPre", "BufNewFile" },
@@ -110,10 +143,10 @@ require("lazy").setup({
     "rmagatti/auto-session",
     config = function()
       require("auto-session").setup({
-        log_level = "info",
-        auto_session_enabled = true,
-        auto_save_enabled = true,   
-        auto_restore_enabled = true,
+        enable = true,
+        auto_save = true,
+        auto_restore = true,
+        auto_create = true,
       })
     end,
   },
@@ -169,10 +202,10 @@ require("lazy").setup({
     "akinsho/toggleterm.nvim",
     version = "*",
     opts = {
-      --direction = "float",
-      --float_opts = { border = "curved" },
+      direction = "float",
+      float_opts = { border = "curved" },
       start_in_insert = true,
-      open_mapping = [[<C-i>]],
+      open_mapping = [[<C-\>]],
     },
   },
   {
@@ -260,6 +293,26 @@ require("lazy").setup({
     vim.keymap.set("n", "<leader>a", "<cmd>HopWord<CR>", {
         silent = true,
     }),
+  },
+  {
+    "kdheepak/lazygit.nvim",
+    lazy = true,
+    cmd = {
+        "LazyGit",
+        "LazyGitConfig",
+        "LazyGitCurrentFile",
+        "LazyGitFilter",
+        "LazyGitFilterCurrentFile",
+    },
+    -- optional for floating window border decoration
+    dependencies = {
+        "nvim-lua/plenary.nvim",
+    },
+    -- setting the keybinding for LazyGit with 'keys' is recommended in
+    -- order to load the plugin when the command is run for the first time
+    keys = {
+        { "<leader>g", "<cmd>LazyGit<cr>", desc = "LazyGit" }
+    },
   },
 })
 
