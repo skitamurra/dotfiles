@@ -55,7 +55,6 @@ local function centered_float_definition()
     vim.api.nvim_set_current_win(win)
     vim.lsp.util.jump_to_location(loc, enc)
 
-    -- <CR>（Enter）で定義を通常ウィンドウに開く
     vim.keymap.set('n', '<CR>', function()
       if vim.api.nvim_win_is_valid(win) then
         vim.api.nvim_win_close(win, true)
@@ -70,14 +69,17 @@ local function centered_float_definition()
       if vim.api.nvim_win_is_valid(win) then
         vim.api.nvim_win_close(win, true)
       end
+      if vim.api.nvim_buf_is_valid(bufnr) then
+        vim.api.nvim_buf_delete(bufnr, { force = true })
+      end
     end
 
     vim.keymap.set('n', 'q', close_float, { buffer = bufnr, nowait = true, silent = true })
     vim.keymap.set('n', '<Esc>', close_float, { buffer = bufnr, nowait = true, silent = true })
   end)
 end
+keymap.set('n', 'gd', centered_float_definition)
 
-vim.keymap.set('n', 'gd', centered_float_definition)
 keymap.set("n", "<leader>t", function()
   local api = require("nvim-tree.api")
   local bufname = vim.api.nvim_buf_get_name(0)
