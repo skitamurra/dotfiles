@@ -314,5 +314,13 @@ require("lazy").setup({
         { "<leader>g", "<cmd>LazyGit<cr>", desc = "LazyGit" }
     },
   },
+  {
+    "nvim-lualine/lualine.nvim",
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = function()
+      require("lualine").setup()
+    end
+  },
+  { "simeji/winresizer" },
 })
 
