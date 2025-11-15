@@ -80,7 +80,7 @@ require("lazy").setup({
     end
   },
   -- 自動補完系
-  { 
+  {
     "hrsh7th/nvim-cmp",
     config = function()
       require("config.cmp")
@@ -134,8 +134,8 @@ require("lazy").setup({
     config = function()
       require("colorizer").setup({
         "*";
-        css = { rgb_fn = true }; 
-        html = { names = true }; 
+        css = { rgb_fn = true };
+        html = { names = true };
       }, { mode = "background" })
     end
   },
@@ -152,16 +152,16 @@ require("lazy").setup({
   },
   {
     "akinsho/bufferline.nvim",
-    version = "*",  
+    version = "*",
     dependencies = "nvim-tree/nvim-web-devicons",
     config = function()
-      local function to_hex(n) return n and string.format("#%06x", n) or nil end
-      local function hl(name)
-        local ok, h = pcall(vim.api.nvim_get_hl, 0, { name = name, link = false })
-        return ok and h or {}
-      end
-      local TabLineSel   = hl("TabLineSel")
-      local bg_selected  = to_hex(TabLineSel.bg or StatusLine.bg or Normal.bg)
+      -- local function to_hex(n) return n and string.format("#%06x", n) or nil end
+      -- local function hl(name)
+      --   local ok, h = pcall(vim.api.nvim_get_hl, 0, { name = name, link = false })
+      --   return ok and h or {}
+      -- end
+      -- local TabLineSel   = hl("TabLineSel")
+      -- local bg_selected  = to_hex(TabLineSel.bg or StatusLine.bg or Normal.bg)
 
       require("bufferline").setup {
         options = {
