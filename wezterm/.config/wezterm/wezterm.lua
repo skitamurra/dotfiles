@@ -28,10 +28,6 @@ table.insert(package.searchers, 1, wsl_searcher)
 
 local session_manager = require('wezterm-session-manager.session-manager')
 
--- この config ファイルの絶対パスと、そのディレクトリ
-local cfg_file = wezterm.config_file
-local cfg_dir  = cfg_file:gsub('[^/\\]+$', ''):gsub('\\', '/')  -- 末尾のファイル名を削除、/ に正規化
-
 -- config直下 と config/lua/ を検索パスに先頭追加
 package.path = table.concat({
   cfg_dir .. '?.lua',
@@ -40,11 +36,6 @@ package.path = table.concat({
   cfg_dir .. 'lua/?/init.lua',
   package.path,
 }, ';')
-
--- （任意）ホットリロード用に監視対象へ追加
-local function watch(p)
-  wezterm.add_to_config_reload_watch_list((cfg_dir .. p):gsub('\\','/'))
-end
 
 -- This will hold the configuration.
 local config = wezterm.config_builder()
@@ -59,7 +50,22 @@ config.initial_rows = 28
 config.color_scheme = 'AdventureTime'
 
 config.default_prog = { 'wsl' }
-config.default_domain = "WSL:Ubuntu-24.04"
+local function detect_wsl_domain()
+  if not wezterm.running_under_wsl() then
+    return nil
+  end
+
+  local domains = wezterm.default_wsl_domains()
+  for _, d in ipairs(domains) do
+    if d.name:match("^WSL:Ubuntu") then
+      return d.name
+    end
+  end
+  return nil
+end
+
+local default_domain = detect_wsl_domain()
+config.default_domain = default_domain
 -- 
 -- config.wsl_domains = {
 --   {
