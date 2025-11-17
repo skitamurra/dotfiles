@@ -49,7 +49,7 @@ config.initial_rows = 28
 -- or, changing the font size and color scheme.
 config.color_scheme = 'AdventureTime'
 
-config.default_prog = { 'wsl' }
+config.default_prog = { 'wsl', '~' }
 local function detect_wsl_domain()
   if not wezterm.running_under_wsl() then
     return nil
@@ -64,8 +64,7 @@ local function detect_wsl_domain()
   return nil
 end
 
-local default_domain = detect_wsl_domain()
-config.default_domain = default_domain
+config.default_domain = detect_wsl_domain()
 -- 
 -- config.wsl_domains = {
 --   {

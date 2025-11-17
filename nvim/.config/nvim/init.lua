@@ -9,12 +9,10 @@ keymap.set("n", "L", "$", { noremap = true, silent = true })
 keymap.set("n", "J", "5j", { noremap = true, silent = true })
 keymap.set("n", "K", "5k", { noremap = true, silent = true })
 local function centered_float_definition()
-  -- ★ 正しいクライアント取得（非推奨API回避）
   local clients = vim.lsp.get_clients({ bufnr = 0 })
   local client = clients[1]
   local enc = (client and client.offset_encoding) or "utf-16"
 
-  -- ★ position_encoding を必ず渡す
   local params = vim.lsp.util.make_position_params(0, enc)
 
   vim.lsp.buf_request(0, "textDocument/definition", params, function(err, result, ctx, _)
@@ -24,13 +22,14 @@ local function centered_float_definition()
     end
 
     local function normalize_loc(loc)
-      return loc.targetUri and {
-        uri = loc.targetUri,
-        range = loc.targetSelectionRange or loc.targetRange or loc.range,
-      } or {
-        uri = loc.uri,
-        range = loc.range,
-      }
+      if loc.targetUri then
+        return {
+          uri = loc.targetUri,
+          range = loc.targetSelectionRange or loc.targetRange or loc.range,
+        }
+      else
+        return { uri = loc.uri, range = loc.range }
+      end
     end
 
     local first = normalize_loc(result[1])
@@ -52,6 +51,9 @@ local function centered_float_definition()
 
     local bufnr = vim.uri_to_bufnr(first.uri)
     vim.fn.bufload(bufnr)
+
+    -- ★ カレントバッファと同じかどうか判定
+    local same_buffer = (bufnr == vim.api.nvim_get_current_buf())
 
     local ui = vim.api.nvim_list_uis()[1]
     local width = math.floor(ui.width * 0.8)
@@ -99,33 +101,34 @@ local function centered_float_definition()
       end
     end, { buffer = bufnr })
 
-    local function close_float()
+    -- ★ ここを修正：同一バッファの場合はバッファ削除しない
+    local function close_float_only()
       if vim.api.nvim_win_is_valid(win) then
         vim.api.nvim_win_close(win, true)
       end
-      if vim.api.nvim_buf_is_valid(bufnr) then
+      if not same_buffer and vim.api.nvim_buf_is_valid(bufnr) then
         vim.api.nvim_buf_delete(bufnr, { force = true })
       end
     end
 
-    vim.keymap.set("n", "q", close_float, { buffer = bufnr })
-    vim.keymap.set("n", "<Esc>", close_float, { buffer = bufnr })
+    vim.keymap.set("n", "q", close_float_only, { buffer = bufnr })
+    vim.keymap.set("n", "<Esc>", close_float_only, { buffer = bufnr })
 
     vim.keymap.set("n", "<CR>", function()
-      close_float()
+      local loc = locs[idx]
+      local r = loc.range
+      local fname = vim.uri_to_fname(loc.uri)
+
+      close_float_only()
+
       if vim.api.nvim_win_is_valid(orig_win) then
         vim.api.nvim_set_current_win(orig_win)
       end
 
-      local r = locs[idx].range
+      vim.cmd("edit " .. vim.fn.fnameescape(fname))
 
-      vim.lsp.util.show_document({
-        uri = locs[idx].uri,
-        position = {
-          line = r.start.line,
-          character = r.start.character,
-        },
-      })
+      vim.api.nvim_win_set_cursor(0, { r.start.line + 1, r.start.character })
+      vim.cmd("normal! zz")
     end, { buffer = bufnr })
   end)
 end
@@ -211,6 +214,7 @@ vim.wo.number = true
 vim.wo.relativenumber = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
+vim.opt.showmode = false
 vim.opt.sessionoptions = {
   "buffers",      -- 開いていたバッファ
   "curdir",       -- カレントディレクトリ
