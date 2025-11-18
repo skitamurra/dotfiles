@@ -1,5 +1,4 @@
 local util = require("lspconfig.util")
-local tslsp = vim.fn.exepath("typescript-language-server")
 
 -- capabilities
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -23,9 +22,7 @@ local function absolute_extra_paths(root, rels)
   return out
 end
 
--- =========
--- Pyright
--- =========
+-- ========= Pyright =========
 vim.lsp.config("pyright", {
   capabilities = capabilities,
   root_dir = util.root_pattern("Pipfile", ".git"),
@@ -68,78 +65,6 @@ vim.lsp.config("pyright", {
   end,
 })
 
--- ========= TypeScript / JavaScript =========
--- 利用可能なTSサーバ名を自動選択（ts_ls → vtsls → tsserver）
-local function ts_root(fname)
-  return util.root_pattern(
-    "tsconfig.json","jsconfig.json",
-    "package.json","pnpm-workspace.yaml",
-    "yarn.lock","pnpm-lock.yaml"
-  )(fname) or util.find_git_ancestor(fname) or vim.loop.cwd()
-end
-
-local ok_cfgs, cfgs = pcall(require, "lspconfig.configs")
-local ts_name = (ok_cfgs and (
-  (cfgs.ts_ls and "ts_ls")
-  or (cfgs.vtsls and "vtsls")
-  or (cfgs.tsserver and "tsserver")
-)) or "tsserver"
-
-local ts_root = util.root_pattern("tsconfig.json", "jsconfig.json", "package.json", ".git")
-
-vim.lsp.config(ts_name, {
-  capabilities = capabilities,
-  filetypes = {
-    "javascript","javascriptreact",
-    "typescript","typescriptreact",
-    "vue",  -- ← vue バッファでも TS クライアントを立ち上げる
-  },
-  root_dir = ts_root,
-  -- ★ cmd を明示（nil を回避）
-  cmd = (tslsp ~= "" and { tslsp, "--stdio" } or nil),
-  on_init = function(client)
-    if tslsp == "" then
-      vim.notify(
-        "typescript-language-server が見つかりません。Mason または PATH を確認して下さい。",
-        vim.log.levels.ERROR
-      )
-      client.stop()
-    end
-  end,
-})
-
--- ========= Vue (Volar / vue_ls) =========
-vim.lsp.config("vue_ls", {
-  capabilities = capabilities,
-  -- Volar の root は TS と合わせる
-  root_dir = ts_root,
-  filetypes = { "vue", "javascript", "typescript" },
-  -- 必要なら:
-  -- init_options = { typescript = { tsdk = "<project>/node_modules/typescript/lib" } },
-})
-
--- ========= Dart / Flutter =========
-vim.lsp.config("dartls", {                 -- ★ dcm → dartls
-  capabilities = capabilities,
-})
-
--- 起動順でTS→Vueを先に（依存満たしやすくする）
-vim.lsp.enable({ ts_name, "vue_ls", "pyright", "dartls" })
-
--- それでも .vue を先に開くと間に合わない環境向けの“保険”
-vim.api.nvim_create_autocmd("BufReadPre", {
-  pattern = "*.vue",
-  callback = function(args)
-    -- すでに ts クライアントがいれば何もしない
-    for _, c in ipairs(vim.lsp.get_active_clients({ bufnr = args.buf })) do
-      if c.name == ts_name then return end
-    end
-    -- 同一rootでTSクライアントを起動
-    local root = ts_root(args.file)
-    if root then vim.lsp.enable(ts_name, { root_dir = root }) end
-  end,
-})
-
 -- ========= lua =========
 vim.lsp.config("lua_ls", {
   settings = {
@@ -157,3 +82,33 @@ vim.lsp.config("lua_ls", {
     },
   },
 })
+
+-- ========= vue =========
+local vue_language_server_path = vim.fn.stdpath('data')
+  .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
+
+local tsserver_filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" }
+
+local vue_plugin = {
+  name = "@vue/typescript-plugin",
+  location = vue_language_server_path,
+  languages = { "vue" },
+  -- configNamespace = "typescript",
+  enableForWorkspaceTypeScriptVersions = true,
+}
+
+local vtsls_config = {
+  filetypes = tsserver_filetypes,
+  settings = {
+    vtsls = {
+      tsserver = {
+        globalPlugins = {
+          vue_plugin,
+        },
+      },
+    },
+    typescript = {},
+  },
+}
+
+vim.lsp.config("vtsls", vtsls_config)

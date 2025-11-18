@@ -12,7 +12,6 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-  "nvim-lualine/lualine.nvim",
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
@@ -57,7 +56,7 @@ require("lazy").setup({
     "williamboman/mason-lspconfig.nvim",
     dependencies = { "williamboman/mason.nvim" },
     opts = {
-      ensure_installed = { "pyright", "ts_ls", "vue_ls" },
+      ensure_installed = { "pyright", "vtsls", "lua_ls" },
       automatic_installation = true,
     },
   },
@@ -313,13 +312,6 @@ require("lazy").setup({
     keys = {
         { "<leader>g", "<cmd>LazyGit<cr>", desc = "LazyGit" }
     },
-  },
-  {
-    "nvim-lualine/lualine.nvim",
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
-    config = function()
-      require("lualine").setup()
-    end
   },
   { "simeji/winresizer" },
 })
