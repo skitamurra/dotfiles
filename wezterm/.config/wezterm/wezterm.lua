@@ -100,7 +100,7 @@ end
 -- 各タブの「ディレクトリ名」を記憶しておくテーブル
 local title_cache = {}
 
-wezterm.on("update-status", function(window, pane)
+wezterm.on("update-status", function(_, pane)
   local pane_id = pane:pane_id()
   local process_info = pane:get_current_working_dir()
   if process_info then
