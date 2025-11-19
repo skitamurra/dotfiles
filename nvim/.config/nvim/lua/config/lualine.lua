@@ -222,7 +222,7 @@ ins_right {
 ins_right {
   -- Lsp server name .
   function()
-    local msg = 'No Active Lsp'
+    local msg = '-'
     local buf_ft = vim.api.nvim_get_option_value('filetype', { buf = 0 })
     local clients = vim.lsp.get_clients()
     if next(clients) == nil then
