@@ -1,6 +1,14 @@
 -- lua/config/lsp/definition.lua
 local M = {}
 
+local float_state = {
+  anchor_row = 1,
+  anchor_col = 2,
+  last_row = nil,
+  last_col = nil,
+  opened = 0,
+}
+
 function M.centered_float_definition()
   local clients = vim.lsp.get_clients({ bufnr = 0 })
   local client = clients[1]
@@ -48,8 +56,58 @@ function M.centered_float_definition()
     local ui = vim.api.nvim_list_uis()[1]
     local width = math.floor(ui.width * 0.8)
     local height = math.floor(ui.height * 0.8)
-    local row = math.floor((ui.height - height) / 2)
-    local col = math.floor((ui.width - width) / 2)
+
+    local center_row = math.floor((ui.height - height) / 2)
+    local center_col = math.floor((ui.width - width) / 2)
+
+    local cur_cfg = vim.api.nvim_win_get_config(0)
+    local in_float = cur_cfg.relative ~= ""
+
+    local row, col
+
+    if not in_float then
+      -- 通常ウィンドウからのジャンプ: 1枚目はセンター
+      row = center_row
+      col = center_col
+
+      -- ネスト用の基準位置はディスプレイ左上に固定
+      float_state.anchor_row = 1
+      float_state.anchor_col = 2
+      float_state.last_row = float_state.anchor_row
+      float_state.last_col = float_state.anchor_col
+      float_state.opened = 0
+    else
+      -- float 内での再ジャンプ: 左上基準から右下方向へずらす
+      if not float_state.last_row or not float_state.last_col then
+        float_state.anchor_row = 1
+        float_state.anchor_col = 2
+        float_state.last_row = float_state.anchor_row
+        float_state.last_col = float_state.anchor_col
+        float_state.opened = 0
+      end
+
+      local step_row = 2
+      local step_col = 4
+
+      if float_state.opened == 0 then
+        row = float_state.anchor_row
+        col = float_state.anchor_col
+      else
+        row = float_state.last_row + step_row
+        col = float_state.last_col + step_col
+      end
+
+      if row + height > ui.height then
+        row = math.max(0, ui.height - height)
+      end
+      if col + width > ui.width then
+        col = math.max(0, ui.width - width)
+      end
+
+      float_state.last_row = row
+      float_state.last_col = col
+      float_state.opened = float_state.opened + 1
+    end
 
     local orig_win = vim.api.nvim_get_current_win()
 
