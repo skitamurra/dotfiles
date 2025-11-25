@@ -200,12 +200,15 @@ require("lazy").setup({
   {
     "akinsho/toggleterm.nvim",
     version = "*",
-    opts = {
-      direction = "float",
-      float_opts = { border = "curved" },
-      start_in_insert = true,
-      open_mapping = [[<C-\>]],
-    },
+    opts = function()
+      local leader = vim.g.mapleader or " "
+      return {
+        direction = "float",
+        float_opts = { border = "curved" },
+        start_in_insert = true,
+        open_mapping = leader .. "\\",
+      }
+    end,
   },
   {
     "MeanderingProgrammer/render-markdown.nvim",
