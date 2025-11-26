@@ -317,5 +317,10 @@ require("lazy").setup({
     },
   },
   { "simeji/winresizer" },
+  { "folke/neodev.nvim" },
+}, {
+  git = {
+    url_format = "git@github.com:%s.git",
+  },
 })
 
