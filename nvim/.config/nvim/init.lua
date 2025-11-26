@@ -19,6 +19,7 @@ keymap.set("n", "<leader>k", "<C-w>k", { silent = true })
 keymap.set("n", "<leader>l", "<C-w>l", { silent = true })
 keymap.set("n", "<leader>q", "<C-w>q", { silent = true })
 keymap.set("n", "<leader>o", "<C-w>o", { silent = true })
+keymap.set('n', '<leader>\\', "<Cmd>ToggleTerm<CR>", { noremap = true, silent = true, desc = "ToggleTerm"})
 
 keymap.set("n", "<leader>t", function()
   local api = require("nvim-tree.api")
