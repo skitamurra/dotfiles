@@ -5,64 +5,91 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 local ok_cmp, cmp = pcall(require, "cmp_nvim_lsp")
 if ok_cmp then capabilities = cmp.default_capabilities(capabilities) end
 
--- Pipenv の venv パス取得（グローバル venv を無視して Pipenv 優先）
-local function pipenv_venv()
-  local out = vim.fn.system("PIPENV_IGNORE_VIRTUALENVS=1 pipenv --venv 2>/dev/null"):gsub("%s+$", "")
-  if vim.v.shell_error ~= 0 or out == "" then return nil end
-  return out
-end
-
--- 相対パスをルート起点で絶対化
-local function absolute_extra_paths(root, rels)
-  local out = {}
-  for _, p in ipairs(rels or {}) do
-    local ap = util.path.is_absolute(p) and p or util.path.join(root, p)
-    table.insert(out, ap)
-  end
-  return out
-end
-
 -- ========= Pyright =========
+local function read_cmd(cmd)
+  local handle = io.popen(cmd)
+  if not handle then
+    return nil
+  end
+  local result = handle:read("*a") or ""
+  handle:close()
+  result = result:gsub("%s+$", "")
+  if result == "" then
+    return nil
+  end
+  return result
+end
+
+local function dir_exists(path)
+  return path and path ~= "" and vim.fn.isdirectory(path) == 1
+end
+
+local function file_exists(path)
+  return path and path ~= "" and vim.fn.filereadable(path) == 1
+end
+
+local function detect_venv(root)
+  local venv = os.getenv("VIRTUAL_ENV")
+  if venv and venv ~= "" and dir_exists(venv) then
+    return venv
+  end
+
+  if file_exists(root .. "/Pipfile") then
+    local cmd = "cd " .. vim.fn.shellescape(root) .. " && pipenv --venv 2>/dev/null"
+    local pipenv_venv = read_cmd(cmd)
+    if dir_exists(pipenv_venv) then
+      return pipenv_venv
+    end
+  end
+
+  if file_exists(root .. "/poetry.lock") or file_exists(root .. "/pyproject.toml") then
+    local cmd = "cd " .. vim.fn.shellescape(root) .. " && poetry env info -p 2>/dev/null"
+    local poetry_venv = read_cmd(cmd)
+    if dir_exists(poetry_venv) then
+      return poetry_venv
+    end
+  end
+
+  local dot_venv = root .. "/.venv"
+  if dir_exists(dot_venv) then
+    return dot_venv
+  end
+
+  return nil
+end
+
+local function detect_python(root)
+  local venv = detect_venv(root)
+  if venv then
+    local venv_python = venv .. "/bin/python"
+    if vim.fn.executable(venv_python) == 1 then
+      return venv_python, venv
+    end
+  end
+
+  -- local pyenv_python = read_cmd("cd " .. vim.fn.shellescape(root) .. " && pyenv which python 2>/dev/null")
+  -- if pyenv_python and vim.fn.executable(pyenv_python) == 1 then
+  --   return pyenv_python, nil
+  -- end
+
+  -- local system_python = read_cmd("which python 2>/dev/null")
+  -- if system_python and vim.fn.executable(system_python) == 1 then
+  --   return system_python, nil
+  -- end
+
+  -- return nil, nil
+end
+
+local python_path, venv = detect_python(vim.loop.cwd())
 vim.lsp.config("pyright", {
   capabilities = capabilities,
-  root_dir = util.root_pattern("Pipfile", ".git"),
-  on_new_config = function(cfg, root)
-    root = root or vim.loop.cwd()
-
-    local venv = pipenv_venv()
-    local src_abs = util.path.join(root, "src")
-    local dot_abs = root -- "."
-
-    local extra = absolute_extra_paths(root, { "src", "." })
-
-    cfg.settings = vim.tbl_deep_extend("force", cfg.settings or {}, {
-      python = {
-        analysis = {
-          extraPaths = extra,
-          diagnosticMode = "workspace",
-          autoSearchPaths = true,
-          useLibraryCodeForTypes = true,
-        },
-      },
-    })
-
-    local py_path_env = table.concat({
-      (vim.fn.isdirectory(src_abs) == 1) and src_abs or nil,
-      dot_abs,
-    }, ":")
-
-    cfg.cmd_env = vim.tbl_extend("force", cfg.cmd_env or {}, {
-      PYTHONPATH = py_path_env .. (vim.env.PYTHONPATH and (":" .. vim.env.PYTHONPATH) or ""),
-    })
-
-    if venv then
-      cfg.settings.python = cfg.settings.python or {}
-      cfg.settings.python.venvPath = util.path.dirname(venv)
-      cfg.settings.python.venv     = util.path.basename(venv)
-      cfg.cmd_env.VIRTUAL_ENV = venv
-      cfg.cmd_env.PATH = venv .. "/bin:" .. vim.env.PATH
-    end
-  end,
+  settings = {
+    python = {
+      pythonPath = python_path,
+      venvPath = vim.fn.fnamemodify(venv, ":h"),
+      venv = vim.fn.fnamemodify(venv, ":t"),
+    }
+  }
 })
 
 -- ========= lua =========
@@ -93,7 +120,7 @@ local vue_plugin = {
   name = "@vue/typescript-plugin",
   location = vue_language_server_path,
   languages = { "vue" },
-  -- configNamespace = "typescript",
+  configNamespace = "typescript",
   enableForWorkspaceTypeScriptVersions = true,
 }
 
@@ -107,7 +134,6 @@ local vtsls_config = {
         },
       },
     },
-    typescript = {},
   },
 }
 
