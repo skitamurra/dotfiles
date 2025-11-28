@@ -1,0 +1,72 @@
+$if bash
+  # ===== 基本設定 =====
+  set editing-mode vi
+  set keyseq-timeout 120
+  set completion-ignore-case on
+  set show-all-if-ambiguous on
+  set show-all-if-unmodified on
+  set bell-style none
+  set horizontal-scroll-mode off
+  set show-mode-in-prompt on
+  set mark-symlinked-directories on
+
+  # プロンプト左側にモード表示 (N / I)
+  set vi-cmd-mode-string "\1\e[36m\2N\1\e[0m\2 "
+  set vi-ins-mode-string "\1\e[32m\2I\1\e[0m\2 "
+
+  # ===== コマンドモード用キーマップ =====
+  set keymap vi-command
+
+  # "v" のデフォルト動作を潰す（不要なら削除）
+  "v": ""
+
+  # Ctrl+v で現在行を $EDITOR で編集
+  "\ev": edit-and-execute-command
+
+  # 履歴検索（C-p / C-n で前方一致）
+  "\C-p": history-search-backward
+  "\C-n": history-search-forward
+
+  # 画面クリア
+  "\C-l": clear-screen
+
+  # TAB 補完
+  TAB: complete
+  "\e[Z": reverse-menu-complete
+
+  # 行頭 / 行末
+  "\e[1~": beginning-of-line
+  "\e[4~": end-of-line
+
+  # Ctrl + ← / → で単語移動
+  "\e[1;5C": forward-word
+  "\e[1;5D": backward-word
+
+  # ===== インサートモード用キーマップ =====
+  set keymap vi-insert
+
+  # jj でノーマルモード（ESC）へ
+  "jj": vi-movement-mode
+
+  # Ctrl+v で現在行を $EDITOR で編集
+  "\ev": edit-and-execute-command
+
+  # 画面クリア
+  "\C-l": clear-screen
+
+  # 履歴検索（C-p / C-n）
+  "\C-p": history-search-backward
+  "\C-n": history-search-forward
+
+  # TAB 補完（インサート中でも有効）
+  TAB: complete
+  "\e[Z": reverse-menu-complete
+
+  # 行頭 / 行末
+  "\e[1~": beginning-of-line
+  "\e[4~": end-of-line
+
+  # Ctrl + ← / → で単語移動
+  "\e[1;5C": forward-word
+  "\e[1;5D": backward-word
+$endif
