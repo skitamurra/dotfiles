@@ -216,6 +216,8 @@ function M.centered_float_definition()
       reset_float_state()
 
       vim.cmd("edit " .. vim.fn.fnameescape(fname))
+      vim.wo.number = true
+      vim.wo.relativenumber = true
       vim.api.nvim_win_set_cursor(0, { r.start.line + 1, r.start.character })
       vim.cmd("normal! zz")
     end, { buffer = bufnr, nowait = true })
