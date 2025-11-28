@@ -1,4 +1,33 @@
 local wezterm = require("wezterm")
+local mux = wezterm.mux
+wezterm.on('gui-startup', function (cmd)
+  -- tab1
+  local tab1, pane1, window = mux.spawn_window(cmd or {})
+  pane1:send_text("note\n")
+  window:gui_window():maximize()
+
+  -- tab2
+  local _, root = window:spawn_tab({})
+  local left_top = root
+  local right_top = root:split({
+    direction = "Right",
+    size = 0.5,
+  })
+  left_top:send_text("cd docker\n")
+  right_top:send_text("cd auth\n")
+  left_top:split({
+    direction = "Bottom",
+    size = 0.5,
+  })
+  right_top:split({
+    direction = "Bottom",
+    size = 0.5,
+  })
+  -- tab3
+  window:spawn_tab({})
+
+  tab1:activate()
+end)
 
 ----------------------------------------------------
 -- require path 設定（WSL対応）
@@ -44,10 +73,6 @@ table.insert(package.searchers, 1, wsl_searcher)
 ----------------------------------------------------
 local config = wezterm.config_builder()
 
--- ウィンドウ初期サイズ
-config.initial_cols = 120
-config.initial_rows = 28
-
 -- フォント、カラー
 config.font_size = 12.0
 config.color_scheme = "Tokyo Night Moon"
@@ -75,13 +100,13 @@ config.default_domain = detect_wsl_domain()
 config.automatically_reload_config = true
 config.default_cursor_style = "BlinkingBar"
 config.window_close_confirmation = "NeverPrompt"
+-- config.show_close_tab_button_in_tabs = false
 
--- 背景関連
--- config.window_background_image = wezterm.home_dir .. "/path/to/your/image.png" -- 使うならちゃんと画像パスを書く
-config.window_background_opacity = 0.8
+-- config.window_background_image = wezterm.home_dir .. "/path/to/your/image.png"
+config.window_background_opacity = 0.7
 
 ----------------------------------------------------
--- Tab / タブバー表示
+-- Tab
 ----------------------------------------------------
 local function split(str, ts)
   if type(str) ~= "string" or str == "" then
@@ -97,9 +122,7 @@ local function split(str, ts)
   return t
 end
 
--- 各タブの「ディレクトリ名」を記憶しておくテーブル
 local title_cache = {}
-
 wezterm.on("update-status", function(_, pane)
   local pane_id = pane:pane_id()
   local process_info = pane:get_current_working_dir()
@@ -128,10 +151,7 @@ wezterm.on("update-status", function(_, pane)
   end
 end)
 
--- タイトルバーを非表示
 config.window_decorations = "RESIZE"
-
--- タブバー表示関連
 config.show_tabs_in_tab_bar = true
 -- config.hide_tab_bar_if_only_one_tab = true
 

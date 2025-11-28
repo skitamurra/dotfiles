@@ -206,11 +206,10 @@ _git_push_current_branch_only() {
   fi
 }
 
-# 既存の補完を壊しにくくするため -o bashdefault を付ける
 complete -o bashdefault -o default -F _git_push_current_branch_only git
 export PATH="$HOME/lua-language-server/bin:$PATH"
 
-[[ -s /usr/share/autojump/autojump.sh ]] && source /usr/share/autojump/autojump.sh
+eval "$(zoxide init bash)"
 cd() {
   # 引数なし → ホーム
   if [ $# -eq 0 ]; then
@@ -218,7 +217,7 @@ cd() {
     return
   fi
 
-  # 特殊ケースはそのまま cd
+  # 特殊ケース → そのまま cd
   case "$1" in
     -|/*|./*|../*|~* )
       builtin cd "$@"
@@ -226,22 +225,22 @@ cd() {
       ;;
   esac
 
-  # カレントから見てその名前のディレクトリが存在する場合は、普通に相対パスとして cd
+  # カレントディレクトリに存在する → 通常 cd
   if [ -d "$1" ]; then
     builtin cd "$1"
     return
   fi
 
-  # ↑ここまでで解決できない「曖昧な名前」だけ autojump に投げる
+  # zoxide に曖昧ジャンプ
   local dest
-  dest="$(autojump "$1" 2>/dev/null)"
+  dest="$(zoxide query -- "$1" 2>/dev/null)"
 
   if [ -n "$dest" ] && [ -d "$dest" ]; then
     builtin cd "$dest"
     return
   fi
 
-  # autojump でも見つからない → もともと存在しないパス扱い
+  # 見つからない → 通常のエラー
   printf 'cd: no such file or directory: %s\n' "$1" >&2
   return 1
 }
