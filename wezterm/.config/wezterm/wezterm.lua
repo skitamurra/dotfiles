@@ -138,17 +138,22 @@ wezterm.on("update-status", function(_, pane)
       cwd = cwd:gsub("/develop", "")
     end
 
-    if cwd == "" then
-      title_cache[pane_id] = "-"
-      return
+    if cwd ~= "" then
+      local dirs = split(cwd, "/")
+      Result = dirs[1] or "-"
     end
 
-    local dirs = split(cwd, "/")
-    local root_dir = dirs[1] or "-"
-    title_cache[pane_id] = root_dir
-  else
-    title_cache[pane_id] = "not info"
+    if Result == "-" then
+      local title = pane:get_title() or ""
+      if title ~= "" and title ~= "-" then
+        local fname = title:match("([^ ]+)$")
+        if fname and fname ~= "" then
+          Result = fname
+        end
+      end
+    end
   end
+  title_cache[pane_id] = Result
 end)
 
 config.window_decorations = "RESIZE"
