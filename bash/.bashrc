@@ -244,3 +244,12 @@ cd() {
   printf 'cd: no such file or directory: %s\n' "$1" >&2
   return 1
 }
+
+export ANDROID_HOME="$HOME/Android/Sdk"
+export ANDROID_SDK_ROOT="$ANDROID_HOME"
+export PATH="$PATH:$ANDROID_HOME/cmdline-tools/latest/bin"
+export PATH="$PATH:$ANDROID_HOME/platform-tools"
+export PATH="/usr/local/bin:$PATH"
+export JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
+export PATH="$JAVA_HOME/bin:$PATH"
+export PATH="$PATH:$HOME/.pub-cache/bin"
