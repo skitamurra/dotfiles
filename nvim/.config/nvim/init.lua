@@ -10,7 +10,6 @@ keymap.set("n", "J", "5j", { noremap = true, silent = true })
 keymap.set("n", "K", "5k", { noremap = true, silent = true })
 keymap.set("n", "gd", lsp_def.centered_float_definition)
 keymap.set("i", "jj", "<esc>", { silent = true })
-keymap.set("n", "<leader>f", "<cmd>NvimTreeFindFile<CR>", { noremap = true, silent = true })
 keymap.set('n', '<leader>F', vim.diagnostic.open_float)
 keymap.set("n", "<leader>w", "<C-w>", { silent = true })
 keymap.set("n", "<leader>v", "<C-w>v", { silent = true })
@@ -22,15 +21,14 @@ keymap.set("n", "<leader>o", "<C-w>o", { silent = true })
 keymap.set('n', '<leader>\\', "<Cmd>ToggleTerm<CR>", { noremap = true, silent = true, desc = "ToggleTerm"})
 keymap.set('t', '<leader>\\', "<Cmd>ToggleTerm<CR>", { noremap = true, silent = true, desc = "ToggleTerm (terminal)"})
 
-keymap.set("n", "<leader>t", function()
-  local api = require("nvim-tree.api")
-  local bufname = vim.api.nvim_buf_get_name(0)
-  local path = vim.fn.fnamemodify(bufname, ":p:h")
-  if vim.fn.isdirectory(path) == 1 then
-    vim.cmd("lcd " .. vim.fn.fnameescape(path))
+keymap.set("n", "*", function()
+  if vim.v.count > 0 then
+    return
   end
-  api.tree.toggle()
-end, { noremap = true, silent = true, desc = "Toggle nvim-tree with buffer dir" })
+  local view = vim.fn.winsaveview()
+  vim.cmd([[silent keepj normal! *]])
+  vim.fn.winrestview(view)
+end, { silent = true })
 
 keymap.set("n", "<leader>y", function()
   vim.fn.setreg("+", vim.fn.expand("%:p"))
@@ -59,6 +57,14 @@ keymap.set('n', '<C-S-f>', function()
     builtin.live_grep()
   end
 end, { desc = 'Live Grep (git-aware)' })
+
+keymap.set("n", "<leader>f", function()
+  local root = util.get_git_root()
+  if not root or root == "" then
+    root = vim.fn.getcwd()
+  end
+  require("fyler").open({ dir = root, kind = "float" })
+end, { noremap = true, silent = true, desc = "Fyler" })
 
 vim.opt.number = true
 vim.opt.relativenumber = true

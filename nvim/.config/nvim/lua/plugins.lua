@@ -32,13 +32,6 @@ require("lazy").setup({
   "rhysd/clever-f.vim",
   "tpope/vim-surround",
   {
-    "nvim-tree/nvim-tree.lua",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    config = function()
-      require("config.nvim-tree")
-    end
-  },
-  {
     "neovim/nvim-lspconfig",
     config = function()
       require("config.lsp.lsp")
@@ -201,7 +194,6 @@ require("lazy").setup({
     "akinsho/toggleterm.nvim",
     version = "*",
     opts = function()
-      local leader = vim.g.mapleader or " "
       return {
         direction = "float",
         float_opts = { border = "curved" },
@@ -326,9 +318,13 @@ require("lazy").setup({
     },
     config = true,
   },
-}, {
-  git = {
-    url_format = "git@github.com:%s.git",
+  {
+    "A7Lavinraj/fyler.nvim",
+    dependencies = { "nvim-mini/mini.icons" },
+    branch = "stable",
+    lazy = false,
+    opts = function()
+      return require("config.fyler")
+    end
   },
 })
-
