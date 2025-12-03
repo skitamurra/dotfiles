@@ -1,7 +1,7 @@
 $if bash
   # ===== 基本設定 =====
   set editing-mode vi
-  set keyseq-timeout 120
+  set keyseq-timeout 130
   set completion-ignore-case on
   set show-all-if-ambiguous on
   set show-all-if-unmodified on

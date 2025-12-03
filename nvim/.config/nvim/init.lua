@@ -66,6 +66,8 @@ keymap.set("n", "<leader>f", function()
   require("fyler").open({ dir = root, kind = "float" })
 end, { noremap = true, silent = true, desc = "Fyler" })
 
+vim.o.timeoutlen = 130
+vim.opt.cmdheight = 0
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.ignorecase = true

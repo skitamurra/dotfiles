@@ -228,18 +228,16 @@ require("lazy").setup({
     "dstein64/vim-startuptime"
   },
   {
-    "folke/which-key.nvim",
+    "emmanueltouzery/key-menu.nvim",
     event = "VeryLazy",
-    opts = {},
-    keys = {
-      {
-        "<leader>?",
-        function()
-          require("which-key").show({ global = false })
-        end,
-        desc = "Buffer Local Keymaps (which-key)",
-      },
-    },
+    config = function()
+      local keymenu = require("key-menu")
+      keymenu.set("n", "<leader>")
+      keymenu.set("n", "g")
+      keymenu.set("n", "z")
+      keymenu.set("n", "[")
+      keymenu.set("n", "]")
+    end,
   },
   {
     "nvim-lualine/lualine.nvim",
@@ -326,5 +324,16 @@ require("lazy").setup({
     opts = function()
       return require("config.fyler")
     end
+  },
+  {
+    "folke/noice.nvim",
+    event = "VeryLazy",
+    opts = {},
+    dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" }
+  },
+  {
+    "pmizio/typescript-tools.nvim",
+    dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+    opts = {},
   },
 })

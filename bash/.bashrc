@@ -120,9 +120,9 @@ if [ -f ~/.bash_completion.d/git-completion.bash ]; then
   source ~/.bash_completion.d/git-completion.bash
 fi
 
-export PYENV_ROOT="$HOME/.pyenv"
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
+# export PYENV_ROOT="$HOME/.pyenv"
+# command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+# eval "$(pyenv init -)"
 
 export PATH="$HOME/.nodenv/bin:$PATH"
 eval "$(nodenv init -)"
@@ -130,7 +130,7 @@ eval "$(nodenv init -)"
 export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
 
 export PATH="$HOME/dev/flutter/bin:$PATH"
-xrdb -load ~/.Xresources
+# xrdb -load ~/.Xresources
 export PATH="$HOME/develop/yzrh-utils/bin:$PATH"
 
 # Created by `pipx` on 2025-07-30 10:27:39

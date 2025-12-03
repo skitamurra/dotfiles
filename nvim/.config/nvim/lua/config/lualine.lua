@@ -1,6 +1,4 @@
--- Eviline config for lualine
--- Author: shadmansaleh
--- Credit: glepnir
+-- lua/config/lualine
 local lualine = require('lualine')
 
 -- Color table for highlights
@@ -202,16 +200,16 @@ ins_left {
 }
 
 -- Add components to right sections
-ins_right {
-  'o:encoding', -- option component same as &encoding in viml
-  fmt = string.upper, -- I'm not sure why it's upper case either ;)
-  cond = conditions.hide_in_width,
-  color = { fg = colors.cyan, gui = 'bold' },
-}
+-- ins_right {
+--   'o:encoding', -- option component same as &encoding in viml
+--   fmt = string.upper, -- I'm not sure why it's upper case either ;)
+--   cond = conditions.hide_in_width,
+--   color = { fg = colors.cyan, gui = 'bold' },
+-- }
 
--- ins_right { 'location' }
--- 
--- ins_right { 'progress', color = { fg = colors.fg, gui = 'bold' } }
+ins_right { 'location' }
+
+ins_right { 'progress', color = { fg = colors.fg, gui = 'bold' } }
 
 ins_right {
   'fileformat',
@@ -248,5 +246,4 @@ ins_right {
   padding = { left = 1 },
 }
 
--- Now don't forget to initialize lualine
 lualine.setup(config)
