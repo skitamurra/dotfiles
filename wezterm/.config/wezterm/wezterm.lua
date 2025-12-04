@@ -74,6 +74,7 @@ table.insert(package.searchers, 1, wsl_searcher)
 local config = wezterm.config_builder()
 
 -- フォント、カラー
+config.font = wezterm.font('HackGen Console', { weight = 'Bold'})
 config.font_size = 12.0
 config.color_scheme = "Tokyo Night Moon"
 config.use_ime = true

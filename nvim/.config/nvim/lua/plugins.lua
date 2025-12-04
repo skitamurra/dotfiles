@@ -176,20 +176,15 @@ require("lazy").setup({
       keymap("n", "<leader>w", "<cmd>bdelete<CR>", opts)
     end,
   },
-  { 'echasnovski/mini.cursorword',
-    version = '*',
-    config = function()
-      require("mini.cursorword").setup()
-    end
-  },
-  {
-    "nvimdev/indentmini.nvim",
-    config = function()
-      require("indentmini").setup({
-        exclude = { "markdown" }
-      })
-    end
-  },
+  "RRethy/vim-illuminate",
+  -- {
+  --   "nvimdev/indentmini.nvim",
+  --   config = function()
+  --     require("indentmini").setup({
+  --       exclude = { "markdown" }
+  --     })
+  --   end
+  -- },
   {
     "akinsho/toggleterm.nvim",
     version = "*",
@@ -228,16 +223,23 @@ require("lazy").setup({
     "dstein64/vim-startuptime"
   },
   {
-    "emmanueltouzery/key-menu.nvim",
+    "folke/which-key.nvim",
     event = "VeryLazy",
-    config = function()
-      local keymenu = require("key-menu")
-      keymenu.set("n", "<leader>")
-      keymenu.set("n", "g")
-      keymenu.set("n", "z")
-      keymenu.set("n", "[")
-      keymenu.set("n", "]")
-    end,
+    config = function ()
+      require("which-key").setup({
+        preset = "modern",
+        win = {
+          no_overlap = true,
+          border = "single",
+          padding = { 0, 1 },
+          title = false,
+        },
+        layout = {
+          width = { min = 18, max = 30 },
+          spacing = 2,
+        },
+      })
+    end
   },
   {
     "nvim-lualine/lualine.nvim",
@@ -246,7 +248,6 @@ require("lazy").setup({
       require("config.lualine")
     end
   },
-  { "simeji/winresizer" },
   {
     'nvimdev/lspsaga.nvim',
     config = function()
@@ -305,7 +306,6 @@ require("lazy").setup({
         { "<leader>g", "<cmd>LazyGit<cr>", desc = "LazyGit" }
     },
   },
-  { "simeji/winresizer" },
   { "folke/neodev.nvim" },
   {
     'nvim-flutter/flutter-tools.nvim',
@@ -332,8 +332,32 @@ require("lazy").setup({
     dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" }
   },
   {
-    "pmizio/typescript-tools.nvim",
-    dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
-    opts = {},
+    "max397574/better-escape.nvim",
+    event = { "BufReadPre", "BufWritePre", "BufNewFile" },
+    opts = {
+      timeout = 130,
+      default_mappings = false,
+      mappings = {
+        i = { j = { j = "<ESC>" } },
+        t = { j = { k = "<C-\\><C-n>" } },
+      },
+    },
+  },
+  {
+    "karb94/neoscroll.nvim",
+    config = function ()
+      require("neoscroll").setup()
+    end
+  },
+  {
+    "shellRaining/hlchunk.nvim",
+    event = { "BufReadPre", "BufNewFile" },
+    config = function()
+      require("hlchunk").setup({
+        indent = {
+          enable = true
+        }
+      })
+    end
   },
 })
