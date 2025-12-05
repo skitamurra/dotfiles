@@ -1,70 +1,21 @@
+if vim.env.LOGFILE or vim.env.WARMUP then
+  local start = vim.uv.hrtime()
+  vim.api.nvim_create_autocmd("User", {
+    once = true,
+    -- snacks.nvim の場合はここを
+    -- "SnacksDashboardOpened" とします。
+    pattern = "DashboardLoaded",
+    callback = function()
+      if vim.env.LOGFILE then
+        local finish = vim.uv.hrtime()
+        vim.fn.writefile({ tostring((finish - start) / 1e6) }, vim.env.LOGFILE, "a")
+      end
+      vim.schedule_wrap(vim.cmd.qall) { bang = true }
+    end,
+  })
+end
+vim.loader.enable()
 vim.g.mapleader = " "
-local keymap = vim.keymap
-local lsp_def = require("config.lsp.definition")
-local util = require("config.util")
-
-keymap.set("n", "<leader><leader>", ":<C-u>cd %:h<CR>", { noremap = true, silent = true })
-keymap.set("n", "H", "^", { noremap = true, silent = true })
-keymap.set("n", "L", "$", { noremap = true, silent = true })
-keymap.set("n", "J", "5j", { noremap = true, silent = true })
-keymap.set("n", "K", "5k", { noremap = true, silent = true })
-keymap.set("n", "gd", lsp_def.centered_float_definition)
-keymap.set('n', '<leader>F', vim.diagnostic.open_float)
-keymap.set("n", "<leader>w", "<C-w>", { silent = true })
-keymap.set("n", "<leader>v", "<C-w>v", { silent = true })
-keymap.set("n", "<leader>j", "<C-w>j", { silent = true })
-keymap.set("n", "<leader>k", "<C-w>k", { silent = true })
-keymap.set("n", "<leader>l", "<C-w>l", { silent = true })
-keymap.set("n", "<leader>q", "<C-w>q", { silent = true })
-keymap.set("n", "<leader>o", "<C-w>o", { silent = true })
-keymap.set('n', '<leader>\\', "<Cmd>ToggleTerm<CR>", { noremap = true, silent = true, desc = "ToggleTerm"})
-keymap.set('t', '<leader>\\', "<Cmd>ToggleTerm<CR>", { noremap = true, silent = true, desc = "ToggleTerm (terminal)"})
-
-keymap.set("n", "*", function()
-  if vim.v.count > 0 then
-    return
-  end
-  local view = vim.fn.winsaveview()
-  vim.cmd([[silent keepj normal! *]])
-  vim.fn.winrestview(view)
-end, { silent = true })
-
-keymap.set("n", "<leader>y", function()
-  vim.fn.setreg("+", vim.fn.expand("%:p"))
-  vim.notify("Copied: " .. vim.fn.expand("%:p"))
-end, { desc = "Copy file path" })
-
-keymap.set('n', '<C-p>', function()
-  local builtin = require('telescope.builtin')
-  local git_root = util.get_git_root()
-  if git_root then
-    local ok = pcall(builtin.git_files, { show_untracked = true })
-    if not ok then
-      builtin.find_files()
-    end
-  else
-    builtin.find_files()
-  end
-end, { desc = 'Files (git-aware)' })
-
-keymap.set('n', '<C-S-f>', function()
-  local builtin = require('telescope.builtin')
-  local git_root = util.get_git_root()
-  if git_root then
-    builtin.live_grep({ search_dirs = { git_root } })
-  else
-    builtin.live_grep()
-  end
-end, { desc = 'Live Grep (git-aware)' })
-
-keymap.set("n", "<leader>f", function()
-  local root = util.get_git_root()
-  if not root or root == "" then
-    root = vim.fn.getcwd()
-  end
-  require("fyler").open({ dir = root, kind = "float" })
-end, { noremap = true, silent = true, desc = "Fyler" })
-
 vim.o.timeoutlen = 130
 vim.opt.cmdheight = 0
 vim.opt.number = true
@@ -125,4 +76,5 @@ vim.diagnostic.config {
 }
 
 require("plugins")
-require("config.cmp")
+require("keymaps")
+

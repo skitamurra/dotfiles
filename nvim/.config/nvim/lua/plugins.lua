@@ -1,9 +1,10 @@
 -- ~/.config/nvim/lua/plugins.lua
-
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
-    "git", "clone", "--filter=blob:none",
+    "git",
+    "clone",
+    "--filter=blob:none",
     "https://github.com/folke/lazy.nvim.git",
     "--branch=stable",
     lazypath,
@@ -11,35 +12,57 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-require("lazy").setup({
+local plugins = {
+  ---------------------------------------------------------------------------
+  -- Syntax / Treesitter
+  ---------------------------------------------------------------------------
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
+    event = { "BufReadPost", "BufNewFile" },
     dependencies = {
-      "nvim-treesitter/nvim-treesitter-context"
+      "nvim-treesitter/nvim-treesitter-context",
     },
     config = function()
       require("config.nvim-treesitter")
-    end
+    end,
   },
+
+  ---------------------------------------------------------------------------
+  -- Telescope
+  ---------------------------------------------------------------------------
   {
     "nvim-telescope/telescope.nvim",
+    event = { "BufReadPost", "BufNewFile" },
+    cmd = "Telescope",
     dependencies = { "nvim-lua/plenary.nvim" },
-    config = function()
-      require("config.nvim-telescope")
-    end
   },
-  "rhysd/clever-f.vim",
-  "tpope/vim-surround",
+
+  ---------------------------------------------------------------------------
+  -- Basic motion / text objects
+  ---------------------------------------------------------------------------
+  {
+    "rhysd/clever-f.vim",
+    event = { "BufReadPost", "BufNewFile" },
+  },
+  {
+    "tpope/vim-surround",
+    event = { "BufReadPost", "BufNewFile" },
+  },
+
+  ---------------------------------------------------------------------------
+  -- LSP / Mason
+  ---------------------------------------------------------------------------
   {
     "neovim/nvim-lspconfig",
     config = function()
       require("config.lsp.lsp")
-    end
+    end,
   },
   {
     "williamboman/mason.nvim",
     build = ":MasonUpdate",
+    event = "VeryLazy",
     opts = {
       ui = { border = "rounded" },
       PATH = "prepend",
@@ -56,6 +79,7 @@ require("lazy").setup({
   {
     "WhoIsSethDaniel/mason-tool-installer.nvim",
     dependencies = { "williamboman/mason.nvim" },
+    event = "VeryLazy",
     opts = {
       ensure_installed = {
         "prettier",
@@ -65,34 +89,80 @@ require("lazy").setup({
     },
   },
   {
+    "linux-cultist/venv-selector.nvim",
+    dependencies = {
+      "neovim/nvim-lspconfig",
+      { "nvim-telescope/telescope.nvim", branch = "0.1.x", dependencies = { "nvim-lua/plenary.nvim" } }, -- optional: you can also use fzf-lua, snacks, mini-pick instead.
+    },
+    ft = "python", -- Load when opening Python files
+    keys = {
+      { ",v", "<cmd>VenvSelect<cr>" }, -- Open picker on keymap
+    },
+    opts = { -- this can be an empty lua table - just showing below for clarity.
+        search = {}, -- if you add your own searches, they go here.
+        options = {} -- if you add plugin options, they go here.
+    },
+  },
+
+  ---------------------------------------------------------------------------
+  -- Autopairs
+  ---------------------------------------------------------------------------
+  {
     "windwp/nvim-autopairs",
     event = "InsertEnter",
     config = function()
       require("config.nvim-autopairs")
-    end
+    end,
   },
-  -- 自動補完系
+
+  ---------------------------------------------------------------------------
+  -- Completion / Snippets / Icons
+  ---------------------------------------------------------------------------
   {
     "hrsh7th/nvim-cmp",
+    event = "InsertEnter",
     config = function()
       require("config.cmp")
-    end
+    end,
   },
-  { "hrsh7th/cmp-nvim-lsp" },
-  { "hrsh7th/cmp-buffer" },
-  { "hrsh7th/cmp-path" },
-  { "hrsh7th/cmp-cmdline" },
-  { "saadparwaiz1/cmp_luasnip" },
-  -- スニペット
-  { "L3MON4D3/LuaSnip" },
-  -- アイコン表示
-  { "onsails/lspkind.nvim" },
+  {
+    "hrsh7th/cmp-nvim-lsp",
+    event = "InsertEnter",
+  },
+  {
+    "hrsh7th/cmp-buffer",
+    event = "InsertEnter",
+  },
+  {
+    "hrsh7th/cmp-path",
+    event = "InsertEnter",
+  },
+  {
+    "hrsh7th/cmp-cmdline",
+    event = "CmdlineEnter",
+  },
+  {
+    "saadparwaiz1/cmp_luasnip",
+    event = "InsertEnter",
+  },
+  {
+    "L3MON4D3/LuaSnip",
+    event = "InsertEnter",
+  },
+  {
+    "onsails/lspkind.nvim",
+    event = "InsertEnter",
+  },
+
+  ---------------------------------------------------------------------------
+  -- Colorscheme
+  ---------------------------------------------------------------------------
   {
     "folke/tokyonight.nvim",
     lazy = false,
     priority = 1000,
     opts = {
-      style = "moon",       -- "night", "day", "moon"
+      style = "moon",
       transparent = true,
       styles = {
         sidebars = "transparent",
@@ -104,12 +174,10 @@ require("lazy").setup({
       vim.cmd.colorscheme("tokyonight")
     end,
   },
-  -- { 
-  --   "EdenEast/nightfox.nvim",
-  --   config = function()
-  --     vim.cmd.colorscheme("nightfox")
-  --   end,
-  -- },
+
+  ---------------------------------------------------------------------------
+  -- Git
+  ---------------------------------------------------------------------------
   {
     "lewis6991/gitsigns.nvim",
     event = { "BufReadPre", "BufNewFile" },
@@ -121,18 +189,24 @@ require("lazy").setup({
       })
     end,
   },
+
+  ---------------------------------------------------------------------------
+  -- UI helpers
+  ---------------------------------------------------------------------------
   {
     "norcalli/nvim-colorizer.lua",
+    event = { "BufReadPost", "BufNewFile" },
     config = function()
       require("colorizer").setup({
-        "*";
-        css = { rgb_fn = true };
-        html = { names = true };
+        "*",
+        css = { rgb_fn = true },
+        html = { names = true },
       }, { mode = "background" })
-    end
+    end,
   },
   {
     "rmagatti/auto-session",
+    lazy = false,
     config = function()
       require("auto-session").setup({
         enable = true,
@@ -145,17 +219,10 @@ require("lazy").setup({
   {
     "akinsho/bufferline.nvim",
     version = "*",
+    event = "VeryLazy",
     dependencies = "nvim-tree/nvim-web-devicons",
     config = function()
-      -- local function to_hex(n) return n and string.format("#%06x", n) or nil end
-      -- local function hl(name)
-      --   local ok, h = pcall(vim.api.nvim_get_hl, 0, { name = name, link = false })
-      --   return ok and h or {}
-      -- end
-      -- local TabLineSel   = hl("TabLineSel")
-      -- local bg_selected  = to_hex(TabLineSel.bg or StatusLine.bg or Normal.bg)
-
-      require("bufferline").setup {
+      require("bufferline").setup({
         options = {
           mode = "buffers",
           numbers = "none",
@@ -165,29 +232,17 @@ require("lazy").setup({
             { filetype = "NvimTree" },
           },
         },
-        --highlights = {
-        -- buffer_selected = { bg = bg_selected,  bold = true, italic = false },
-        --},
-      }
-      local keymap = vim.keymap.set
-      local opts = { silent = true, noremap = true }
-      keymap("n", "<leader>h", "<cmd>BufferLineCyclePrev<CR>", opts)
-      keymap("n", "<leader>l", "<cmd>BufferLineCycleNext<CR>", opts)
-      keymap("n", "<leader>w", "<cmd>bdelete<CR>", opts)
+      })
     end,
   },
-  "RRethy/vim-illuminate",
-  -- {
-  --   "nvimdev/indentmini.nvim",
-  --   config = function()
-  --     require("indentmini").setup({
-  --       exclude = { "markdown" }
-  --     })
-  --   end
-  -- },
+  {
+    "RRethy/vim-illuminate",
+    event = { "BufReadPost", "BufNewFile" },
+  },
   {
     "akinsho/toggleterm.nvim",
     version = "*",
+    cmd = { "ToggleTerm" },
     opts = function()
       return {
         direction = "float",
@@ -198,6 +253,7 @@ require("lazy").setup({
   },
   {
     "MeanderingProgrammer/render-markdown.nvim",
+    ft = { "markdown", "md" },
     dependencies = { "nvim-treesitter/nvim-treesitter" },
     opts = {
       heading = {
@@ -213,19 +269,21 @@ require("lazy").setup({
   },
   {
     "levouh/tint.nvim",
+    event = "VeryLazy",
     config = function()
       require("tint").setup({
-        tint = -80
+        tint = -80,
       })
-    end
+    end,
   },
   {
-    "dstein64/vim-startuptime"
+    "dstein64/vim-startuptime",
+    cmd = "StartupTime",
   },
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
-    config = function ()
+    config = function()
       require("which-key").setup({
         preset = "modern",
         win = {
@@ -239,80 +297,94 @@ require("lazy").setup({
           spacing = 2,
         },
       })
-    end
+    end,
   },
   {
     "nvim-lualine/lualine.nvim",
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    event = "VimEnter",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
       require("config.lualine")
-    end
+    end,
+  },
+
+  ---------------------------------------------------------------------------
+  -- LSP UI / Namu
+  ---------------------------------------------------------------------------
+  {
+    "nvimdev/lspsaga.nvim",
+    event = "LspAttach",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-tree/nvim-web-devicons",
+    },
+    config = function()
+      require("lspsaga").setup({
+        lightbulb = {
+          enable = false
+        }
+      })
+    end,
   },
   {
-    'nvimdev/lspsaga.nvim',
-    config = function()
-        require('lspsaga').setup({})
-    end,
-    dependencies = {
-        'nvim-treesitter/nvim-treesitter', -- optional
-        'nvim-tree/nvim-web-devicons',     -- optional
-    },
     "bassamsdata/namu.nvim",
+    cmd = { "Namu", "NamuSymbols" },
     opts = {
-        global = { },
-        namu_symbols = {
-            options = {},
-        },
+      global = {},
+      namu_symbols = {
+        options = {},
+      },
     },
-    vim.keymap.set("n", "<leader>ss", ":Namu symbols<cr>", {
-        desc = "Jump to LSP symbol",
-        silent = true,
-    }),
-    vim.keymap.set("n", "<leader>sw", ":Namu workspace<cr>", {
-        desc = "LSP Symbols - Workspace",
-        silent = true,
-    })
   },
-  {"sindrets/diffview.nvim"},
+
+  ---------------------------------------------------------------------------
+  -- Diff / Hop / Git UI
+  ---------------------------------------------------------------------------
+  {
+    "sindrets/diffview.nvim",
+    cmd = {
+      "DiffviewOpen",
+      "DiffviewClose",
+      "DiffviewToggleFiles",
+      "DiffviewFocusFiles",
+    },
+  },
   {
     "phaazon/hop.nvim",
     branch = "v2",
+    cmd = { "HopWord" },
     config = function()
-      require("hop").setup {
+      require("hop").setup({
         multi_windows = true,
-      }
+      })
     end,
-    vim.keymap.set("n", "<leader>a", "<cmd>HopWord<CR>", {
-        silent = true,
-    }),
   },
   {
     "kdheepak/lazygit.nvim",
     lazy = true,
     cmd = {
-        "LazyGit",
-        "LazyGitConfig",
-        "LazyGitCurrentFile",
-        "LazyGitFilter",
-        "LazyGitFilterCurrentFile",
+      "LazyGit",
+      "LazyGitConfig",
+      "LazyGitCurrentFile",
+      "LazyGitFilter",
+      "LazyGitFilterCurrentFile",
     },
-    -- optional for floating window border decoration
-    dependencies = {
-        "nvim-lua/plenary.nvim",
-    },
-    -- setting the keybinding for LazyGit with 'keys' is recommended in
-    -- order to load the plugin when the command is run for the first time
-    keys = {
-        { "<leader>g", "<cmd>LazyGit<cr>", desc = "LazyGit" }
-    },
+    dependencies = { "nvim-lua/plenary.nvim" },
   },
-  { "folke/neodev.nvim" },
+
+  ---------------------------------------------------------------------------
+  -- Dev helpers
+  ---------------------------------------------------------------------------
   {
-    'nvim-flutter/flutter-tools.nvim',
+    "folke/neodev.nvim",
+    event = "VeryLazy",
+  },
+  {
+    "nvim-flutter/flutter-tools.nvim",
     lazy = false,
     dependencies = {
-        'nvim-lua/plenary.nvim',
-        'stevearc/dressing.nvim', -- optional for vim.ui.select
+      "nvim-lua/plenary.nvim",
+      "stevearc/dressing.nvim",
     },
     config = true,
   },
@@ -323,13 +395,16 @@ require("lazy").setup({
     lazy = false,
     opts = function()
       return require("config.fyler")
-    end
+    end,
   },
   {
     "folke/noice.nvim",
     event = "VeryLazy",
     opts = {},
-    dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" }
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "rcarriga/nvim-notify",
+    },
   },
   {
     "max397574/better-escape.nvim",
@@ -345,9 +420,10 @@ require("lazy").setup({
   },
   {
     "karb94/neoscroll.nvim",
-    config = function ()
+    event = { "BufWinEnter", "WinScrolled" },
+    config = function()
       require("neoscroll").setup()
-    end
+    end,
   },
   {
     "shellRaining/hlchunk.nvim",
@@ -355,9 +431,11 @@ require("lazy").setup({
     config = function()
       require("hlchunk").setup({
         indent = {
-          enable = true
-        }
+          enable = true,
+        },
       })
-    end
+    end,
   },
-})
+}
+
+require("lazy").setup(plugins)
