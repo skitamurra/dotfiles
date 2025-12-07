@@ -16,13 +16,11 @@ local plugins = {
   ---------------------------------------------------------------------------
   -- Syntax / Treesitter
   ---------------------------------------------------------------------------
+  { "nvim-treesitter/nvim-treesitter-context", lazy = true },
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
-    event = { "BufReadPost", "BufNewFile" },
-    dependencies = {
-      "nvim-treesitter/nvim-treesitter-context",
-    },
+    lazy = true,
     config = function()
       require("config.nvim-treesitter")
     end,
@@ -31,11 +29,10 @@ local plugins = {
   ---------------------------------------------------------------------------
   -- Telescope
   ---------------------------------------------------------------------------
+  { "nvim-lua/plenary.nvim", lazy = true },
   {
     "nvim-telescope/telescope.nvim",
-    event = { "BufReadPost", "BufNewFile" },
-    cmd = "Telescope",
-    dependencies = { "nvim-lua/plenary.nvim" },
+    cmd = { "Telescope" },
   },
 
   ---------------------------------------------------------------------------
@@ -62,7 +59,7 @@ local plugins = {
   {
     "williamboman/mason.nvim",
     build = ":MasonUpdate",
-    event = "VeryLazy",
+    lazy = true,
     opts = {
       ui = { border = "rounded" },
       PATH = "prepend",
@@ -70,7 +67,6 @@ local plugins = {
   },
   {
     "williamboman/mason-lspconfig.nvim",
-    dependencies = { "williamboman/mason.nvim" },
     opts = {
       ensure_installed = { "pyright", "vtsls", "lua_ls" },
       automatic_installation = true,
@@ -78,7 +74,6 @@ local plugins = {
   },
   {
     "WhoIsSethDaniel/mason-tool-installer.nvim",
-    dependencies = { "williamboman/mason.nvim" },
     event = "VeryLazy",
     opts = {
       ensure_installed = {
@@ -86,21 +81,6 @@ local plugins = {
         "eslint_d",
       },
       run_on_start = true,
-    },
-  },
-  {
-    "linux-cultist/venv-selector.nvim",
-    dependencies = {
-      "neovim/nvim-lspconfig",
-      { "nvim-telescope/telescope.nvim", branch = "0.1.x", dependencies = { "nvim-lua/plenary.nvim" } }, -- optional: you can also use fzf-lua, snacks, mini-pick instead.
-    },
-    ft = "python", -- Load when opening Python files
-    keys = {
-      { ",v", "<cmd>VenvSelect<cr>" }, -- Open picker on keymap
-    },
-    opts = { -- this can be an empty lua table - just showing below for clarity.
-        search = {}, -- if you add your own searches, they go here.
-        options = {} -- if you add plugin options, they go here.
     },
   },
 
@@ -181,7 +161,6 @@ local plugins = {
   {
     "lewis6991/gitsigns.nvim",
     event = { "BufReadPre", "BufNewFile" },
-    dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
       require("gitsigns").setup({
         current_line_blame = true,
@@ -206,7 +185,7 @@ local plugins = {
   },
   {
     "rmagatti/auto-session",
-    lazy = false,
+    event = "VeryLazy",
     config = function()
       require("auto-session").setup({
         enable = true,
@@ -216,11 +195,11 @@ local plugins = {
       })
     end,
   },
+  { "nvim-tree/nvim-web-devicons", lazy = true },
   {
     "akinsho/bufferline.nvim",
     version = "*",
     event = "VeryLazy",
-    dependencies = "nvim-tree/nvim-web-devicons",
     config = function()
       require("bufferline").setup({
         options = {
@@ -301,8 +280,7 @@ local plugins = {
   },
   {
     "nvim-lualine/lualine.nvim",
-    event = "VimEnter",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    event = "VeryLazy",
     config = function()
       require("config.lualine")
     end,
@@ -314,10 +292,6 @@ local plugins = {
   {
     "nvimdev/lspsaga.nvim",
     event = "LspAttach",
-    dependencies = {
-      "nvim-treesitter/nvim-treesitter",
-      "nvim-tree/nvim-web-devicons",
-    },
     config = function()
       require("lspsaga").setup({
         lightbulb = {
@@ -369,7 +343,6 @@ local plugins = {
       "LazyGitFilter",
       "LazyGitFilterCurrentFile",
     },
-    dependencies = { "nvim-lua/plenary.nvim" },
   },
 
   ---------------------------------------------------------------------------
@@ -379,38 +352,33 @@ local plugins = {
     "folke/neodev.nvim",
     event = "VeryLazy",
   },
+  { "stevearc/dressing.nvim", lazy = true },
   {
     "nvim-flutter/flutter-tools.nvim",
-    lazy = false,
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "stevearc/dressing.nvim",
-    },
+    ft = { "dart" },
     config = true,
   },
+  { "nvim-mini/mini.icons", lazy = true },
   {
     "A7Lavinraj/fyler.nvim",
-    dependencies = { "nvim-mini/mini.icons" },
     branch = "stable",
-    lazy = false,
+    cmd = { "Fyler" },
     opts = function()
       return require("config.fyler")
     end,
   },
+  { "MunifTanjim/nui.nvim", lazy = true },
+  { "rcarriga/nvim-notify", lazy = true },
   {
     "folke/noice.nvim",
     event = "VeryLazy",
     opts = {},
-    dependencies = {
-      "MunifTanjim/nui.nvim",
-      "rcarriga/nvim-notify",
-    },
   },
   {
     "max397574/better-escape.nvim",
     event = { "BufReadPre", "BufWritePre", "BufNewFile" },
     opts = {
-      timeout = 130,
+      timeout = 135,
       default_mappings = false,
       mappings = {
         i = { j = { j = "<ESC>" } },
@@ -436,6 +404,13 @@ local plugins = {
       })
     end,
   },
+  {
+    "nvimtools/hydra.nvim",
+    event = { "BufReadPre", "BufNewFile" },
+    config = function()
+      require("config.hydra")
+    end
+  }
 }
 
 require("lazy").setup(plugins)

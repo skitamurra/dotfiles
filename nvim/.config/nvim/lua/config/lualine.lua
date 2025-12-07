@@ -153,7 +153,7 @@ ins_left {
   function()
     local fullpath = vim.fn.expand("%:p")
     local relpath = vim.fn.expand("%:.")
-    local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
+    local git_root = require("config.util").get_git_root()
     if vim.v.shell_error ~= 0 or not git_root or git_root == "" then
       return relpath
     end
