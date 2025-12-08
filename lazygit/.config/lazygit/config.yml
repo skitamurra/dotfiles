@@ -1,0 +1,14 @@
+gui:
+  nerdFontsVersion: "3"
+git:
+  paging:
+    colorArg: always
+    pager: delta --dark --paging=never --line-numbers --hyperlinks
+# customCommands:
+#   - key: "<enter>"
+#     context: "files"
+#     description: "Show git diff in nvim float"
+#     command: >
+#       nvim --server "$NVIM" --remote-expr
+#       'v:lua.require("config.util").open_diff("{{.SelectedFile.Name}}")'
+#     output: none

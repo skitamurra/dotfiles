@@ -72,17 +72,17 @@ local plugins = {
       automatic_installation = true,
     },
   },
-  {
-    "WhoIsSethDaniel/mason-tool-installer.nvim",
-    event = "VeryLazy",
-    opts = {
-      ensure_installed = {
-        "prettier",
-        "eslint_d",
-      },
-      run_on_start = true,
-    },
-  },
+  -- {
+  --   "WhoIsSethDaniel/mason-tool-installer.nvim",
+  --   event = "VeryLazy",
+  --   opts = {
+  --     ensure_installed = {
+  --       "prettier",
+  --       "eslint_d",
+  --     },
+  --     run_on_start = true,
+  --   },
+  -- },
 
   ---------------------------------------------------------------------------
   -- Autopairs
@@ -185,7 +185,6 @@ local plugins = {
   },
   {
     "rmagatti/auto-session",
-    event = "VeryLazy",
     config = function()
       require("auto-session").setup({
         enable = true,
@@ -410,6 +409,11 @@ local plugins = {
     config = function()
       require("config.hydra")
     end
+  },
+  {
+    "folke/trouble.nvim",
+    opts = {}, -- for default options, refer to the configuration section for custom setup.
+    cmd = "Trouble",
   }
 }
 

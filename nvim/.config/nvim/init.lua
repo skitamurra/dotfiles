@@ -60,3 +60,4 @@ vim.diagnostic.config {
 
 require("plugins")
 require("keymaps")
+require("config.util")
