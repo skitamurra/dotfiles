@@ -377,7 +377,7 @@ local plugins = {
     "max397574/better-escape.nvim",
     event = { "BufReadPre", "BufWritePre", "BufNewFile" },
     opts = {
-      timeout = 135,
+      timeout = 150,
       default_mappings = false,
       mappings = {
         i = { j = { j = "<ESC>" } },
@@ -414,7 +414,25 @@ local plugins = {
     "folke/trouble.nvim",
     opts = {}, -- for default options, refer to the configuration section for custom setup.
     cmd = "Trouble",
-  }
+  },
+  {
+    "folke/snacks.nvim",
+    opts = {
+      image = {
+        -- your image configuration comes here
+        -- or leave it empty to use the default settings
+        -- refer to the configuration section below
+      }
+    }
+  },
+  {
+    "potamides/pantran.nvim",
+    cmd = "Pantran",
+    config = function()
+      require("config.pantran")
+    end,
+  },
+  "vim-jp/vimdoc-ja",
 }
 
 require("lazy").setup(plugins)

@@ -1,16 +1,15 @@
 local Hydra = require("hydra")
--- local cmd = require("hydra.keymap-util").cmd
 
 Hydra({
   name = "Buffer",
   hint = [[ Buffer Mode
  _h_: prev   _l_: next   _w_: close   _q_: quit ]],
   mode = "n",
-  body = "<leader>b",
+  body = "<leader>l",
   heads = {
-    { "h", function() vim.cmd("BufferLineCyclePrev") end, { private = false } },
-    { "l", function() vim.cmd("BufferLineCycleNext") end, { private = false } },
-    { "w", function() vim.cmd("bdelete") end, { private = false } },
+    { "h", function() vim.cmd("BufferLineCyclePrev") end, { desc = "prev" } },
+    { "l", function() vim.cmd("BufferLineCycleNext") end, { desc = "next" } },
+    { "w", function() vim.cmd("bdelete") end, { desc = "close" } },
     { "q", nil, { exit = true }, },
   },
 })
