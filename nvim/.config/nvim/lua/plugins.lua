@@ -33,6 +33,13 @@ local plugins = {
   {
     "nvim-telescope/telescope.nvim",
     cmd = { "Telescope" },
+    config = function()
+      require("telescope").setup({
+        defaults = {
+          mappings = { n = { ["q"] = require("telescope.actions").close, } },
+        },
+      })
+    end,
   },
 
   ---------------------------------------------------------------------------
@@ -72,17 +79,6 @@ local plugins = {
       automatic_installation = true,
     },
   },
-  -- {
-  --   "WhoIsSethDaniel/mason-tool-installer.nvim",
-  --   event = "VeryLazy",
-  --   opts = {
-  --     ensure_installed = {
-  --       "prettier",
-  --       "eslint_d",
-  --     },
-  --     run_on_start = true,
-  --   },
-  -- },
 
   ---------------------------------------------------------------------------
   -- Autopairs
@@ -184,15 +180,11 @@ local plugins = {
     end,
   },
   {
-    "rmagatti/auto-session",
-    config = function()
-      require("auto-session").setup({
-        enable = true,
-        auto_save = true,
-        auto_restore = true,
-        auto_create = true,
-      })
-    end,
+    "folke/persistence.nvim",
+    event = "BufReadPre",
+    opts = {
+      options = { "buffers", "curdir", "tabpages", "winsize" },
+    },
   },
   { "nvim-tree/nvim-web-devicons", lazy = true },
   {
@@ -392,17 +384,17 @@ local plugins = {
       require("neoscroll").setup()
     end,
   },
-  {
-    "shellRaining/hlchunk.nvim",
-    event = { "BufReadPre", "BufNewFile" },
-    config = function()
-      require("hlchunk").setup({
-        indent = {
-          enable = true,
-        },
-      })
-    end,
-  },
+  -- {
+  --   "shellRaining/hlchunk.nvim",
+  --   event = { "BufReadPre", "BufNewFile" },
+  --   config = function()
+  --     require("hlchunk").setup({
+  --       indent = {
+  --         enable = true,
+  --       },
+  --     })
+  --   end,
+  -- },
   {
     "nvimtools/hydra.nvim",
     event = { "BufReadPre", "BufNewFile" },
@@ -417,13 +409,10 @@ local plugins = {
   },
   {
     "folke/snacks.nvim",
-    opts = {
-      image = {
-        -- your image configuration comes here
-        -- or leave it empty to use the default settings
-        -- refer to the configuration section below
-      }
-    }
+    lazy = false,
+    config = function ()
+      require("config.snacks")
+    end
   },
   {
     "potamides/pantran.nvim",
@@ -432,7 +421,10 @@ local plugins = {
       require("config.pantran")
     end,
   },
-  "vim-jp/vimdoc-ja",
+  {
+    "vim-jp/vimdoc-ja",
+    lazy = true,
+  },
 }
 
 require("lazy").setup(plugins)

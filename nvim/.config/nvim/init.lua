@@ -58,6 +58,15 @@ vim.diagnostic.config {
   },
 }
 
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = function()
+    local git_root = require("config.util").get_git_root()
+    if git_root then
+      vim.cmd("cd " .. git_root)
+    end
+  end,
+})
+
 require("plugins")
 require("keymaps")
 require("config.util")
