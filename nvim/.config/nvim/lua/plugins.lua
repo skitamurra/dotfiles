@@ -29,18 +29,18 @@ local plugins = {
   ---------------------------------------------------------------------------
   -- Telescope
   ---------------------------------------------------------------------------
-  { "nvim-lua/plenary.nvim", lazy = true },
-  {
-    "nvim-telescope/telescope.nvim",
-    cmd = { "Telescope" },
-    config = function()
-      require("telescope").setup({
-        defaults = {
-          mappings = { n = { ["q"] = require("telescope.actions").close, } },
-        },
-      })
-    end,
-  },
+  -- { "nvim-lua/plenary.nvim", lazy = true },
+  -- {
+  --   "nvim-telescope/telescope.nvim",
+  --   cmd = { "Telescope" },
+  --   config = function()
+  --     require("telescope").setup({
+  --       defaults = {
+  --         mappings = { n = { ["q"] = require("telescope.actions").close, } },
+  --       },
+  --     })
+  --   end,
+  -- },
 
   ---------------------------------------------------------------------------
   -- Basic motion / text objects
@@ -242,7 +242,7 @@ local plugins = {
     event = "VeryLazy",
     config = function()
       require("tint").setup({
-        tint = -80,
+        tint = -55,
       })
     end,
   },

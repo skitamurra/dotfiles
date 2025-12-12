@@ -64,20 +64,21 @@ Map("n", "<leader>y", function()
 end, { desc = "Copy file path" })
 
 Map("n", "<leader>p", function()
-  local builtin = require("telescope.builtin")
-  if pcall(builtin.git_files, { show_untracked = true }) then
+  local snacks = require("snacks")
+  if util.get_git_root() then
+    snacks.picker.git_files({ untracked = true })
     return
   end
-  builtin.find_files()
+  snacks.picker.files()
 end, { desc = "File grep" })
 
 Map('n', '<leader>F', function()
-  local builtin = require('telescope.builtin')
+  local snacks = require("snacks")
   local git_root = util.get_git_root()
   if git_root then
-    builtin.live_grep({ search_dirs = { git_root } })
+    snacks.picker("live_grep", { dirs = { git_root } })
   else
-    builtin.live_grep()
+    snacks.picker("live_grep")
   end
 end, { desc = 'Fuzzy find' })
 
