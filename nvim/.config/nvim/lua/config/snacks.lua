@@ -1,33 +1,26 @@
 local Snacks = require("snacks")
+local util = require("config.util")
 
 Snacks.setup({
   dashboard = {
     enabled =true,
     width = 60,
-    row = nil, -- dashboard position. nil for center
-    col = nil, -- dashboard position. nil for center
-    pane_gap = 4, -- empty columns between vertical panes
+    row = nil,
+    col = nil,
+    pane_gap = 4,
     autokeys = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", -- autokey sequence
-    -- These settings are used by some built-in sections
     preset = {
-      -- Defaults to a picker that supports `fzf-lua`, `telescope.nvim` and `mini.pick`
-      ---@type fun(cmd:string, opts:table)|nil
-      pick = nil,
-      -- Used by the `keys` section to show keymaps.
-      -- Set your custom keymaps here.
-      -- When using a function, the `items` argument are the default keymaps.
       ---@type snacks.dashboard.Item[]
       keys = {
         { icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
         { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
         { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
-        -- { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
-        { icon = " ", key = "s", desc = "Restore Session", section = "session" },
+        { icon = " ", key = "s", desc = "Restore Session", action = function() require("persistence").select() util.esc() end },
+        { icon = " ", key = "S", desc = "Last Session", action = function() require("persistence").load({ last = true }) end },
         { icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
-        { icon = " ", key = "c", desc = "Config", action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
+        { icon = " ", key = "c", desc = "Config", action = function() Snacks.picker.files({cwd = vim.fn.stdpath('config')}) end },
         { icon = " ", key = "q", desc = "Quit", action = ":qa" },
       },
-      -- Used by the `header` section
       header = [[
 ░░░    ░░ ░░░░░░░  ░░░░░░  ░░    ░░ ░░ ░░░    ░░░ 
 ▒▒▒▒   ▒▒ ▒▒      ▒▒    ▒▒ ▒▒    ▒▒ ▒▒ ▒▒▒▒  ▒▒▒▒ 
@@ -36,7 +29,6 @@ Snacks.setup({
 ██   ████ ███████  ██████    ████   ██ ██      ██ 
       ]],
     },
-    -- item field formatters
     formats = {
       icon = function(item)
         if item.file and item.icon == "file" or item.icon == "directory" then
@@ -72,26 +64,42 @@ Snacks.setup({
       -- },
       { section = "keys", gap = 1, padding = 1 },
       -- { pane = 1, icon = " ", title = "Recent Files", section = "recent_files", indent = 2, padding = 1 },
-      { pane = 1, icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
+      { section = "projects", icon = " ", title = "Projects", indent = 2, padding = 1 },
       -- {
       --   section = "terminal",
-      --   cmd = "pokemon-colorscripts -n rayquaza --no-title; sleep .1",
+      --   cmd = "pokemon-colorscripts -r --no-title; sleep .1",
       --   random = 10,
       --   pane = 2,
-      --   -- indent = 4,
-      --   height = 40,
+      --   indent = 4,
+      --   height = 30,
       -- },
       { section = "startup" },
     },
   },
   terminal = {
     enabled = true,
-    win = { style = ""}
+    win = {
+      style = "float",
+      width = 0.8,
+      height = 0.78,
+      border = "rounded",
+    },
   },
   -- explorer = { enabled = true },
   indent = { enabled = true },
   -- input = { enabled = true },
-  picker = { enabled = true },
+  picker = {
+    sources = {
+      gh_issue = {
+        -- your gh_issue picker configuration comes here
+        -- or leave it empty to use the default settings
+      },
+      gh_pr = {
+        -- your gh_pr picker configuration comes here
+        -- or leave it empty to use the default settings
+      }
+    }
+  },
   notifier = { enabled = true },
   -- quickfile = { enabled = true },
   -- scope = { enabled = true },

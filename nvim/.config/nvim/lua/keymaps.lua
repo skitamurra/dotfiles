@@ -1,4 +1,4 @@
-local lsp_def = require("config.lsp.definition")
+local lsp_def = require("config.definition")
 local util = require("config.util")
 
 function Map(mode, lhs, rhs, opts)
@@ -44,18 +44,17 @@ Map("n", "*", function()
   vim.fn.winrestview(view)
 end)
 
-Map("n", "<leader><leader>", ":<C-u>cd %:h<CR>", { desc = "CD to current file dir" })
+Map("n", "<leader><leader>", ":<C-u>lcd %:h<CR>", { desc = "CD to current file dir" })
 Map("n", "gd", lsp_def.centered_float_definition, { desc = "Go to definition" })
+Map("n", "gD", function() require("snacks").picker.lsp_definitions({ auto_confirm = false }) util.esc() end, { desc = "Definitions list" })
 Map('n', '<leader>d', vim.diagnostic.open_float, { desc = "Show diagnostics" })
--- Map("n", "<leader>w", "<C-w>", { silent = true, desc = "Window prefix" })
-Map("n", "<leader>g", function() vim.cmd("LazyGit") end, { desc = "LazyGit" })
+Map("n", "<leader>gg", function() vim.cmd("LazyGit") end, { desc = "LazyGit" })
 Map("n", "<leader>a", function() vim.cmd("HopWord") end, { desc = "HopWord" })
-Map({ "n", "t" }, "<leader>\\", function() vim.cmd("ToggleTerm") end, { desc = "ToggleTerm" })
+Map({ "n", "t" }, "<leader>\\", function() require("snacks").terminal.toggle() end, { desc = "ToggleTerm" })
 Map("n", "<leader>s", function() vim.cmd("Namu symbols") end, { desc = "Jump to LSP symbol" })
 Map({"n", "v"}, "<leader>t", "<cmd>Pantran<CR>", { desc = "Show Translate Window" })
 Map("n", "<leader>l", "", { desc = "Buffer mode"})
 Map("n", "<leader>qs", function() require("persistence").select() end, { desc = "Select a session to load" })
-Map("n", "<leader>ql", function() require("persistence").load({ last = true }) end, { desc = "Load the last session" })
 Map("n", "<leader>qd", function() require("persistence").stop() end, { desc = "Stop Persistence" })
 
 Map("n", "<leader>y", function()
@@ -74,12 +73,11 @@ end, { desc = "File grep" })
 
 Map('n', '<leader>F', function()
   local snacks = require("snacks")
-  local git_root = util.get_git_root()
-  if git_root then
-    snacks.picker("live_grep", { dirs = { git_root } })
-  else
-    snacks.picker("live_grep")
+  if util.get_git_root() then
+    snacks.picker.git_grep()
+    return
   end
+  snacks.picker.grep()
 end, { desc = 'Fuzzy find' })
 
 Map("n", "<leader>f", function()

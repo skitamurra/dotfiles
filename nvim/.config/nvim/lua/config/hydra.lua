@@ -9,7 +9,7 @@ Hydra({
   heads = {
     { "h", function() vim.cmd("BufferLineCyclePrev") end, { desc = "prev" } },
     { "l", function() vim.cmd("BufferLineCycleNext") end, { desc = "next" } },
-    { "w", function() vim.cmd("bdelete") end, { desc = "close" } },
+    { "w", function() require("snacks").bufdelete() end, { desc = "close" } },
     { "q", nil, { exit = true }, },
   },
 })

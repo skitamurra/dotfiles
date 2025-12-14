@@ -58,15 +58,25 @@ vim.diagnostic.config {
   },
 }
 
-vim.api.nvim_create_autocmd("VimEnter", {
+vim.api.nvim_create_autocmd("BufRead", {
   callback = function()
     local git_root = require("config.util").get_git_root()
     if git_root then
-      vim.cmd("cd " .. git_root)
+      vim.cmd("lcd " .. git_root)
+    else
+      vim.cmd("lcd %:h")
     end
+  end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "help",
+  callback = function()
+    vim.cmd("wincmd L | :vert resize 80")
   end,
 })
 
 require("plugins")
 require("keymaps")
 require("config.util")
+require("lsp")

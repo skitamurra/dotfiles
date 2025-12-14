@@ -12,35 +12,40 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+local opts = {
+  defaults = { lazy = true },
+  performance = {
+    rtp = {
+      disabled_plugins = {
+        "gzip",
+        "matchit",
+        "matchparen",
+        "netrwPlugin",
+        "tarPlugin",
+        "tohtml",
+        "tutor",
+        "zipPlugin",
+        "editorconfig",
+        "man",
+        "osc52",
+        "spellfile",
+      },
+    },
+  },
+}
+
 local plugins = {
   ---------------------------------------------------------------------------
   -- Syntax / Treesitter
   ---------------------------------------------------------------------------
-  { "nvim-treesitter/nvim-treesitter-context", lazy = true },
+  "nvim-treesitter/nvim-treesitter-context",
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
-    lazy = true,
     config = function()
       require("config.nvim-treesitter")
     end,
   },
-
-  ---------------------------------------------------------------------------
-  -- Telescope
-  ---------------------------------------------------------------------------
-  -- { "nvim-lua/plenary.nvim", lazy = true },
-  -- {
-  --   "nvim-telescope/telescope.nvim",
-  --   cmd = { "Telescope" },
-  --   config = function()
-  --     require("telescope").setup({
-  --       defaults = {
-  --         mappings = { n = { ["q"] = require("telescope.actions").close, } },
-  --       },
-  --     })
-  --   end,
-  -- },
 
   ---------------------------------------------------------------------------
   -- Basic motion / text objects
@@ -59,26 +64,29 @@ local plugins = {
   ---------------------------------------------------------------------------
   {
     "neovim/nvim-lspconfig",
-    config = function()
-      require("config.lsp.lsp")
-    end,
+    -- lazy = false,
+    event = { "BufReadPre", "BufNewFile" },
+    -- config = function()
+    --   require("config.lsp.lsp")
+    -- end,
   },
   {
     "williamboman/mason.nvim",
+    cmd = "Mason",
     build = ":MasonUpdate",
-    lazy = true,
     opts = {
       ui = { border = "rounded" },
       PATH = "prepend",
     },
   },
-  {
-    "williamboman/mason-lspconfig.nvim",
-    opts = {
-      ensure_installed = { "pyright", "vtsls", "lua_ls" },
-      automatic_installation = true,
-    },
-  },
+  -- {
+  --   "williamboman/mason-lspconfig.nvim",
+  --   lazy = false,
+  --   opts = {
+  --     ensure_installed = { "pyright", "vtsls", "lua_ls" },
+  --     automatic_installation = true,
+  --   },
+  -- },
 
   ---------------------------------------------------------------------------
   -- Autopairs
@@ -186,7 +194,7 @@ local plugins = {
       options = { "buffers", "curdir", "tabpages", "winsize" },
     },
   },
-  { "nvim-tree/nvim-web-devicons", lazy = true },
+  "nvim-tree/nvim-web-devicons",
   {
     "akinsho/bufferline.nvim",
     version = "*",
@@ -201,6 +209,9 @@ local plugins = {
           offsets = {
             { filetype = "NvimTree" },
           },
+          custom_filter = function(buf)
+            return vim.bo[buf].filetype ~= "help"
+          end,
         },
       })
     end,
@@ -326,7 +337,6 @@ local plugins = {
   },
   {
     "kdheepak/lazygit.nvim",
-    lazy = true,
     cmd = {
       "LazyGit",
       "LazyGitConfig",
@@ -349,7 +359,7 @@ local plugins = {
     ft = { "dart" },
     config = true,
   },
-  { "nvim-mini/mini.icons", lazy = true },
+  "nvim-mini/mini.icons",
   {
     "A7Lavinraj/fyler.nvim",
     branch = "stable",
@@ -358,16 +368,47 @@ local plugins = {
       return require("config.fyler")
     end,
   },
-  { "MunifTanjim/nui.nvim", lazy = true },
-  { "rcarriga/nvim-notify", lazy = true },
+  "MunifTanjim/nui.nvim",
+  "rcarriga/nvim-notify",
   {
     "folke/noice.nvim",
     event = "VeryLazy",
-    opts = {},
+      opts = {
+        views = {
+        cmdline_popup = {
+          position = {
+            row = "50%",
+            col = "50%",
+          },
+          size = {
+            width = 60,
+            height = "auto",
+          },
+        },
+        popupmenu = {
+          relative = "editor",
+          position = {
+            row = 27,
+            col = "50%",
+          },
+          size = {
+            width = 60,
+            height = 10,
+          },
+          border = {
+            style = "rounded",
+            padding = { 0, 1 },
+          },
+          win_options = {
+            winhighlight = { Normal = "Normal", FloatBorder = "DiagnosticInfo" },
+          },
+        },
+      },
+    },
   },
   {
     "max397574/better-escape.nvim",
-    event = { "BufReadPre", "BufWritePre", "BufNewFile" },
+    lazy = false,
     opts = {
       timeout = 150,
       default_mappings = false,
@@ -384,17 +425,6 @@ local plugins = {
       require("neoscroll").setup()
     end,
   },
-  -- {
-  --   "shellRaining/hlchunk.nvim",
-  --   event = { "BufReadPre", "BufNewFile" },
-  --   config = function()
-  --     require("hlchunk").setup({
-  --       indent = {
-  --         enable = true,
-  --       },
-  --     })
-  --   end,
-  -- },
   {
     "nvimtools/hydra.nvim",
     event = { "BufReadPre", "BufNewFile" },
@@ -404,7 +434,7 @@ local plugins = {
   },
   {
     "folke/trouble.nvim",
-    opts = {}, -- for default options, refer to the configuration section for custom setup.
+    opts = {},
     cmd = "Trouble",
   },
   {
@@ -412,7 +442,13 @@ local plugins = {
     lazy = false,
     config = function ()
       require("config.snacks")
-    end
+    end,
+    keys = {
+      { "<leader>gi", function() Snacks.picker.gh_issue() end, desc = "GitHub Issues (open)" },
+      { "<leader>gI", function() Snacks.picker.gh_issue({ state = "all" }) end, desc = "GitHub Issues (all)" },
+      { "<leader>gp", function() Snacks.picker.gh_pr() end, desc = "GitHub Pull Requests (open)" },
+      { "<leader>gP", function() Snacks.picker.gh_pr({ state = "all" }) end, desc = "GitHub Pull Requests (all)" },
+    },
   },
   {
     "potamides/pantran.nvim",
@@ -421,10 +457,7 @@ local plugins = {
       require("config.pantran")
     end,
   },
-  {
-    "vim-jp/vimdoc-ja",
-    lazy = true,
-  },
+  "vim-jp/vimdoc-ja",
 }
 
-require("lazy").setup(plugins)
+require("lazy").setup(plugins, opts)
