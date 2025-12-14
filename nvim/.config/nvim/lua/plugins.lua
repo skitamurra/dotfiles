@@ -220,18 +220,18 @@ local plugins = {
     "RRethy/vim-illuminate",
     event = { "BufReadPost", "BufNewFile" },
   },
-  {
-    "akinsho/toggleterm.nvim",
-    version = "*",
-    cmd = { "ToggleTerm" },
-    opts = function()
-      return {
-        direction = "float",
-        float_opts = { border = "curved" },
-        start_in_insert = true,
-      }
-    end,
-  },
+  -- {
+  --   "akinsho/toggleterm.nvim",
+  --   version = "*",
+  --   cmd = { "ToggleTerm" },
+  --   opts = function()
+  --     return {
+  --       direction = "float",
+  --       float_opts = { border = "curved" },
+  --       start_in_insert = true,
+  --     }
+  --   end,
+  -- },
   {
     "MeanderingProgrammer/render-markdown.nvim",
     ft = { "markdown", "md" },
@@ -250,7 +250,7 @@ local plugins = {
   },
   {
     "levouh/tint.nvim",
-    event = "VeryLazy",
+    event = { "BufReadPost", "BufNewFile" },
     config = function()
       require("tint").setup({
         tint = -55,
