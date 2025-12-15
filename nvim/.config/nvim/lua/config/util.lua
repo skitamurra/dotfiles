@@ -3,8 +3,8 @@ local M = {}
 
 local git_root_cache = {}
 
-function M.get_git_root()
-  return require("snacks").git.get_root()
+function M.get_git_root(path)
+  return require("snacks").git.get_root(path or nil)
   -- local cwd = vim.fn.getcwd()
   -- if git_root_cache[cwd] ~= nil then
   --   return git_root_cache[cwd]
