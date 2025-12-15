@@ -413,8 +413,8 @@ local plugins = {
       timeout = 150,
       default_mappings = false,
       mappings = {
-        i = { j = { j = "<ESC>" } },
-        t = { j = { k = "<C-\\><C-n>" } },
+        i = { j = { k = "<ESC>" } },
+        t = { k = { l = "<C-\\><C-n>" } },
       },
     },
   },

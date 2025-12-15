@@ -158,7 +158,7 @@ Snacks.setup({
       style = "float",
       -- width = 0.8,
       -- height = 0.78,
-      -- border = "rounded",
+      border = "rounded",
     },
   },
   -- explorer = { enabled = true },

@@ -45,8 +45,8 @@ $if bash
   # ===== インサートモード用キーマップ =====
   set keymap vi-insert
 
-  # jj でノーマルモード（ESC）へ
-  "jj": vi-movement-mode
+  # jk でノーマルモード（ESC）へ
+  "jk": vi-movement-mode
 
   # Ctrl+v で現在行を $EDITOR で編集
   "\ev": edit-and-execute-command
