@@ -106,7 +106,7 @@ config.window_close_confirmation = "NeverPrompt"
 config.background = {
   {
     source = { File = wezterm.config_dir .. "/backgrounds/background.jpg" },
-    opacity = 0.7,
+    opacity = 0.2,
     width = "100%",
     height = "100%",
   }

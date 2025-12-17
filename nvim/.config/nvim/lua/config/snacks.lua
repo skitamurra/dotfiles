@@ -1,6 +1,29 @@
 local Snacks = require("snacks")
 local util = require("config.util")
 
+local logo = [[
+░░░    ░░ ░░░░░░░  ░░░░░░  ░░    ░░ ░░ ░░░    ░░░
+▒▒▒▒   ▒▒ ▒▒      ▒▒    ▒▒ ▒▒    ▒▒ ▒▒ ▒▒▒▒  ▒▒▒▒
+▒▒ ▒▒  ▒▒ ▒▒▒▒▒   ▒▒    ▒▒ ▒▒    ▒▒ ▒▒ ▒▒ ▒▒▒▒ ▒▒
+▓▓  ▓▓ ▓▓ ▓▓      ▓▓    ▓▓  ▓▓  ▓▓  ▓▓ ▓▓  ▓▓  ▓▓
+██   ████ ███████  ██████    ████   ██ ██      ██
+]]
+local subcommands = {
+  'middleout --center-movement-speed 0.8 --full-movement-speed 0.2',
+  'slide --merge --movement-speed 0.8',
+  'beams --beam-delay 5 --beam-row-speed-range 20-60 --beam-column-speed-range 8-12',
+}
+math.randomseed(os.time())
+local subcommand = subcommands[math.random(#subcommands)]
+local cmd = {
+  'bash',
+  '-c',
+  'echo -e '
+  .. vim.fn.shellescape(vim.trim(logo))
+  .. ' | tte --anchor-canvas s ' .. subcommand
+  .. ' --final-gradient-direction diagonal'
+}
+
 Snacks.setup({
   dashboard = {
     enabled =true,
@@ -22,13 +45,6 @@ Snacks.setup({
         { icon = " ", key = "c", desc = "Config", action = function() Snacks.picker.files({cwd = vim.fn.stdpath('config')}) end },
         { icon = " ", key = "q", desc = "Quit", action = ":qa" },
       },
-      header = [[
-░░░    ░░ ░░░░░░░  ░░░░░░  ░░    ░░ ░░ ░░░    ░░░ 
-▒▒▒▒   ▒▒ ▒▒      ▒▒    ▒▒ ▒▒    ▒▒ ▒▒ ▒▒▒▒  ▒▒▒▒ 
-▒▒ ▒▒  ▒▒ ▒▒▒▒▒   ▒▒    ▒▒ ▒▒    ▒▒ ▒▒ ▒▒ ▒▒▒▒ ▒▒ 
-▓▓  ▓▓ ▓▓ ▓▓      ▓▓    ▓▓  ▓▓  ▓▓  ▓▓ ▓▓  ▓▓  ▓▓ 
-██   ████ ███████  ██████    ████   ██ ██      ██ 
-      ]],
     },
     -- formats = {
     --   icon = function(item)
@@ -55,7 +71,11 @@ Snacks.setup({
     --   end,
     -- },
     sections = {
-      { section = "header" },
+      {
+        section = "terminal",
+        cmd = cmd,
+      },
+      -- { section = "header", action = cmd },
       -- {
       --   pane = 2,
       --   section = "terminal",
