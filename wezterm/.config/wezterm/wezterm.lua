@@ -103,8 +103,17 @@ config.default_cursor_style = "BlinkingBar"
 config.window_close_confirmation = "NeverPrompt"
 -- config.show_close_tab_button_in_tabs = false
 
--- config.window_background_image = wezterm.home_dir .. "/path/to/your/image.png"
-config.window_background_opacity = 0.7
+config.background = {
+  {
+    source = { File = wezterm.config_dir .. "/backgrounds/background.jpg" },
+    opacity = 0.7,
+    width = "100%",
+    height = "100%",
+  }
+}
+-- config.window_background_image = "~/mnt/c/Users/s.kitamura/Downloads/Pixel-art-full-moon2.jpg"
+wezterm.log_info(config)
+-- config.window_background_opacity = 0.7
 
 ----------------------------------------------------
 -- Tab
