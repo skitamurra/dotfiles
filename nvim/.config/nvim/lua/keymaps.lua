@@ -47,11 +47,11 @@ end)
 
 Map("n", "<leader><leader>", ":<C-u>lcd %:h<CR>", { desc = "CD to current file dir" })
 Map("n", "gd", lsp_def.centered_float_definition, { desc = "Go to definition" })
-Map("n", "gD", function() Snacks.picker.lsp_definitions({ auto_confirm = false }) util.esc() end, { desc = "Definitions list" })
+Map("n", "gD", function() Snacks.picker.lsp_definitions({ include_current = true, auto_confirm = false }) util.esc() end, { desc = "Definitions list" })
 Map('n', '<leader>d', vim.diagnostic.open_float, { desc = "Show diagnostics" })
-Map("n", "<leader>gg", function() vim.cmd("LazyGit") end, { desc = "LazyGit" })
+Map("n", "<leader>g", function() vim.cmd("LazyGit") end, { desc = "LazyGit" })
 -- Map("n", "<leader>gg", function() Snacks.lazygit.open() end, { desc = "LazyGit" })
-Map("n", "<leader>a", function() vim.cmd("HopWord") end, { desc = "HopWord" })
+Map("n", "<leader>a", function() require("flash").jump() end, { desc = "Flash" } )
 Map({ "n", "t" }, "<leader>\\", function() Snacks.terminal.toggle() end, { desc = "ToggleTerm" })
 Map("n", "<leader>s", function() vim.cmd("Namu symbols") end, { desc = "Jump to LSP symbol" })
 Map({"n", "v"}, "<leader>t", "<cmd>Pantran<CR>", { desc = "Show Translate Window" })
@@ -65,11 +65,12 @@ Map("n", "<leader>y", function()
 end, { desc = "Copy file path" })
 
 Map("n", "<leader>p", function()
+  opts = { layout = "select"}
   if util.get_git_root() then
-    Snacks.picker.git_files({ untracked = true })
+    Snacks.picker.git_files(opts, { untracked = true })
     return
   end
-  Snacks.picker.files()
+  Snacks.picker.files(opts)
 end, { desc = "File grep" })
 
 Map('n', '<leader>F', function()

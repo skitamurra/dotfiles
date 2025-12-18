@@ -326,14 +326,7 @@ local plugins = {
     },
   },
   {
-    "phaazon/hop.nvim",
-    branch = "v2",
-    cmd = { "HopWord" },
-    config = function()
-      require("hop").setup({
-        multi_windows = true,
-      })
-    end,
+    "folke/flash.nvim",
   },
   {
     "kdheepak/lazygit.nvim",
@@ -443,12 +436,12 @@ local plugins = {
     config = function ()
       require("config.snacks")
     end,
-    keys = {
-      { "<leader>gi", function() Snacks.picker.gh_issue() end, desc = "GitHub Issues (open)" },
-      { "<leader>gI", function() Snacks.picker.gh_issue({ state = "all" }) end, desc = "GitHub Issues (all)" },
-      { "<leader>gp", function() Snacks.picker.gh_pr() end, desc = "GitHub Pull Requests (open)" },
-      { "<leader>gP", function() Snacks.picker.gh_pr({ state = "all" }) end, desc = "GitHub Pull Requests (all)" },
-    },
+    -- keys = {
+    --   { "<leader>gi", function() Snacks.picker.gh_issue() end, desc = "GitHub Issues (open)" },
+    --   { "<leader>gI", function() Snacks.picker.gh_issue({ state = "all" }) end, desc = "GitHub Issues (all)" },
+    --   { "<leader>gp", function() Snacks.picker.gh_pr() end, desc = "GitHub Pull Requests (open)" },
+    --   { "<leader>gP", function() Snacks.picker.gh_pr({ state = "all" }) end, desc = "GitHub Pull Requests (all)" },
+    -- },
   },
   {
     "potamides/pantran.nvim",
@@ -458,6 +451,10 @@ local plugins = {
     end,
   },
   "vim-jp/vimdoc-ja",
+  {
+    "shortcuts/no-neck-pain.nvim",
+    event = { "BufReadPre", "BufNewFile" },
+  },
 }
 
 require("lazy").setup(plugins, opts)

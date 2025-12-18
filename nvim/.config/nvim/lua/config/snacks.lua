@@ -1,5 +1,6 @@
 local Snacks = require("snacks")
 local util = require("config.util")
+math.randomseed(os.time())
 
 local logo = [[
 ░░░    ░░ ░░░░░░░  ░░░░░░  ░░    ░░ ░░ ░░░    ░░░
@@ -13,20 +14,10 @@ local subcommands = {
   'slide --merge --movement-speed 0.8',
   'beams --beam-delay 5 --beam-row-speed-range 20-60 --beam-column-speed-range 8-12',
 }
-math.randomseed(os.time())
-local subcommand = subcommands[math.random(#subcommands)]
-local cmd = {
-  'bash',
-  '-c',
-  'echo -e '
-  .. vim.fn.shellescape(vim.trim(logo))
-  .. ' | tte --anchor-canvas s ' .. subcommand
-  .. ' --final-gradient-direction diagonal'
-}
 
 Snacks.setup({
   dashboard = {
-    enabled =true,
+    -- enabled =true,
     width = 60,
     row = nil,
     col = nil,
@@ -46,34 +37,35 @@ Snacks.setup({
         { icon = " ", key = "q", desc = "Quit", action = ":qa" },
       },
     },
-    -- formats = {
-    --   icon = function(item)
-    --     if item.file and item.icon == "file" or item.icon == "directory" then
-    --       return Snacks.dashboard.icon(item.file, item.icon)
-    --     end
-    --     return { item.icon, width = 2, hl = "icon" }
-    --   end,
-    --   footer = { "%s", align = "center" },
-    --   header = { "%s", align = "center" },
-    --   file = function(item, ctx)
-    --     local fname = vim.fn.fnamemodify(item.file, ":~")
-    --     fname = ctx.width and #fname > ctx.width and vim.fn.pathshorten(fname) or fname
-    --     if #fname > ctx.width then
-    --       local dir = vim.fn.fnamemodify(fname, ":h")
-    --       local file = vim.fn.fnamemodify(fname, ":t")
-    --       if dir and file then
-    --         file = file:sub(-(ctx.width - #dir - 2))
-    --         fname = dir .. "/…" .. file
-    --       end
-    --     end
-    --     local dir, file = fname:match("^(.*)/(.+)$")
-    --     return dir and { { dir .. "/", hl = "dir" }, { file, hl = "file" } } or { { fname, hl = "file" } }
-    --   end,
-    -- },
+    formats = {
+      icon = function(item)
+        if item.file and item.icon == "file" or item.icon == "directory" then
+          return Snacks.dashboard.icon(item.file, item.icon)
+        end
+        return { item.icon, width = 2, hl = "icon" }
+      end,
+      footer = { "%s", align = "left" },
+      header = { "%s", align = "right" },
+      file = function(item, ctx)
+        local fname = vim.fn.fnamemodify(item.file, ":~")
+        fname = ctx.width and #fname > ctx.width and vim.fn.pathshorten(fname) or fname
+        if #fname > ctx.width then
+          local dir = vim.fn.fnamemodify(fname, ":h")
+          local file = vim.fn.fnamemodify(fname, ":t")
+          if dir and file then
+            file = file:sub(-(ctx.width - #dir - 2))
+            fname = dir .. "/…" .. file
+          end
+        end
+        local dir, file = fname:match("^(.*)/(.+)$")
+        return dir and { { dir .. "/", hl = "dir" }, { file, hl = "file" } } or { { fname, hl = "file" } }
+      end,
+    },
     sections = {
       {
         section = "terminal",
-        cmd = cmd,
+        cmd = 'echo -e ' .. vim.fn.shellescape(vim.trim(logo)) .. ' | tte --anchor-canvas s ' .. subcommands[math.random(#subcommands)] .. ' --final-gradient-direction diagonal',
+        align = "right"
       },
       -- { section = "header", action = cmd },
       -- {
@@ -98,25 +90,25 @@ Snacks.setup({
     },
   },
   terminal = {
-    enabled = true,
+    -- enabled = true,
     win = {
       style = "float",
       border = "rounded",
     },
   },
   indent = { enabled = true },
-  picker = {
-    sources = {
-      gh_issue = {
-        -- your gh_issue picker configuration comes here
-        -- or leave it empty to use the default settings
-      },
-      gh_pr = {
-        -- your gh_pr picker configuration comes here
-        -- or leave it empty to use the default settings
-      }
-    }
-  },
+  -- picker = {
+    -- sources = {
+    --   gh_issue = {
+    --     -- your gh_issue picker configuration comes here
+    --     -- or leave it empty to use the default settings
+    --   },
+    --   gh_pr = {
+    --     -- your gh_pr picker configuration comes here
+    --     -- or leave it empty to use the default settings
+    --   }
+    -- }
+  -- },
   notifier = { enabled = true },
   -- quickfile = { enabled = true },
   -- scope = { enabled = true },
