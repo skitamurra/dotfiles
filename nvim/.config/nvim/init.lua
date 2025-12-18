@@ -32,14 +32,14 @@ vim.g.clipboard = {
   cache_enabled = 0,
 }
 vim.opt.sessionoptions = {
-  "buffers",      -- 開いていたバッファ
-  "curdir",       -- カレントディレクトリ
-  "tabpages",     -- タブページ
-  "winsize",      -- ウィンドウサイズ
-  "help",         -- ヘルプバッファ
-  "globals",      -- グローバル変数 (g:var 保存対象)
-  "folds",        -- 折り畳み状態
-  "localoptions", -- buffer/window ローカルオプション
+  "buffers",
+  "curdir",
+  "tabpages",
+  "winsize",
+  "help",
+  "globals",
+  "folds",
+  "localoptions",
 }
 vim.diagnostic.config {
   severity_sort = true,

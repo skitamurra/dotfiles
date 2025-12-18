@@ -64,11 +64,7 @@ local plugins = {
   ---------------------------------------------------------------------------
   {
     "neovim/nvim-lspconfig",
-    -- lazy = false,
     event = { "BufReadPre", "BufNewFile" },
-    -- config = function()
-    --   require("config.lsp.lsp")
-    -- end,
   },
   {
     "williamboman/mason.nvim",
@@ -79,14 +75,6 @@ local plugins = {
       PATH = "prepend",
     },
   },
-  -- {
-  --   "williamboman/mason-lspconfig.nvim",
-  --   lazy = false,
-  --   opts = {
-  --     ensure_installed = { "pyright", "vtsls", "lua_ls" },
-  --     automatic_installation = true,
-  --   },
-  -- },
 
   ---------------------------------------------------------------------------
   -- Autopairs
@@ -145,16 +133,15 @@ local plugins = {
     "folke/tokyonight.nvim",
     lazy = false,
     priority = 1000,
-    opts = {
-      style = "moon",
-      transparent = true,
-      styles = {
-        sidebars = "transparent",
-        floats = "transparent",
-      },
-    },
-    config = function(_, opts)
-      require("tokyonight").setup(opts)
+    config = function()
+      require("tokyonight").setup({
+        style = "moon",
+        transparent = true,
+        styles = {
+          sidebars = "transparent",
+          floats = "transparent",
+        }
+      })
       vim.cmd.colorscheme("tokyonight")
     end,
   },
@@ -220,18 +207,6 @@ local plugins = {
     "RRethy/vim-illuminate",
     event = { "BufReadPost", "BufNewFile" },
   },
-  -- {
-  --   "akinsho/toggleterm.nvim",
-  --   version = "*",
-  --   cmd = { "ToggleTerm" },
-  --   opts = function()
-  --     return {
-  --       direction = "float",
-  --       float_opts = { border = "curved" },
-  --       start_in_insert = true,
-  --     }
-  --   end,
-  -- },
   {
     "MeanderingProgrammer/render-markdown.nvim",
     ft = { "markdown", "md" },
@@ -251,11 +226,7 @@ local plugins = {
   {
     "levouh/tint.nvim",
     event = { "BufReadPost", "BufNewFile" },
-    config = function()
-      require("tint").setup({
-        tint = -55,
-      })
-    end,
+    opts = { tint = -55}
   },
   {
     "dstein64/vim-startuptime",
@@ -291,40 +262,34 @@ local plugins = {
   ---------------------------------------------------------------------------
   -- LSP UI / Namu
   ---------------------------------------------------------------------------
-  {
-    "nvimdev/lspsaga.nvim",
-    event = "LspAttach",
-    config = function()
-      require("lspsaga").setup({
-        lightbulb = {
-          enable = false
-        }
-      })
-    end,
-  },
-  {
-    "bassamsdata/namu.nvim",
-    cmd = { "Namu", "NamuSymbols" },
-    opts = {
-      global = {},
-      namu_symbols = {
-        options = {},
-      },
-    },
-  },
+  -- {
+  --   "nvimdev/lspsaga.nvim",
+  --   event = "LspAttach",
+  --   opts = {}
+  -- },
+  -- {
+  --   "bassamsdata/namu.nvim",
+  --   cmd = { "Namu", "NamuSymbols" },
+  --   opts = {
+  --     global = {},
+  --     namu_symbols = {
+  --       options = {},
+  --     },
+  --   },
+  -- },
 
   ---------------------------------------------------------------------------
   -- Diff / Hop / Git UI
   ---------------------------------------------------------------------------
-  {
-    "sindrets/diffview.nvim",
-    cmd = {
-      "DiffviewOpen",
-      "DiffviewClose",
-      "DiffviewToggleFiles",
-      "DiffviewFocusFiles",
-    },
-  },
+  -- {
+  --   "sindrets/diffview.nvim",
+  --   cmd = {
+  --     "DiffviewOpen",
+  --     "DiffviewClose",
+  --     "DiffviewToggleFiles",
+  --     "DiffviewFocusFiles",
+  --   },
+  -- },
   {
     "folke/flash.nvim",
   },
@@ -346,7 +311,7 @@ local plugins = {
     "folke/neodev.nvim",
     event = "VeryLazy",
   },
-  { "stevearc/dressing.nvim", lazy = true },
+  "stevearc/dressing.nvim",
   {
     "nvim-flutter/flutter-tools.nvim",
     ft = { "dart" },
@@ -411,13 +376,13 @@ local plugins = {
       },
     },
   },
-  {
-    "karb94/neoscroll.nvim",
-    event = { "BufWinEnter", "WinScrolled" },
-    config = function()
-      require("neoscroll").setup()
-    end,
-  },
+  -- {
+  --   "karb94/neoscroll.nvim",
+  --   event = { "BufWinEnter", "WinScrolled" },
+  --   config = function()
+  --     require("neoscroll").setup()
+  --   end,
+  -- },
   {
     "nvimtools/hydra.nvim",
     event = { "BufReadPre", "BufNewFile" },
@@ -436,12 +401,6 @@ local plugins = {
     config = function ()
       require("config.snacks")
     end,
-    -- keys = {
-    --   { "<leader>gi", function() Snacks.picker.gh_issue() end, desc = "GitHub Issues (open)" },
-    --   { "<leader>gI", function() Snacks.picker.gh_issue({ state = "all" }) end, desc = "GitHub Issues (all)" },
-    --   { "<leader>gp", function() Snacks.picker.gh_pr() end, desc = "GitHub Pull Requests (open)" },
-    --   { "<leader>gP", function() Snacks.picker.gh_pr({ state = "all" }) end, desc = "GitHub Pull Requests (all)" },
-    -- },
   },
   {
     "potamides/pantran.nvim",

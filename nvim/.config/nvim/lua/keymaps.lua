@@ -23,10 +23,10 @@ Map("v", "<", "<gv")
 Map("v", ">", ">gv")
 Map("v", "q", "<ESC>")
 Map("n", "M", "%")
--- Map("n", "/", "/\v")
 Map("n", "p", "]p`]")
 Map("n", ";", function() vim.api.nvim_feedkeys(":", "n", false) end)
 Map("n", ":", function() vim.api.nvim_feedkeys(";", "n", false) end)
+Map("n", "K", "<cmd>Lspsaga hover_doc<CR>")
 
 Map("n", "i", function()
   return vim.fn.empty(vim.fn.getline(".")) == 1 and '"_cc' or "i"
@@ -65,7 +65,7 @@ Map("n", "<leader>y", function()
 end, { desc = "Copy file path" })
 
 Map("n", "<leader>p", function()
-  opts = { layout = "select"}
+  local opts = { layout = "select"}
   if util.get_git_root() then
     Snacks.picker.git_files(opts, { untracked = true })
     return
