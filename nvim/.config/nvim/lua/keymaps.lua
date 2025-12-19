@@ -26,7 +26,7 @@ Map("n", "M", "%")
 Map("n", "p", "]p`]")
 Map("n", ";", function() vim.api.nvim_feedkeys(":", "n", false) end)
 Map("n", ":", function() vim.api.nvim_feedkeys(";", "n", false) end)
-Map("n", "K", "<cmd>Lspsaga hover_doc<CR>")
+-- Map("n", "K", "<cmd>Lspsaga hover_doc<CR>")
 
 Map("n", "i", function()
   return vim.fn.empty(vim.fn.getline(".")) == 1 and '"_cc' or "i"
