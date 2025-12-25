@@ -137,10 +137,13 @@ local plugins = {
       require("tokyonight").setup({
         style = "moon",
         transparent = true,
+        terminal_colors = true,
         styles = {
           sidebars = "transparent",
           floats = "transparent",
-        }
+        },
+        dim_inactive = true,
+        cache = true,
       })
       vim.cmd.colorscheme("tokyonight")
     end,

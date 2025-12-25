@@ -80,7 +80,7 @@ config.color_scheme = "Tokyo Night Moon"
 config.use_ime = true
 
 -- WSL + デフォルト起動シェル
-config.default_prog = { "wsl", "~" }
+config.default_prog = { "wsl", "~", "zsh" }
 
 local function detect_wsl_domain()
   if not wezterm.running_under_wsl() then
@@ -101,7 +101,7 @@ config.default_domain = detect_wsl_domain()
 config.automatically_reload_config = true
 config.default_cursor_style = "BlinkingBar"
 config.window_close_confirmation = "NeverPrompt"
--- config.show_close_tab_button_in_tabs = false
+config.show_close_tab_button_in_tabs = false
 
 config.background = {
   {

@@ -12,7 +12,7 @@ local vue_plugin = {
 }
 
 return {
-  cmd = mason_bin .. "vue-language-server",
+  cmd = { mason_bin .. "/vue-language-server", "--stdio" },
   settings = {
     vtsls = {
       tsserver = {

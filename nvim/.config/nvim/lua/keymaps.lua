@@ -56,8 +56,10 @@ Map({ "n", "t" }, "<leader>\\", function() Snacks.terminal.toggle() end, { desc 
 Map("n", "<leader>s", function() vim.cmd("Namu symbols") end, { desc = "Jump to LSP symbol" })
 Map({"n", "v"}, "<leader>t", "<cmd>Pantran<CR>", { desc = "Show Translate Window" })
 Map("n", "<leader>l", "", { desc = "Buffer mode"})
+Map("n", "<leader>w", "", { desc = "Window mode"})
 Map("n", "<leader>qs", function() require("persistence").select() end, { desc = "Select a session to load" })
 Map("n", "<leader>qd", function() require("persistence").stop() end, { desc = "Stop Persistence" })
+Map("n", "<leader>;", ":noh<CR>", { desc = "Stop Persistence" })
 
 Map("n", "<leader>y", function()
   vim.fn.setreg("+", vim.fn.expand("%:p"))
