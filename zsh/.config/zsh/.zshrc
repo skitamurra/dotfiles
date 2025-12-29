@@ -1,7 +1,4 @@
 # ~/.zshrc
-autoload -Uz promptinit
-promptinit
-
 HISTFILE=~/.zsh_history
 HISTSIZE=1000
 SAVEHIST=1000
@@ -40,7 +37,6 @@ export PATH="$DPRINT_INSTALL/bin:$PATH"
 
 export PATH="$HOME/bin:$PATH"
 export PATH="$HOME/.nodenv/bin:$PATH"
-eval "$(nodenv init -)"
 
 export PATH="/opt/nvim-linux-x86_64/bin:$PATH"
 export PATH="$HOME/dev/flutter/bin:$PATH"
@@ -57,36 +53,18 @@ export PATH="$ANDROID_HOME/platform-tools:$PATH"
 export JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
 export PATH="$JAVA_HOME/bin:$PATH"
 export PATH="$HOME/.pub-cache/bin:$PATH"
-export PATH="$(go env GOPATH)/bin:$PATH"
+export GOPATH="$HOME/go"
+export PATH="$GOPATH/bin:$PATH"
 export PATH="/usr/local/bin:$PATH"
 
 export SHELDON_CONFIG_DIR="$HOME/.config/zsh/sheldon"
 
 # =========================================================
-# Vi mode
+# FUNCTION
 # =========================================================
-bindkey -v
-export KEYTIMEOUT=13
-
-bindkey -M viins 'jk' vi-cmd-mode
-bindkey '^P' history-search-backward
-bindkey '^N' history-search-forward
-bindkey '^L' clear-screen
-bindkey '^[[1;5C' forward-word
-bindkey '^[[1;5D' backward-word
-
-# function zle-keymap-select {
-#   if [[ $KEYMAP == vicmd ]]; then
-#     MODE=" %F{cyan}N%f "
-#   else
-#     MODE=" %F{green}I%f "
-#   fi
-#   zle reset-prompt
-# }
-# zle -N zle-keymap-select
-#
-# MODE=""
-# PROMPT='${MODE}%n@%m:%~%# '
+function zvm_config() {
+  ZVM_VI_INSERT_ESCAPE_BINDKEY=jk
+}
 
 cd() {
   if [ $# -eq 0 ]; then
@@ -133,6 +111,10 @@ _git_push_current_branch_only() {
 
 compdef _git_push_current_branch_only git
 
+function zvm_after_init() {
+  autopair-init
+}
+
 # =========================================================
 # alias
 # =========================================================
@@ -153,4 +135,26 @@ alias note='nvim ~/NOTE.md'
 
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
-eval "$(sheldon source)"
+
+function ensure_zcompiled {
+  local compiled="$1.zwc"
+  if [[ ! -r "$compiled" || "$1" -nt "$compiled" ]]; then
+    echo "\033[1;36mCompiling\033[m $1"
+    zcompile $1
+  fi
+}
+function source {
+  ensure_zcompiled $1
+  builtin source $1
+}
+ensure_zcompiled ~/.config/zsh/.zshrc
+
+cache_dir=${XDG_CACHE_HOME:-$HOME/.cache}
+sheldon_cache="$cache_dir/sheldon.zsh"
+sheldon_toml="$HOME/.config/zsh/sheldon/plugins.toml"
+if [[ ! -r "$sheldon_cache" || "$sheldon_toml" -nt "$sheldon_cache" ]]; then
+  mkdir -p $cache_dir
+  sheldon source > $sheldon_cache
+fi
+source "$sheldon_cache"
+unset cache_dir sheldon_cache sheldon_toml
