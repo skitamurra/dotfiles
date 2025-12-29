@@ -69,7 +69,7 @@ end, { desc = "Copy file path" })
 Map("n", "<leader>p", function()
   local opts = { layout = "select"}
   if util.get_git_root() then
-    Snacks.picker.git_files(opts, { untracked = true })
+    Snacks.picker.git_files(opts, { submodules = false, ignored = true })
     return
   end
   Snacks.picker.files(opts)
@@ -77,7 +77,7 @@ end, { desc = "File grep" })
 
 Map('n', '<leader>F', function()
   if util.get_git_root() then
-    Snacks.picker.git_grep()
+    Snacks.picker.git_grep({ submodules = false, ignored = true })
     return
   end
   Snacks.picker.grep()
