@@ -9,7 +9,7 @@ local logo = [[
 ▓▓  ▓▓ ▓▓ ▓▓      ▓▓    ▓▓  ▓▓  ▓▓  ▓▓ ▓▓  ▓▓  ▓▓
 ██   ████ ███████  ██████    ████   ██ ██      ██
 ]]
-local subcommands = {
+local effects = {
   'middleout --center-movement-speed 0.8 --full-movement-speed 0.2',
   'slide --merge --movement-speed 0.8',
   'beams --beam-delay 5 --beam-row-speed-range 20-60 --beam-column-speed-range 8-12',
@@ -64,7 +64,7 @@ Snacks.setup({
     sections = {
       {
         section = "terminal",
-        cmd = 'echo -e ' .. vim.fn.shellescape(vim.trim(logo)) .. ' | tte --anchor-canvas s ' .. subcommands[math.random(#subcommands)] .. ' --final-gradient-direction diagonal',
+        cmd = 'echo -e ' .. vim.fn.shellescape(vim.trim(logo)) .. ' | tte --anchor-canvas s ' .. effects[math.random(#effects)] .. ' --final-gradient-direction diagonal',
         align = "right"
       },
       -- { section = "header", action = cmd },
