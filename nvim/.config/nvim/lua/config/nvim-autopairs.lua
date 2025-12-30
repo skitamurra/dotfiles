@@ -2,7 +2,7 @@
 local autopairs = require("nvim-autopairs")
 
 autopairs.setup({
-  check_ts = true, -- Treesitter連携で文法に沿った補完
+  check_ts = true,
   disable_filetype = { "TelescopePrompt", "vim" },
 })
 

@@ -284,15 +284,12 @@ local plugins = {
   ---------------------------------------------------------------------------
   -- Diff / Hop / Git UI
   ---------------------------------------------------------------------------
-  -- {
-  --   "sindrets/diffview.nvim",
-  --   cmd = {
-  --     "DiffviewOpen",
-  --     "DiffviewClose",
-  --     "DiffviewToggleFiles",
-  --     "DiffviewFocusFiles",
-  --   },
-  -- },
+  {
+    "sindrets/diffview.nvim",
+    cmd = {
+      "DiffviewOpen",
+    },
+  },
   {
     "folke/flash.nvim",
   },
@@ -300,10 +297,6 @@ local plugins = {
     "kdheepak/lazygit.nvim",
     cmd = {
       "LazyGit",
-      "LazyGitConfig",
-      "LazyGitCurrentFile",
-      "LazyGitFilter",
-      "LazyGitFilterCurrentFile",
     },
   },
 
@@ -335,6 +328,9 @@ local plugins = {
     "folke/noice.nvim",
     event = "VeryLazy",
       opts = {
+        presets = {
+          lsp_doc_border = true,
+        },
         views = {
         cmdline_popup = {
           position = {
@@ -379,13 +375,6 @@ local plugins = {
       },
     },
   },
-  -- {
-  --   "karb94/neoscroll.nvim",
-  --   event = { "BufWinEnter", "WinScrolled" },
-  --   config = function()
-  --     require("neoscroll").setup()
-  --   end,
-  -- },
   {
     "nvimtools/hydra.nvim",
     event = { "BufReadPre", "BufNewFile" },

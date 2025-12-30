@@ -17,14 +17,12 @@ local effects = {
 
 Snacks.setup({
   dashboard = {
-    -- enabled =true,
     width = 60,
     row = nil,
     col = nil,
     pane_gap = 4,
-    autokeys = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", -- autokey sequence
+    autokeys = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
     preset = {
-      ---@type snacks.dashboard.Item[]
       keys = {
         { icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
         { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
@@ -68,53 +66,17 @@ Snacks.setup({
         ttl = 0,
         height = 8,
       },
-      -- { section = "header", action = cmd },
-      -- {
-      --   pane = 2,
-      --   section = "terminal",
-      --   cmd = "colorscript -e square",
-      --   height = 5,
-      --   padding = 1,
-      -- },
       { section = "keys", gap = 0, padding = 1 },
-      -- { pane = 1, icon = " ", title = "Recent Files", section = "recent_files", indent = 2, padding = 1 },
-      -- { section = "projects", icon = " ", title = "Projects", indent = 2, padding = 1 },
-      -- {
-      --   section = "terminal",
-      --   cmd = "pokemon-colorscripts -r --no-title; sleep .1",
-      --   random = 10,
-      --   pane = 2,
-      --   indent = 4,
-      --   height = 30,
-      -- },
       { section = "startup" },
     },
   },
   terminal = {
-    -- enabled = true,
     win = {
       style = "float",
       border = "rounded",
     },
   },
   indent = { enabled = true },
-  -- picker = {
-    -- sources = {
-    --   gh_issue = {
-    --     -- your gh_issue picker configuration comes here
-    --     -- or leave it empty to use the default settings
-    --   },
-    --   gh_pr = {
-    --     -- your gh_pr picker configuration comes here
-    --     -- or leave it empty to use the default settings
-    --   }
-    -- }
-  -- },
   notifier = { enabled = true },
-  -- quickfile = { enabled = true },
-  -- scope = { enabled = true },
-  -- scroll = { enabled = true },
-  -- statuscolumn = { enabled = true },
-  -- words = { enabled = true },
   image = { enabled = true},
 })

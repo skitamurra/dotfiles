@@ -111,9 +111,7 @@ config.background = {
     height = "100%",
   }
 }
--- config.window_background_image = "~/mnt/c/Users/s.kitamura/Downloads/Pixel-art-full-moon2.jpg"
 wezterm.log_info(config)
--- config.window_background_opacity = 0.7
 
 ----------------------------------------------------
 -- Tab
@@ -168,7 +166,6 @@ end)
 
 config.window_decorations = "RESIZE"
 config.show_tabs_in_tab_bar = true
--- config.hide_tab_bar_if_only_one_tab = true
 
 config.window_frame = {
   inactive_titlebar_bg = "none",
