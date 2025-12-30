@@ -12,7 +12,7 @@ local logo = [[
 local effects = {
   'middleout --center-movement-speed 0.8 --full-movement-speed 0.2',
   'slide --merge --movement-speed 0.8',
-  'beams --beam-delay 5 --beam-row-speed-range 20-60 --beam-column-speed-range 8-12',
+  'beams --beam-delay 1 --beam-row-speed-range 80-100 --beam-column-speed-range 45-60',
 }
 
 Snacks.setup({
