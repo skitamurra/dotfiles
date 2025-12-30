@@ -64,8 +64,9 @@ Snacks.setup({
     sections = {
       {
         section = "terminal",
-        cmd = 'echo -e ' .. vim.fn.shellescape(vim.trim(logo)) .. ' | tte --anchor-canvas s ' .. effects[math.random(#effects)] .. ' --final-gradient-direction diagonal',
-        align = "right"
+        cmd = 'echo -e ' .. vim.fn.shellescape(vim.trim(logo)) .. ' | tte --anchor-canvas s ' .. effects[math.random(#effects)] .. ' --final-gradient-direction diagonal; sleep infinity',
+        ttl = 0,
+        height = 8,
       },
       -- { section = "header", action = cmd },
       -- {
