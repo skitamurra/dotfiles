@@ -7,6 +7,12 @@ cmp.setup({
       require("luasnip").lsp_expand(args.body)
     end,
   },
+  window = {
+    completion = cmp.config.window.bordered({
+      winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel",
+    }),
+    documentation = cmp.config.window.bordered(),
+  },
   mapping = cmp.mapping.preset.insert({
     ["<Tab>"] = cmp.mapping.select_next_item(),
     ["<S-Tab>"] = cmp.mapping.select_prev_item(),
