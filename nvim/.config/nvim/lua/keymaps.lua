@@ -59,7 +59,7 @@ Map("n", "<leader>l", "", { desc = "Buffer mode"})
 Map("n", "<leader>w", "", { desc = "Window mode"})
 Map("n", "<leader>qs", function() require("persistence").select() end, { desc = "Select a session to load" })
 Map("n", "<leader>qd", function() require("persistence").stop() end, { desc = "Stop Persistence" })
-Map("n", "<leader>;", ":noh<CR>", { desc = "Stop Persistence" })
+Map("n", "<leader>;", ":noh<CR>", { desc = "noh" })
 
 Map("n", "<leader>y", function()
   vim.fn.setreg("+", vim.fn.expand("%:p"))
