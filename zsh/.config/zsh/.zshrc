@@ -1,16 +1,13 @@
 # ~/.zshrc
 HISTFILE=~/.zsh_history
-HISTSIZE=1000
-SAVEHIST=1000
+HISTSIZE=10000
+SAVEHIST=10000
 
-setopt histignorealldups
-setopt sharehistory
-setopt autocd
-setopt extendedglob
-setopt notify
-setopt hist_ignore_dups
+setopt hist_ignore_all_dups
+setopt hist_save_no_dups
+setopt hist_ignore_space
 setopt hist_reduce_blanks
-setopt share_history
+setopt hist_no_store
 
 zstyle ':completion:*' auto-description 'specify: %d'
 zstyle ':completion:*' completer _expand _complete _correct _approximate
@@ -125,6 +122,24 @@ compdef _git_push_current_branch_only git
 
 function zvm_after_init() {
   autopair-init
+}
+
+function fzf-select-history() {
+    BUFFER=$(history -r 1 | fzf --query "$LBUFFER" --reverse)
+    CURSOR=$#BUFFER
+    zle reset-prompt
+}
+zle -N fzf-select-history
+
+autoload -Uz add-zsh-hook
+add-zsh-hook precmd () { bindkey '^r' fzf-select-history }
+
+zshaddhistory() {
+    local cmd=${line%% *}
+    if ! type "$cmd" >/dev/null 2>&1; then
+        return 1
+    fi
+    return 0
 }
 
 # =========================================================
