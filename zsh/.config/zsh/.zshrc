@@ -29,6 +29,18 @@ zstyle ':completion:*' verbose true
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
+fzf_options=(
+    --layout reverse
+    --border rounded
+    --height 45%
+    --margin 0.5%
+    --bind 'tab:down'
+    --bind 'shift-tab:up'
+)
+fzf() {
+    command fzf "${fzf_options[@]}" "$@"
+}
+
 # =========================================================
 # PATH
 # =========================================================
