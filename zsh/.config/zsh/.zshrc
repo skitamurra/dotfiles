@@ -40,33 +40,25 @@ fzf() {
 }
 
 # =========================================================
-# PATH
+# EXPORT
 # =========================================================
-
-export PATH="$DPRINT_INSTALL/bin:$PATH"
-
 export PATH="$HOME/bin:$PATH"
 export PATH="$HOME/.nodenv/bin:$PATH"
-
 export PATH="/opt/nvim-linux-x86_64/bin:$PATH"
 export PATH="$HOME/dev/flutter/bin:$PATH"
 export PATH="$HOME/develop/yzrh-utils/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
-export PATH="$HOME/bin/yazi:$PATH"
 export PATH="$HOME/lua-language-server/bin:$PATH"
-
 export ANDROID_HOME="$HOME/Android/Sdk"
 export ANDROID_SDK_ROOT="$ANDROID_HOME"
 export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
 export PATH="$ANDROID_HOME/platform-tools:$PATH"
-
 export JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
 export PATH="$JAVA_HOME/bin:$PATH"
 export PATH="$HOME/.pub-cache/bin:$PATH"
 export GOPATH="$HOME/go"
 export PATH="$GOPATH/bin:$PATH"
 export PATH="/usr/local/bin:$PATH"
-
 export SHELDON_CONFIG_DIR="$HOME/.config/zsh/sheldon"
 
 # =========================================================
@@ -160,7 +152,9 @@ alias source-bashrc='source ~/.bashrc'
 alias v-wezterm='nvim $HOME/.config/wezterm/wezterm.lua'
 alias note='nvim ~/NOTE.md'
 
-
+# =========================================================
+# SOURCE
+# =========================================================
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
 
