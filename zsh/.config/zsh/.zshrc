@@ -1,5 +1,5 @@
 # ~/.zshrc
-HISTFILE=~/.zsh_history
+HISTFILE=~/.config/zsh/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
 
