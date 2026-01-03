@@ -3,6 +3,7 @@ HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
 
+setopt inc_append_history
 setopt hist_ignore_all_dups
 setopt hist_save_no_dups
 setopt hist_ignore_space
@@ -125,7 +126,7 @@ function zvm_after_init() {
 }
 
 function fzf-select-history() {
-    BUFFER=$(history -r 1 | fzf --query "$LBUFFER" --reverse)
+    BUFFER=$(history -n -r 1 | fzf --query "$LBUFFER" --reverse)
     CURSOR=$#BUFFER
     zle reset-prompt
 }
@@ -135,11 +136,11 @@ autoload -Uz add-zsh-hook
 add-zsh-hook precmd () { bindkey '^r' fzf-select-history }
 
 zshaddhistory() {
+    local line=${1%%$'\n'}
     local cmd=${line%% *}
-    if ! type "$cmd" >/dev/null 2>&1; then
+    if [[ -n "$cmd" ]] && ! type "$cmd" >/dev/null 2>&1; then
         return 1
     fi
-    return 0
 }
 
 # =========================================================
