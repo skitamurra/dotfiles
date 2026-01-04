@@ -12,6 +12,7 @@ apply = ["defer"]
 
 [plugins.zeno]
 github = "yuki-yano/zeno.zsh"
+apply = ["defer"]
 
 [plugins.fast-syntax-highlighting]
 github = "zdharma-continuum/fast-syntax-highlighting"

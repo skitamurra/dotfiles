@@ -1,6 +1,7 @@
 # ~/.zshrc
+zmodload zsh/zprof
 autoload -Uz compinit
-compinit
+compinit -C -d "$HOME/.zcompdump"
 HISTFILE=~/.config/zsh/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
@@ -11,23 +12,6 @@ setopt hist_save_no_dups
 setopt hist_ignore_space
 setopt hist_reduce_blanks
 setopt hist_no_store
-
-zstyle ':completion:*' auto-description 'specify: %d'
-zstyle ':completion:*' completer _expand _complete _correct _approximate
-zstyle ':completion:*' format 'Completing %d'
-zstyle ':completion:*' group-name ''
-zstyle ':completion:*' menu select=2
-eval "$(dircolors -b)"
-zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
-zstyle ':completion:*' list-colors ''
-zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
-zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=* l:|=*'
-zstyle ':completion:*' menu select=long
-zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
-zstyle ':completion:*' use-compctl false
-zstyle ':completion:*' verbose true
-zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
-zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
 fzf_options=(
     --layout reverse
@@ -69,8 +53,25 @@ export ZENO_GIT_TREE="eza --tree"
 # =========================================================
 # FUNCTION
 # =========================================================
+zeno_bindkeys() {
+  if [[ -n $ZENO_LOADED ]]; then
+    bindkey ' '  zeno-auto-snippet
+    bindkey '^m' zeno-auto-snippet-and-accept-line
+    bindkey '^i' zeno-completion
+    bindkey '^r' zeno-smart-history-selection
+  fi
+}
+
 function zvm_config() {
   ZVM_VI_INSERT_ESCAPE_BINDKEY=jk
+  ZVM_SYSTEM_CLIPBOARD_ENABLED=true
+  ZVM_CLIPBOARD_COPY_CMD='clip.exe'
+  ZVM_CLIPBOARD_PASTE_CMD='powershell.exe -NoProfile -Command Get-Clipboard'
+}
+
+function zvm_after_init() {
+  autopair-init
+  zeno_bindkeys
 }
 
 cd() {
@@ -126,20 +127,6 @@ zshaddhistory() {
     fi
 }
 
-zeno_bindkeys() {
-  if [[ -n $ZENO_LOADED ]]; then
-    bindkey ' '  zeno-auto-snippet
-    bindkey '^m' zeno-auto-snippet-and-accept-line
-    bindkey '^i' zeno-completion
-    bindkey '^r' zeno-smart-history-selection
-  fi
-}
-
-function zvm_after_init() {
-  autopair-init
-  zeno_bindkeys
-}
-
 # =========================================================
 # alias
 # =========================================================
@@ -160,8 +147,20 @@ alias note='nvim ~/NOTE.md'
 # =========================================================
 # SOURCE
 # =========================================================
-eval "$(starship init zsh)"
-eval "$(zoxide init zsh)"
+cache_dir=${XDG_CACHE_HOME:-$HOME/.cache}
+cache_init() {
+  local name="$1"
+  local cmd="$2"
+  local cache_file="$cache_dir/${name}.zsh"
+
+  if [[ ! -f "$cache_file" ]]; then
+    eval "$cmd" > "$cache_file"
+  fi
+  source "$cache_file"
+}
+
+cache_init starship "starship init zsh"
+cache_init zoxide  "zoxide init zsh"
 source "/home/kitamura/.deno/env"
 
 function ensure_zcompiled {
@@ -177,7 +176,6 @@ function source {
 }
 ensure_zcompiled ~/.config/zsh/.zshrc
 
-cache_dir=${XDG_CACHE_HOME:-$HOME/.cache}
 sheldon_cache="$cache_dir/sheldon.zsh"
 sheldon_toml="$HOME/.config/zsh/sheldon/plugins.toml"
 if [[ ! -r "$sheldon_cache" || "$sheldon_toml" -nt "$sheldon_cache" ]]; then
@@ -186,5 +184,3 @@ if [[ ! -r "$sheldon_cache" || "$sheldon_toml" -nt "$sheldon_cache" ]]; then
 fi
 source "$sheldon_cache"
 unset cache_dir sheldon_cache sheldon_toml
-
-zeno_bindkeys
