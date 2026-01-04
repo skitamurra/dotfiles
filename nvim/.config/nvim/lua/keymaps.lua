@@ -27,6 +27,7 @@ Map("n", "p", "]p`]")
 Map({"n", "v"}, ";", function() vim.api.nvim_feedkeys(":", "n", false) end)
 Map({"n", "v"}, ":", function() vim.api.nvim_feedkeys(";", "n", false) end)
 Map("n", "K", function() vim.lsp.buf.hover() end, {desc = "Hover documentation"})
+Map({"i", "n"}, "<C-CR>", function() require("in-and-out").in_and_out() end)
 
 Map("n", "i", function()
   return vim.fn.empty(vim.fn.getline(".")) == 1 and '"_cc' or "i"

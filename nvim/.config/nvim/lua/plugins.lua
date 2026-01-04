@@ -406,6 +406,17 @@ local plugins = {
     "shortcuts/no-neck-pain.nvim",
     event = { "BufReadPre", "BufNewFile" },
   },
+  {
+    "ysmb-wtsg/in-and-out.nvim",
+    event = { "BufReadPre", "BufNewFile" },
+  },
+  {
+    'nacro90/numb.nvim',
+    event = { "BufReadPre", "BufNewFile" },
+    config = function()
+      require('numb').setup()
+    end,
+  },
 }
 
 require("lazy").setup(plugins, opts)
