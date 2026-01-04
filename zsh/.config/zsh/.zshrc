@@ -1,4 +1,6 @@
 # ~/.zshrc
+autoload -Uz compinit
+compinit
 HISTFILE=~/.config/zsh/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
@@ -60,6 +62,9 @@ export GOPATH="$HOME/go"
 export PATH="$GOPATH/bin:$PATH"
 export PATH="/usr/local/bin:$PATH"
 export SHELDON_CONFIG_DIR="$HOME/.config/zsh/sheldon"
+export ZENO_HOME=~/.config/zsh/zeno
+export ZENO_GIT_CAT="bat --color=always"
+export ZENO_GIT_TREE="eza --tree"
 
 # =========================================================
 # FUNCTION
@@ -113,26 +118,26 @@ _git_push_current_branch_only() {
 
 compdef _git_push_current_branch_only git
 
-function zvm_after_init() {
-  autopair-init
-}
-
-function fzf-select-history() {
-    BUFFER=$(history -n -r 1 | fzf --query "$LBUFFER" --reverse)
-    CURSOR=$#BUFFER
-    zle reset-prompt
-}
-zle -N fzf-select-history
-
-autoload -Uz add-zsh-hook
-add-zsh-hook precmd () { bindkey '^r' fzf-select-history }
-
 zshaddhistory() {
     local line=${1%%$'\n'}
     local cmd=${line%% *}
     if [[ -n "$cmd" ]] && ! type "$cmd" >/dev/null 2>&1; then
         return 1
     fi
+}
+
+zeno_bindkeys() {
+  if [[ -n $ZENO_LOADED ]]; then
+    bindkey ' '  zeno-auto-snippet
+    bindkey '^m' zeno-auto-snippet-and-accept-line
+    bindkey '^i' zeno-completion
+    bindkey '^r' zeno-smart-history-selection
+  fi
+}
+
+function zvm_after_init() {
+  autopair-init
+  zeno_bindkeys
 }
 
 # =========================================================
@@ -157,6 +162,7 @@ alias note='nvim ~/NOTE.md'
 # =========================================================
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
+source "/home/kitamura/.deno/env"
 
 function ensure_zcompiled {
   local compiled="$1.zwc"
@@ -180,3 +186,5 @@ if [[ ! -r "$sheldon_cache" || "$sheldon_toml" -nt "$sheldon_cache" ]]; then
 fi
 source "$sheldon_cache"
 unset cache_dir sheldon_cache sheldon_toml
+
+zeno_bindkeys
