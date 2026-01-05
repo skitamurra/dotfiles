@@ -76,7 +76,7 @@ Map("n", "<leader>p", function()
   Snacks.picker.files(opts)
 end, { desc = "File grep" })
 
-Map('n', '<leader>F', function()
+Map('n', '<leader>fg', function()
   if util.get_git_root() then
     Snacks.picker.git_grep({ submodules = false, ignored = true })
     return
@@ -84,7 +84,21 @@ Map('n', '<leader>F', function()
   Snacks.picker.grep()
 end, { desc = 'Fuzzy find' })
 
-Map("n", "<leader>f", function()
+Map('v', '<leader>fg', function()
+  local function get_text()
+    local visual = Snacks.picker.util.visual()
+    return visual and visual.text or ""
+  end
+  local text = get_text()
+  local opts = { on_show = function() vim.api.nvim_put({ text }, "c", true, true) end }
+  if util.get_git_root() then
+    Snacks.picker.git_grep(opts, { submodules = false, ignored = true })
+    return
+  end
+  Snacks.picker.grep(opts)
+end, { desc = 'Fuzzy find' })
+
+Map("n", "<leader>ff", function()
   local root = util.get_git_root()
   if not root or root == "" then
     root = vim.fn.getcwd()
