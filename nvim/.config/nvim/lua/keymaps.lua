@@ -37,7 +37,7 @@ Map("n", "A", function()
   return vim.fn.empty(vim.fn.getline(".")) == 1 and '"_cc' or "A"
 end, { expr = true })
 
-Map("n", "*", function()
+Map({"n", "v"}, "*", function()
   if vim.v.count > 0 then
     return
   end
