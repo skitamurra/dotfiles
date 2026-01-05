@@ -413,9 +413,7 @@ local plugins = {
   {
     'nacro90/numb.nvim',
     event = { "BufReadPre", "BufNewFile" },
-    config = function()
-      require('numb').setup()
-    end,
+    opts = {},
   },
 }
 
