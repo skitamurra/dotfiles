@@ -161,7 +161,7 @@ cache_init() {
 
 cache_init starship "starship init zsh"
 cache_init zoxide  "zoxide init zsh"
-source "/home/kitamura/.deno/env"
+source "$HOME/.deno/env"
 
 function ensure_zcompiled {
   local compiled="$1.zwc"
