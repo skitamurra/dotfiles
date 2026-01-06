@@ -372,6 +372,7 @@ local plugins = {
       mappings = {
         i = { j = { k = "<ESC>" } },
         t = { k = { l = "<C-\\><C-n>" } },
+        c = { j = { k = "<ESC>" } },
       },
     },
   },
