@@ -93,9 +93,10 @@ Map('v', '<leader>fg', function()
   local opts = { on_show = function() vim.api.nvim_put({ text }, "c", true, true) end }
   if util.get_git_root() then
     Snacks.picker.git_grep(opts, { submodules = false, ignored = true })
-    return
+  else
+    Snacks.picker.grep(opts)
   end
-  Snacks.picker.grep(opts)
+  util.esc()
 end, { desc = 'Fuzzy find' })
 
 Map("n", "<leader>ff", function()
