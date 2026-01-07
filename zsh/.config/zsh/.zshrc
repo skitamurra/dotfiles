@@ -1,5 +1,5 @@
 # ~/.zshrc
-zmodload zsh/zprof
+stty -ixon -ixoff
 autoload -Uz compinit
 compinit -C -d "$HOME/.zcompdump"
 HISTFILE=~/.config/zsh/.zsh_history
@@ -73,6 +73,7 @@ function zvm_config() {
 function zvm_after_init() {
   autopair-init
   zeno_bindkeys
+  bindkey '^q' push-line
 }
 
 cd() {
