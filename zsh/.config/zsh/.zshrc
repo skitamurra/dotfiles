@@ -1,7 +1,8 @@
 # ~/.zshrc
 stty -ixon -ixoff
-autoload -Uz compinit
+autoload -Uz compinit smart-insert-last-word
 compinit -C -d "$HOME/.zcompdump"
+zle -N insert-last-word smart-insert-last-word
 HISTFILE=~/.config/zsh/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
@@ -74,6 +75,7 @@ function zvm_after_init() {
   autopair-init
   zeno_bindkeys
   bindkey '^q' push-line
+  bindkey '^]' insert-last-word
 }
 
 cd() {
