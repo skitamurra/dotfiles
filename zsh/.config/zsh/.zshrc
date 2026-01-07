@@ -49,6 +49,7 @@ export SHELDON_CONFIG_DIR="$HOME/.config/zsh/sheldon"
 export ZENO_HOME=~/.config/zsh/zeno
 export ZENO_GIT_CAT="bat --color=always"
 export ZENO_GIT_TREE="eza --tree"
+export BROWSER=wslview
 
 # =========================================================
 # FUNCTION
