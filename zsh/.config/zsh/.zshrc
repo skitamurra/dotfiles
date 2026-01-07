@@ -51,6 +51,7 @@ export ZENO_HOME=~/.config/zsh/zeno
 export ZENO_GIT_CAT="bat --color=always"
 export ZENO_GIT_TREE="eza --tree"
 export BROWSER=wslview
+export QUICKLOOK_PATH=$(which QuickLook.exe)
 
 # =========================================================
 # FUNCTION
@@ -137,6 +138,21 @@ clip() {
     echo "$ $cmd"
     eval "$cmd" 2>&1 | tee /dev/tty
   } | clip.exe
+}
+
+qlook() {
+  local win_path=$(wslpath -w "$1")
+  "$QUICKLOOK_PATH" "$win_path"
+}
+
+qlook_preview() {
+  local win_path=$(wslpath -w "$1")
+  "$QUICKLOOK_PATH" "$win_path" > null &
+}
+
+fql() {
+  fzf --preview 'batcat --color=always --style=numbers {}' \
+      --bind "ctrl-space:execute($QUICKLOOK_PATH \$(wslpath -w {}) > /dev/null 2>&1 &)"
 }
 
 # =========================================================
