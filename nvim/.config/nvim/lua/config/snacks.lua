@@ -31,7 +31,7 @@ Snacks.setup({
         { icon = " ", key = "s", desc = "Restore Session", action = function() require("persistence").select() util.esc() end },
         { icon = " ", key = "S", desc = "Last Session", action = function() require("persistence").load({ last = true }) end },
         { icon = "󰒲 ", key = "l", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
-        { icon = " ", key = "c", desc = "Config", action = function() Snacks.picker.files({cwd = vim.fn.stdpath('config')}) end },
+        { icon = " ", key = "c", desc = "Config", action = function() Snacks.picker.files({hidden = true, follow = true, cwd = vim.fn.fnamemodify(vim.fn.stdpath('config'), ":h") }) end },
         { icon = " ", key = "q", desc = "Quit", action = ":qa" },
       },
     },
