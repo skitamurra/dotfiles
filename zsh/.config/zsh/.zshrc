@@ -1,8 +1,8 @@
 # ~/.zshrc
 stty -ixon -ixoff
-autoload -Uz compinit smart-insert-last-word
-compinit -C -d "$HOME/.zcompdump"
+autoload -Uz smart-insert-last-word
 zle -N insert-last-word smart-insert-last-word
+
 HISTFILE=~/.config/zsh/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
@@ -52,6 +52,7 @@ export ZENO_GIT_CAT="bat --color=always"
 export ZENO_GIT_TREE="eza --tree"
 export BROWSER=wslview
 export QUICKLOOK_PATH=$(which QuickLook.exe)
+export NVM_DIR="$HOME/.nvm"
 
 # =========================================================
 # FUNCTION
@@ -108,21 +109,6 @@ cd() {
   print -u2 "cd: no such file or directory: $1"
   return 1
 }
-
-__git_current_branch() {
-  local branch
-  branch=$(git symbolic-ref --short HEAD 2>/dev/null)
-  [[ -n $branch ]] && compadd "$branch"
-}
-
-_git_push_current_branch_only() {
-  _arguments \
-    '1:command:(push)' \
-    '2:remote:__git_remotes' \
-    '3:branch:__git_current_branch'
-}
-
-compdef _git_push_current_branch_only git
 
 zshaddhistory() {
     local line=${1%%$'\n'}
@@ -190,6 +176,7 @@ cache_init() {
 cache_init starship "starship init zsh"
 cache_init zoxide  "zoxide init zsh"
 source "$HOME/.deno/env"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  #
 
 function ensure_zcompiled {
   local compiled="$1.zwc"
@@ -198,9 +185,9 @@ function ensure_zcompiled {
     zcompile $1
   fi
 }
-function source {
+function zcomp_source {
   ensure_zcompiled $1
-  builtin source $1
+  source $1
 }
 ensure_zcompiled ~/.config/zsh/.zshrc
 
@@ -210,5 +197,9 @@ if [[ ! -r "$sheldon_cache" || "$sheldon_toml" -nt "$sheldon_cache" ]]; then
   mkdir -p $cache_dir
   sheldon source > $sheldon_cache
 fi
-source "$sheldon_cache"
+
+autoload -Uz compinit
+compinit -u
+
+zcomp_source "$sheldon_cache"
 unset cache_dir sheldon_cache sheldon_toml
