@@ -28,6 +28,16 @@ snippets:
     lbuffer: '.+\s'
     # rbuffer: ''
 
+- name: "docker compose"
+  keyword: "dc"
+  snippet: "docker compose"
+  
+- name: "windows dir"
+  keyword: "win"
+  snippet: "/mnt/c/{{dir}}"
+  context:
+    lbuffer: '.+\s'
+
 - name: branch
   keyword: B
   snippet: git symbolic-ref --short HEAD
