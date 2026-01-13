@@ -78,6 +78,10 @@ config.font = wezterm.font('HackGen Console', { weight = 'Regular'})
 config.font_size = 13.0
 config.color_scheme = "Tokyo Night Moon"
 config.use_ime = true
+config.inactive_pane_hsb = {
+  saturation = 0.3,
+  brightness = 0.3,
+}
 
 -- WSL + デフォルト起動シェル
 config.default_prog = { "wsl", "~", "zsh" }
