@@ -18,6 +18,7 @@ vim.opt.mouse = 'a'
 vim.opt.title = true
 vim.opt.titlestring = "%t"
 vim.g.clever_f_smart_case = 1
+vim.opt.exrc = true
 vim.opt.clipboard = 'unnamedplus'
 vim.g.clipboard = {
   name = "win32yank-wsl",
