@@ -1,5 +1,8 @@
 # ~/.zshrc
 stty -ixon -ixoff
+autoload -Uz compinit smart-insert-last-word
+compinit -C -d "$HOME/.zcompdump"
+
 autoload -Uz smart-insert-last-word
 zle -N insert-last-word smart-insert-last-word
 
@@ -51,8 +54,8 @@ export ZENO_HOME=~/.config/zsh/zeno
 export ZENO_GIT_CAT="bat --color=always"
 export ZENO_GIT_TREE="eza --tree"
 export BROWSER=wslview
-export QUICKLOOK_PATH=$(which QuickLook.exe)
-export NVM_DIR="$HOME/.nvm"
+# export NVM_DIR="$HOME/.nvm"
+# export QUICKLOOK_PATH=$(which QuickLook.exe)
 
 # =========================================================
 # FUNCTION
@@ -126,20 +129,20 @@ clip() {
   } | clip.exe
 }
 
-qlook() {
-  local win_path=$(wslpath -w "$1")
-  "$QUICKLOOK_PATH" "$win_path"
-}
-
-qlook_preview() {
-  local win_path=$(wslpath -w "$1")
-  "$QUICKLOOK_PATH" "$win_path" > null &
-}
-
-fql() {
-  fzf --preview 'batcat --color=always --style=numbers {}' \
-      --bind "ctrl-space:execute($QUICKLOOK_PATH \$(wslpath -w {}) > /dev/null 2>&1 &)"
-}
+# qlook() {
+#   local win_path=$(wslpath -w "$1")
+#   "$QUICKLOOK_PATH" "$win_path"
+# }
+#
+# qlook_preview() {
+#   local win_path=$(wslpath -w "$1")
+#   "$QUICKLOOK_PATH" "$win_path" > null &
+# }
+#
+# fql() {
+#   fzf --preview 'batcat --color=always --style=numbers {}' \
+#       --bind "ctrl-space:execute($QUICKLOOK_PATH \$(wslpath -w {}) > /dev/null 2>&1 &)"
+# }
 
 # =========================================================
 # alias
@@ -176,7 +179,7 @@ cache_init() {
 cache_init starship "starship init zsh"
 cache_init zoxide  "zoxide init zsh"
 source "$HOME/.deno/env"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  #
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  #
 
 function ensure_zcompiled {
   local compiled="$1.zwc"
@@ -197,9 +200,6 @@ if [[ ! -r "$sheldon_cache" || "$sheldon_toml" -nt "$sheldon_cache" ]]; then
   mkdir -p $cache_dir
   sheldon source > $sheldon_cache
 fi
-
-autoload -Uz compinit
-compinit -u
 
 zcomp_source "$sheldon_cache"
 unset cache_dir sheldon_cache sheldon_toml
