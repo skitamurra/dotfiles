@@ -103,7 +103,7 @@ return {
     { key = 'L', mods = 'ALT', action = wezterm.action.SendKey { key = "End" }},
     { key = 'c', mods = 'SHIFT|CTRL', action = act.CopyTo 'Clipboard' },
     { key = 'c', mods = 'SUPER', action = act.CopyTo 'Clipboard' },
-    --{ key = 'f', mods = 'SHIFT|CTRL', action = act.Search 'CurrentSelectionOrEmptyString' },
+    { key = '/', mods = 'LEADER', action = act.Search 'CurrentSelectionOrEmptyString' },
     --{ key = 'f', mods = 'SUPER', action = act.Search 'CurrentSelectionOrEmptyString' },
     -- { key = 'k', mods = 'SHIFT|CTRL', action = act.ClearScrollback 'ScrollbackOnly' },
     { key = 'k', mods = 'SUPER', action = act.ClearScrollback 'ScrollbackOnly' },
