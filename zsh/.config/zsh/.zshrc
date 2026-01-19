@@ -54,6 +54,7 @@ export ZENO_HOME=~/.config/zsh/zeno
 export ZENO_GIT_CAT="bat --color=always"
 export ZENO_GIT_TREE="eza --tree"
 export BROWSER=wslview
+export PATH="$HOME/.cargo/bin:$PATH"
 # export NVM_DIR="$HOME/.nvm"
 # export QUICKLOOK_PATH=$(which QuickLook.exe)
 
