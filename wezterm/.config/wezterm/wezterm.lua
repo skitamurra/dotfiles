@@ -20,7 +20,10 @@ config.default_prog = { "wsl", "~", "zsh" }
 config.unix_domains = {{ name = 'idle' }}
 
 config.color_scheme = "Tokyo Night Moon"
-config.font = wezterm.font('HackGen Console', { weight = 'Regular'})
+config.font = wezterm.font_with_fallback({
+  { family = 'HackGen Console', weight = 'Regular' },
+  { family = 'SauceCodePro Nerd Font Mono' }
+})
 config.font_size = 13.0
 
 config.window_frame = { active_titlebar_bg = "none" }
