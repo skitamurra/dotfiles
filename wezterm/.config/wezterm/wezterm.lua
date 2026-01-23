@@ -43,8 +43,8 @@ config.show_new_tab_button_in_tab_bar = false
 config.show_close_tab_button_in_tabs = false
 
 config.inactive_pane_hsb = {
-  saturation = 0.3,
-  brightness = 0.3,
+  saturation = 0.4,
+  brightness = 0.4,
 }
 
 config.colors = {
@@ -62,7 +62,7 @@ wezterm.on("format-tab-title", function(tab)
     { Text = wezterm.nerdfonts.ple_lower_right_triangle },
     { Background = { Color = background } },
     { Foreground = { Color = "#FFFFFF" } },
-    { Text = "    " .. tab.active_pane.current_working_dir.file_path .. "    " },
+    { Text = "    " .. tab.active_pane.pane_id .. "    " },
     { Background = { Color = "none" } },
     { Foreground = { Color = background } },
     { Text = wezterm.nerdfonts.ple_upper_left_triangle },
