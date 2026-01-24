@@ -255,3 +255,4 @@ export PATH="$JAVA_HOME/bin:$PATH"
 export PATH="$PATH:$HOME/.pub-cache/bin"
 
 export PATH="$PATH:$(go env GOPATH)/bin"
+. "$HOME/.cargo/env"
