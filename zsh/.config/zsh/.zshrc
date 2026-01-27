@@ -129,20 +129,12 @@ clip() {
   } | clip.exe
 }
 
-# qlook() {
-#   local win_path=$(wslpath -w "$1")
-#   "$QUICKLOOK_PATH" "$win_path"
-# }
-#
-# qlook_preview() {
-#   local win_path=$(wslpath -w "$1")
-#   "$QUICKLOOK_PATH" "$win_path" > null &
-# }
-#
-# fql() {
-#   fzf --preview 'batcat --color=always --style=numbers {}' \
-#       --bind "ctrl-space:execute($QUICKLOOK_PATH \$(wslpath -w {}) > /dev/null 2>&1 &)"
-# }
+n-find() {
+  local file
+  file=$(find . -maxdepth 1 -type f | fzf --preview "batcat --color=always {}")
+
+  [ -n "$file" ] && nvim "$file"
+}
 
 # =========================================================
 # alias
@@ -154,11 +146,6 @@ alias egrep='egrep --color=auto'
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
-alias v='nvim'
-alias v-nvim='nvim $HOME/.config/nvim/init.lua'
-alias v-bashrc='nvim ~/.bashrc'
-alias source-bashrc='source ~/.bashrc'
-alias v-wezterm='nvim $HOME/.config/wezterm/wezterm.lua'
 alias note='nvim ~/NOTE.md'
 
 # =========================================================
