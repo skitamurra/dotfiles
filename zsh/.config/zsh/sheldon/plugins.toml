@@ -26,10 +26,6 @@ apply = ["defer"]
 github = "greymd/docker-zsh-completion"
 apply = ["defer"]
 
-[plugins.zsh-vi-mode]
-github = "jeffreytse/zsh-vi-mode"
-apply = ["defer"]
-
 [plugins.zsh-autopair]
 github = "hlissner/zsh-autopair"
 apply = ["defer"]

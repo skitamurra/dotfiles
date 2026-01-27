@@ -1,10 +1,13 @@
 # ~/.zshrc
 stty -ixon -ixoff
-autoload -Uz compinit smart-insert-last-word
+autoload -Uz compinit
 compinit -C -d "$HOME/.zcompdump"
 
 autoload -Uz smart-insert-last-word
 zle -N insert-last-word smart-insert-last-word
+
+autoload -Uz edit-command-line
+zle -N edit-command-line
 
 HISTFILE=~/.config/zsh/.zsh_history
 HISTSIZE=10000
@@ -32,6 +35,7 @@ fzf() {
 # =========================================================
 # EXPORT
 # =========================================================
+export EDITOR=nvim
 export PATH="$HOME/bin:$PATH"
 export PATH="/opt/nvim-linux-x86_64/bin:$PATH"
 export PATH="$HOME/dev/flutter/bin:$PATH"
@@ -59,29 +63,6 @@ export PATH="$HOME/.local/share/fnm:$PATH"
 # =========================================================
 # FUNCTION
 # =========================================================
-zeno_bindkeys() {
-  if [[ -n $ZENO_LOADED ]]; then
-    bindkey ' '  zeno-auto-snippet
-    bindkey '^m' zeno-auto-snippet-and-accept-line
-    bindkey '^i' zeno-completion
-    bindkey '^r' zeno-smart-history-selection
-  fi
-}
-
-function zvm_config() {
-  ZVM_VI_INSERT_ESCAPE_BINDKEY=jk
-  ZVM_SYSTEM_CLIPBOARD_ENABLED=true
-  ZVM_CLIPBOARD_COPY_CMD='clip.exe'
-  ZVM_CLIPBOARD_PASTE_CMD='powershell.exe -NoProfile -Command Get-Clipboard'
-}
-
-function zvm_after_init() {
-  autopair-init
-  zeno_bindkeys
-  bindkey '^q' push-line
-  bindkey '^]' insert-last-word
-}
-
 cd() {
   if [ $# -eq 0 ]; then
     builtin cd ~
@@ -189,3 +170,11 @@ fi
 
 zcomp_source "$sheldon_cache"
 unset cache_dir sheldon_cache sheldon_toml
+
+bindkey ' '  zeno-auto-snippet
+bindkey '^m' zeno-auto-snippet-and-accept-line
+bindkey '^i' zeno-completion
+bindkey '^r' zeno-smart-history-selection
+bindkey '^q' push-line
+bindkey '^]' insert-last-word
+bindkey '^e' edit-command-line
