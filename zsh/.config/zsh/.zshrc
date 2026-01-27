@@ -33,7 +33,6 @@ fzf() {
 # EXPORT
 # =========================================================
 export PATH="$HOME/bin:$PATH"
-export PATH="$HOME/.nodenv/bin:$PATH"
 export PATH="/opt/nvim-linux-x86_64/bin:$PATH"
 export PATH="$HOME/dev/flutter/bin:$PATH"
 export PATH="$HOME/develop/yzrh-utils/bin:$PATH"
@@ -43,7 +42,7 @@ export ANDROID_HOME="$HOME/Android/Sdk"
 export ANDROID_SDK_ROOT="$ANDROID_HOME"
 export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
 export PATH="$ANDROID_HOME/platform-tools:$PATH"
-export JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
+export JAVA_HOME="/usr/lib/jvm/java-21-openjdk-amd64"
 export PATH="$JAVA_HOME/bin:$PATH"
 export PATH="$HOME/.pub-cache/bin:$PATH"
 export GOPATH="$HOME/go"
@@ -55,7 +54,7 @@ export ZENO_GIT_CAT="bat --color=always"
 export ZENO_GIT_TREE="eza --tree"
 export BROWSER=wslview
 export PATH="$HOME/.cargo/bin:$PATH"
-# export NVM_DIR="$HOME/.nvm"
+export PATH="$HOME/.local/share/fnm:$PATH"
 # export QUICKLOOK_PATH=$(which QuickLook.exe)
 
 # =========================================================
@@ -180,7 +179,7 @@ cache_init() {
 cache_init starship "starship init zsh"
 cache_init zoxide  "zoxide init zsh"
 source "$HOME/.deno/env"
-# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  #
+eval "$(fnm env --shell zsh --use-on-cd --version-file-strategy=recursive --resolve-engines)"
 
 function ensure_zcompiled {
   local compiled="$1.zwc"
