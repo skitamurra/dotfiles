@@ -97,7 +97,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("UserLspConfig", {}),
   callback = function(ev)
     vim.api.nvim_create_autocmd("BufWritePre", {
-      pattern = { "*.rs", "*.py", "*.ts" },
+      pattern = { "*.rs" },
       callback = function()
         vim.lsp.buf.format({
           buffer = ev.buf,
