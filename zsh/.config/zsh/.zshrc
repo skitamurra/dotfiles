@@ -55,7 +55,6 @@ export ZENO_GIT_TREE="eza --tree"
 export BROWSER=wslview
 export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="$HOME/.local/share/fnm:$PATH"
-# export QUICKLOOK_PATH=$(which QuickLook.exe)
 
 # =========================================================
 # FUNCTION
