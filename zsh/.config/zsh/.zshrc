@@ -111,10 +111,39 @@ clip() {
 }
 
 n-find() {
-  local file
-  file=$(find . -maxdepth 1 -type f | fzf --preview "batcat --color=always {}")
+  (
+    local target
+    while true; do
+      local out
+      out=$(find . -maxdepth 1 ! -path . | fzf \
+        --preview "if [ -d {} ]; then ls -AF --color=always {}; else batcat --color=always {}; fi" \
+        --header "PWD: $PWD | ^: Up" \
+        --expect="^")
+      local state=$?
+      
+      local key=$(head -1 <<< "$out")
+      target=$(tail -1 <<< "$out")
 
-  [ -n "$file" ] && nvim "$file"
+      if [ $state -ne 0 ] && [ -z "$key" ]; then
+        break
+      fi
+
+      if [[ "$key" == "^" ]]; then
+        cd ..
+        continue
+      fi
+
+      [ -z "$target" ] && break
+
+      if [ -d "$target" ]; then
+        cd "$target"
+        continue
+      else
+        nvim "$target"
+        break
+      fi
+    done
+  )
 }
 
 # =========================================================
