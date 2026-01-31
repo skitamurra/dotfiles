@@ -1,0 +1,10 @@
+[Unit]
+Description=Language server multiplexer server
+
+[Service]
+Type=simple
+ExecStart=%h/.config/lspmux/lspmux server
+Environment="PATH=%h/.local/share/nvim/mason/bin:%h/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:%h/.config/lspmux"
+
+[Install]
+WantedBy=default.target
