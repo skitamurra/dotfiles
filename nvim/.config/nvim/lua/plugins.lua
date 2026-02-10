@@ -313,6 +313,9 @@ local plugins = {
     "nvim-flutter/flutter-tools.nvim",
     ft = { "dart" },
     config = true,
+    opts = {
+      root_patterns = { ".git", "pubspec.yaml" },
+    }
   },
   "nvim-mini/mini.icons",
   {
