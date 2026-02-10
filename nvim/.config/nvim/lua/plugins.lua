@@ -308,6 +308,7 @@ local plugins = {
     event = "VeryLazy",
   },
   "stevearc/dressing.nvim",
+  "nvim-lua/plenary.nvim",
   {
     "nvim-flutter/flutter-tools.nvim",
     ft = { "dart" },
