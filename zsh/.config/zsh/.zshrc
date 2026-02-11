@@ -9,7 +9,6 @@ zle -N insert-last-word smart-insert-last-word
 autoload -Uz edit-command-line
 zle -N edit-command-line
 
-HISTFILE=~/.config/zsh/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
 
