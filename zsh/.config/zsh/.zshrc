@@ -230,6 +230,8 @@ if [[ ! -r "$sheldon_cache" || "$sheldon_toml" -nt "$sheldon_cache" ]]; then
   sheldon source > $sheldon_cache
 fi
 
+ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(zeno-auto-snippet-and-accept-line)
+
 zcomp_source "$sheldon_cache"
 unset cache_dir sheldon_cache sheldon_toml
 
