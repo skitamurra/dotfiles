@@ -110,8 +110,9 @@ clip() {
   } | clip.exe
 }
 
-n-find() {
+nvim-fzf() {
   (
+    exec 1>/dev/null
     local target
     while true; do
       local out
@@ -120,30 +121,31 @@ n-find() {
         --header "PWD: $PWD | ^: Up" \
         --expect="^")
       local state=$?
-      
+
       local key=$(head -1 <<< "$out")
       target=$(tail -1 <<< "$out")
-
       if [ $state -ne 0 ] && [ -z "$key" ]; then
         break
       fi
-
       if [[ "$key" == "^" ]]; then
         cd ..
         continue
       fi
-
       [ -z "$target" ] && break
-
       if [ -d "$target" ]; then
         cd "$target"
         continue
       else
-        nvim "$target"
+        nvim "$target" </dev/tty >/dev/tty 2>&1
         break
       fi
     done
   )
+  zle reset-prompt
+}
+zle -N nvim-fzf
+bindkey '^n' nvim-fzf
+
 function ghq-fzf() {
   local src=$(ghq list | fzf --preview "batcat --color=always --style=header,grid --line-range :80 $(ghq root)/{}/README.*")
   if [ -n "$src" ]; then
