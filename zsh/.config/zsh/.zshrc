@@ -144,7 +144,16 @@ n-find() {
       fi
     done
   )
+function ghq-fzf() {
+  local src=$(ghq list | fzf --preview "batcat --color=always --style=header,grid --line-range :80 $(ghq root)/{}/README.*")
+  if [ -n "$src" ]; then
+    BUFFER="cd $(ghq root)/$src"
+    zle accept-line
+  fi
+  zle reset-prompt
 }
+zle -N ghq-fzf
+bindkey '^g' ghq-fzf
 
 # =========================================================
 # alias
