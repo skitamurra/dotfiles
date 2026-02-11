@@ -117,7 +117,7 @@ nvim-fzf() {
     while true; do
       local out
       out=$(find . -maxdepth 1 ! -path . | fzf \
-        --preview "if [ -d {} ]; then ls -AF --color=always {}; else batcat --color=always {}; fi" \
+        --preview "if [ -d {} ]; then ls -AF --color=always {}; else bat --color=always {}; fi" \
         --header "PWD: $PWD | ^: Up" \
         --expect="^")
       local state=$?
@@ -144,10 +144,9 @@ nvim-fzf() {
   zle reset-prompt
 }
 zle -N nvim-fzf
-bindkey '^n' nvim-fzf
 
 function ghq-fzf() {
-  local src=$(ghq list | fzf --preview "batcat --color=always --style=header,grid --line-range :80 $(ghq root)/{}/README.*")
+  local src=$(ghq list | fzf --preview "bat --color=always --style=header,grid --line-range :80 $(ghq root)/{}/README.*")
   if [ -n "$src" ]; then
     BUFFER="cd $(ghq root)/$src"
     zle accept-line
@@ -155,7 +154,6 @@ function ghq-fzf() {
   zle reset-prompt
 }
 zle -N ghq-fzf
-bindkey '^g' ghq-fzf
 
 create_gitignore() {
     local input_file="$1"
@@ -190,6 +188,7 @@ alias la='ls -A'
 alias l='ls -CF'
 alias note='nvim ~/NOTE.md'
 alias gia='create_gitignore'
+alias bat='batcat'
 
 # =========================================================
 # SOURCE
@@ -241,3 +240,5 @@ bindkey '^r' zeno-smart-history-selection
 bindkey '^q' push-line
 bindkey '^]' insert-last-word
 bindkey '^e' edit-command-line
+bindkey '^n' nvim-fzf
+bindkey '^g' ghq-fzf
