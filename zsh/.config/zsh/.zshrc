@@ -157,6 +157,27 @@ function ghq-fzf() {
 zle -N ghq-fzf
 bindkey '^g' ghq-fzf
 
+create_gitignore() {
+    local input_file="$1"
+
+    if [[ -z "$input_file" ]]; then
+        input_file=".gitignore"
+    fi
+
+    local selected=$(gibo list | fzf \
+        --multi \
+        --preview "gibo dump {} | bat --style=numbers --color=always --paging=never")
+
+    if [[ -z "$selected" ]]; then
+        echo "No templates selected. Exiting."
+        return
+    fi
+
+    echo "$selected" | xargs gibo dump >> "$input_file"
+
+    bat "$input_file"
+}
+
 # =========================================================
 # alias
 # =========================================================
@@ -168,6 +189,7 @@ alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
 alias note='nvim ~/NOTE.md'
+alias gia='create_gitignore'
 
 # =========================================================
 # SOURCE
