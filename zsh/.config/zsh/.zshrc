@@ -1,5 +1,4 @@
 # ~/.zshrc
-stty -ixon -ixoff
 autoload -Uz compinit
 compinit -C -d "$HOME/.zcompdump"
 
@@ -51,8 +50,8 @@ export PATH="$HOME/.pub-cache/bin:$PATH"
 export GOPATH="$HOME/go"
 export PATH="$GOPATH/bin:$PATH"
 export PATH="/usr/local/bin:$PATH"
-export SHELDON_CONFIG_DIR="$HOME/.config/zsh/sheldon"
-export ZENO_HOME=~/.config/zsh/zeno
+export SHELDON_CONFIG_DIR="$HOME/.config/sheldon"
+export ZENO_HOME=~/.config/zeno
 export ZENO_GIT_CAT="batcat --color=always"
 export ZENO_GIT_TREE="eza --tree"
 export BROWSER=wslview
@@ -209,7 +208,7 @@ function zcomp_source {
 ensure_zcompiled ~/.config/zsh/.zshrc
 
 sheldon_cache="$cache_dir/sheldon.zsh"
-sheldon_toml="$HOME/.config/zsh/sheldon/plugins.toml"
+sheldon_toml="$SHELDON_CONFIG_DIR/plugins.toml"
 if [[ ! -r "$sheldon_cache" || "$sheldon_toml" -nt "$sheldon_cache" ]]; then
   mkdir -p $cache_dir
   sheldon source > $sheldon_cache
