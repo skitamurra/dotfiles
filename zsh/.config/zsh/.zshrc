@@ -54,7 +54,7 @@ export PATH="$GOPATH/bin:$PATH"
 export PATH="/usr/local/bin:$PATH"
 export SHELDON_CONFIG_DIR="$HOME/.config/zsh/sheldon"
 export ZENO_HOME=~/.config/zsh/zeno
-export ZENO_GIT_CAT="bat --color=always"
+export ZENO_GIT_CAT="batcat --color=always"
 export ZENO_GIT_TREE="eza --tree"
 export BROWSER=wslview
 export PATH="$HOME/.cargo/bin:$PATH"
@@ -117,7 +117,7 @@ nvim-fzf() {
     while true; do
       local out
       out=$(find . -maxdepth 1 ! -path . | fzf \
-        --preview "if [ -d {} ]; then ls -AF --color=always {}; else bat --color=always {}; fi" \
+        --preview "if [ -d {} ]; then ls -AF --color=always {}; else batcat --color=always {}; fi" \
         --header "PWD: $PWD | ^: Up" \
         --expect="^")
       local state=$?
@@ -146,7 +146,7 @@ nvim-fzf() {
 zle -N nvim-fzf
 
 function ghq-fzf() {
-  local src=$(ghq list | fzf --preview "bat --color=always --style=header,grid --line-range :80 $(ghq root)/{}/README.*")
+  local src=$(ghq list | fzf --preview "batcat --color=always --style=header,grid --line-range :80 $(ghq root)/{}/README.*")
   if [ -n "$src" ]; then
     BUFFER="cd $(ghq root)/$src"
     zle accept-line
@@ -164,7 +164,7 @@ create_gitignore() {
 
     local selected=$(gibo list | fzf \
         --multi \
-        --preview "gibo dump {} | bat --style=numbers --color=always --paging=never")
+        --preview "gibo dump {} | batcat --style=numbers --color=always --paging=never")
 
     if [[ -z "$selected" ]]; then
         echo "No templates selected. Exiting."
@@ -173,7 +173,7 @@ create_gitignore() {
 
     echo "$selected" | xargs gibo dump >> "$input_file"
 
-    bat "$input_file"
+    batcat "$input_file"
 }
 
 # =========================================================
@@ -188,7 +188,7 @@ alias la='ls -A'
 alias l='ls -CF'
 alias note='nvim ~/NOTE.md'
 alias gia='create_gitignore'
-alias bat='batcat'
+alias bat='batcat --color=always'
 
 # =========================================================
 # SOURCE
