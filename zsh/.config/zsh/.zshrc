@@ -65,13 +65,8 @@ export PATH="$HOME/.pyenv/bin:$PATH"
 # FUNCTION
 # =========================================================
 cd() {
-  if [ $# -eq 0 ]; then
-    builtin cd ~
-    return
-  fi
-
   case "$1" in
-    -|/*|./*|../*|~* )
+    ""|-|/*|./*|../*|~* )
       builtin cd "$@"
       return
       ;;
@@ -82,9 +77,7 @@ cd() {
     return
   fi
 
-  local dest
-  dest="$(zoxide query -- "$1" 2>/dev/null)"
-
+  local dest="$(zoxide query -- "$1" 2>/dev/null)"
   if [ -n "$dest" ] && [ -d "$dest" ]; then
     builtin cd "$dest"
     return
@@ -120,13 +113,9 @@ nvim-fzf() {
         --preview "if [ -d {} ]; then ls -AF --color=always {}; else batcat --color=always {}; fi" \
         --header "PWD: $PWD | ^: Up" \
         --expect="^")
-      local state=$?
 
       local key=$(head -1 <<< "$out")
       target=$(tail -1 <<< "$out")
-      if [ $state -ne 0 ] && [ -z "$key" ]; then
-        break
-      fi
       if [[ "$key" == "^" ]]; then
         cd ..
         continue
@@ -157,7 +146,6 @@ zle -N ghq-fzf
 
 create_gitignore() {
     local input_file="$1"
-
     if [[ -z "$input_file" ]]; then
         input_file=".gitignore"
     fi
@@ -165,14 +153,12 @@ create_gitignore() {
     local selected=$(gibo list | fzf \
         --multi \
         --preview "gibo dump {} | batcat --style=numbers --color=always --paging=never")
-
     if [[ -z "$selected" ]]; then
         echo "No templates selected. Exiting."
         return
     fi
 
     echo "$selected" | xargs gibo dump >> "$input_file"
-
     batcat "$input_file"
 }
 
