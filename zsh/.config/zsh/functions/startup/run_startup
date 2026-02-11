@@ -1,0 +1,19 @@
+#!/bin/zsh
+
+cache_init starship "starship init zsh"
+cache_init zoxide  "zoxide init zsh"
+
+[[ -f "$HOME/.deno/env" ]] && source "$HOME/.deno/env"
+eval "$(fnm env --shell zsh --use-on-cd --version-file-strategy=recursive --resolve-engines)"
+
+local cache_dir=${XDG_CACHE_HOME:-$HOME/.cache}
+local sheldon_cache="$cache_dir/sheldon.zsh"
+local sheldon_conf="$SHELDON_CONFIG_DIR/plugins.toml"
+
+if [[ ! -r "$sheldon_cache" || "$sheldon_conf" -nt "$sheldon_cache" ]]; then
+  mkdir -p "$cache_dir"
+  sheldon source > "$sheldon_cache"
+fi
+
+ensure_zcompiled "$sheldon_cache"
+source "$sheldon_cache"

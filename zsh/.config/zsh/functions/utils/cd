@@ -1,0 +1,22 @@
+#!/bin/zsh
+
+case "$1" in
+  ""|-|/*|./*|../*|~* )
+    builtin cd "$@"
+    return
+    ;;
+esac
+
+if [ -d "$1" ]; then
+  builtin cd "$1"
+  return
+fi
+
+local dest="$(zoxide query -- "$1" 2>/dev/null)"
+if [ -n "$dest" ] && [ -d "$dest" ]; then
+  builtin cd "$dest"
+  return
+fi
+
+print -u2 "cd: no such file or directory: $1"
+return 1

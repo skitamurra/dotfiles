@@ -1,0 +1,7 @@
+#!/bin/zsh
+
+local cmd="$*"
+{
+  echo "$ $cmd"
+  eval "$cmd" 2>&1 | tee /dev/tty
+} | clip.exe

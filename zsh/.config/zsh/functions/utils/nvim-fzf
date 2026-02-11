@@ -1,0 +1,29 @@
+#!/bin/zsh
+
+(
+  exec 1>/dev/null
+  local target
+  while true; do
+    local out
+    out=$(find . -maxdepth 1 ! -path . | fzf \
+      --preview "if [ -d {} ]; then ls -AF --color=always {}; else batcat --color=always {}; fi" \
+      --header "PWD: $PWD | ^: Up" \
+      --expect="^")
+
+    local key=$(head -1 <<< "$out")
+    target=$(tail -1 <<< "$out")
+    if [[ "$key" == "^" ]]; then
+      cd ..
+      continue
+    fi
+    [ -z "$target" ] && break
+    if [ -d "$target" ]; then
+      cd "$target"
+      continue
+    else
+      nvim "$target" </dev/tty >/dev/tty 2>&1
+      break
+    fi
+  done
+)
+zle reset-prompt

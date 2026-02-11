@@ -1,0 +1,17 @@
+#!/bin/zsh
+
+local input_file="$1"
+if [[ -z "$input_file" ]]; then
+    input_file=".gitignore"
+fi
+
+local selected=$(gibo list | fzf \
+    --multi \
+    --preview "gibo dump {} | batcat --style=numbers --color=always --paging=never")
+if [[ -z "$selected" ]]; then
+    echo "No templates selected. Exiting."
+    return
+fi
+
+echo "$selected" | xargs gibo dump >> "$input_file"
+batcat "$input_file"
