@@ -59,6 +59,7 @@ export SHELDON_CONFIG_DIR="$HOME/.config/sheldon"
 export ZENO_HOME=~/.config/zeno
 export ZENO_GIT_CAT="batcat --color=always"
 export ZENO_GIT_TREE="eza --tree"
+export ZENO_COMPLETION_FALLBACK=fzf-tab-complete
 export BROWSER=wslview
 export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="$HOME/.local/share/fnm:$PATH"
