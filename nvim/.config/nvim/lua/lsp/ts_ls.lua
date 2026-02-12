@@ -1,8 +1,6 @@
 local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"
-
 local vue_language_server_path = vim.fn.stdpath('data')
   .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
-
 local vue_plugin = {
   name = "@vue/typescript-plugin",
   location = vue_language_server_path,
@@ -12,7 +10,16 @@ local vue_plugin = {
 }
 
 return {
-  cmd = { mason_bin .. "/vue-language-server", "--stdio" },
+  cmd = { mason_bin .. "/typescript-language-server", "--stdio" },
+  filetypes = {
+    'javascript',
+    'javascriptreact',
+    'javascript.jsx',
+    'typescript',
+    'typescriptreact',
+    'typescript.tsx',
+    'vue',
+  },
   settings = {
     vtsls = {
       tsserver = {
@@ -22,5 +29,13 @@ return {
       },
     },
   },
-  filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+  init_options = {
+    plugins = {
+      {
+        name = "@vue/typescript-plugin",
+        location = vue_language_server_path,
+        languages = { "vue" },
+      },
+    },
+  },
 }
