@@ -21,7 +21,7 @@ format = "[@$hostname ]($style)"
 disabled = false
 
 [directory]
-truncation_length = 5
+truncation_length = 2
 truncate_to_repo = false
 truncation_symbol = "…/"
 style = "white"
