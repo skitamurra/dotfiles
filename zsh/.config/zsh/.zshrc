@@ -10,11 +10,11 @@ setopt hist_ignore_space
 setopt hist_reduce_blanks
 setopt hist_no_store
 
-local func_dir="$HOME/.config/zsh/functions"
-typeset -U fpath && fpath=($func_dir(N/) $func_dir/**/*(N/) $fpath)
-autoload -Uz $func_dir/**/*(N.:t)
-autoload -Uz compinit && compinit -C -d "$HOME/.zcompdump"
-autoload -Uz smart-insert-last-word edit-command-line
+ZSH_HOME="$HOME/.config/zsh"
+local func_dir="$ZSH_HOME/functions"
+typeset -gU fpath=("$ZSH_HOME/completions" $func_dir(N/) $func_dir/**/*(N/) $fpath)
+autoload -Uz compinit smart-insert-last-word edit-command-line $func_dir/**/*(N.:t)
+compinit -C -d "$HOME/.zcompdump"
 zle -N nvim-fzf
 zle -N ghq-fzf
 zle -N smart-insert-last-word
