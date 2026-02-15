@@ -17,3 +17,4 @@ fi
 
 ensure_zcompiled "$sheldon_cache"
 source "$sheldon_cache"
+source "$HOME/.config/zsh/wezterm_shell_integration.sh"

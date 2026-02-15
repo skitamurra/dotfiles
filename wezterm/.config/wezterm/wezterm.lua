@@ -2,6 +2,8 @@ local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 
 local cfg_file = wezterm.config_file
+config.automatically_reload_config = true
+
 local cfg_dir  = cfg_file:gsub("[^/\\]+$", ""):gsub("\\", "/")
 package.path = table.concat({
   cfg_dir .. "?.lua",
@@ -53,50 +55,36 @@ config.colors = {
   },
 }
 
-wezterm.on("format-tab-title", function(tab)
-  local background = tab.is_active and "#ae8b2d" or "#5c6d74"
+-- wezterm.on('gui-startup', function (cmd)
+--   -- tab1
+--   local tab1, pane1, window = wezterm.mux.spawn_window(cmd or {})
+--   pane1:send_text("note\n")
+--   window:gui_window():maximize()
+--
+--   -- tab2
+--   local _, root = window:spawn_tab({})
+--   local left_top = root
+--   local right_top = root:split({
+--     direction = "Right",
+--     size = 0.5,
+--   })
+--   left_top:send_text("cd docker\n")
+--   right_top:send_text("cd auth\n")
+--   left_top:split({
+--     direction = "Bottom",
+--     size = 0.5,
+--   })
+--   right_top:split({
+--     direction = "Bottom",
+--     size = 0.5,
+--   })
+--
+--   -- tab3
+--   window:spawn_tab({})
+--
+--   tab1:activate()
+-- end)
 
-  return {
-    { Background = { Color = "none" } },
-    { Foreground = { Color = background } },
-    { Text = wezterm.nerdfonts.ple_lower_right_triangle },
-    { Background = { Color = background } },
-    { Foreground = { Color = "#FFFFFF" } },
-    { Text = "    " .. tab.active_pane.pane_id .. "    " },
-    { Background = { Color = "none" } },
-    { Foreground = { Color = background } },
-    { Text = wezterm.nerdfonts.ple_upper_left_triangle },
-  }
-end)
-
-wezterm.on('gui-startup', function (cmd)
-  -- tab1
-  local tab1, pane1, window = wezterm.mux.spawn_window(cmd or {})
-  pane1:send_text("note\n")
-  window:gui_window():maximize()
-
-  -- tab2
-  local _, root = window:spawn_tab({})
-  local left_top = root
-  local right_top = root:split({
-    direction = "Right",
-    size = 0.5,
-  })
-  left_top:send_text("cd docker\n")
-  right_top:send_text("cd auth\n")
-  left_top:split({
-    direction = "Bottom",
-    size = 0.5,
-  })
-  right_top:split({
-    direction = "Bottom",
-    size = 0.5,
-  })
-
-  -- tab3
-  window:spawn_tab({})
-
-  tab1:activate()
-end)
-
+require("workspace").apply_to_config(config)
+require("tab").apply_to_config(config)
 return config
