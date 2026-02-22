@@ -35,3 +35,9 @@ chmod +x ~/.local/bin/win32yank.exe
 ```powershell
 [Environment]::SetEnvironmentVariable("WEZTERM_CONFIG_FILE", (wsl.exe sh -c 'wslpath -w $(readlink -f ~/.config/wezterm/wezterm.lua)').Trim(), "User")
 ```
+
+**rustowl**
+```bash
+curl -L https://github.com/cordx56/rustowl/releases/download/v1.0.0-rc.1/rustowl-x86_64-unknown-linux-gnu -o ~/.cargo/bin/rustowl
+chmod +x ~/.cargo/bin/rustowl
+```
