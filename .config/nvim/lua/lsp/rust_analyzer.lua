@@ -1,6 +1,5 @@
-local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"
 return {
-  cmd = { mason_bin .. "/rust-analyzer" },
+  cmd = { "rust-analyzer" },
   filetypes = { "rust" },
   root_markers = { "Cargo.toml", ".git"},
   settings = {
