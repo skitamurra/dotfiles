@@ -29,12 +29,16 @@ local function detect_python()
 end
 
 local python_path = detect_python()
-if python_path then
-  pyright_config.settings = {
-    python = {
-      pythonPath = python_path,
+local global_stub_path = vim.fn.expand("~/.local/share/python-stubs")
+pyright_config.settings = {
+  python = {
+    pythonPath = python_path,
+    analysis = {
+      extraPaths = {
+        global_stub_path
+      },
     },
-  }
-end
+  },
+}
 
 return pyright_config
