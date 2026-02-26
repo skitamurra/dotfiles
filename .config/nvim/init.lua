@@ -1,5 +1,5 @@
 vim.g.mapleader = " "
-vim.o.timeoutlen = 130
+vim.o.timeoutlen = 300
 vim.opt.cmdheight = 0
 vim.opt.number = true
 vim.opt.relativenumber = true
