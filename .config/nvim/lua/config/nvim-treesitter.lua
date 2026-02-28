@@ -3,7 +3,8 @@
 require("nvim-treesitter.configs").setup({
   ensure_installed = {
     "lua", "python", "typescript", "javascript",
-    "vue", "tsx", "json", "html", "css", "dart"
+    "vue", "tsx", "json", "html", "css", "dart",
+    "regex", "bash",
   },
   highlight = {
     enable = true,

@@ -78,5 +78,10 @@ Snacks.setup({
   },
   indent = { enabled = true },
   notifier = { enabled = true },
-  image = { enabled = true},
+  image = {
+    enabled = true,
+    math = { enabled = false },
+    mermaid = { enabled = false },
+  },
+  picker = { enabled = true},
 })

@@ -215,6 +215,7 @@ local plugins = {
     ft = { "markdown", "md" },
     dependencies = { "nvim-treesitter/nvim-treesitter" },
     opts = {
+      latex = { enabled = false },
       heading = {
         width = "block",
         left_pad = 0,
@@ -332,6 +333,13 @@ local plugins = {
     "folke/noice.nvim",
     event = "VeryLazy",
       opts = {
+        lsp = {
+          override = {
+            ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+            ["vim.lsp.util.stylize_markdown"] = true,
+            ["cmp.entry.get_documentation"] = true,
+          },
+        },
         presets = {
           lsp_doc_border = true,
         },
@@ -395,6 +403,7 @@ local plugins = {
   {
     "folke/snacks.nvim",
     lazy = false,
+    priority = 1000,
     config = function ()
       require("config.snacks")
     end,
@@ -432,6 +441,7 @@ local plugins = {
     "y3owk1n/undo-glow.nvim",
     event = { "BufReadPre", "BufNewFile" },
     opts = {
+      fallback_for_transparency = { bg = "#222436" },
       highlights = {
         undo = { hl_color = { bg = "#693232" } },
         redo = { hl_color = { bg = "#2F4640" } },
