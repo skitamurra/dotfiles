@@ -7,6 +7,7 @@ return {
     { key = 'Tab', mods = 'SHIFT|CTRL', action = act.ActivateTabRelative(-1) },
     { key = 'Enter', mods = 'ALT', action = act.ToggleFullScreen },
     { key = 'Enter', mods = 'CTRL', action = wezterm.action.SendString '\x1b[13;5u' },
+    { key = "Enter", mods = "SHIFT", action = wezterm.action.SendString("\n") },
     { key = '!', mods = 'CTRL', action = act.ActivateTab(0) },
     { key = '!', mods = 'SHIFT|CTRL', action = act.ActivateTab(0) },
     { key = '\"', mods = 'ALT|CTRL', action = act.SplitVertical{ domain =  'CurrentPaneDomain' } },
