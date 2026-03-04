@@ -19,12 +19,8 @@ end
 local function restore_picker_on_exit()
   for _, picker in ipairs(Snacks.picker.get()) do
     if picker:is_focused() then
-      -- Ensure preview window is visible in layout, then focus input.
-      picker:focus("preview", { show = true })
       picker:focus("input")
-      vim.schedule(function()
-        picker:show_preview()
-      end)
+      picker:show_preview()
       return
     end
   end
