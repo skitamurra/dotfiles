@@ -115,6 +115,29 @@ Map('v', '<leader>fg', function()
   util.esc()
 end, { desc = 'Fuzzy find' })
 
+local grep_persistent_opts = { layout = "right", jump = { close = false }, auto_close = false }
+
+Map('n', '<leader>fG', function()
+  if util.get_git_root() then
+    Snacks.picker.git_grep(grep_persistent_opts)
+    return
+  end
+  Snacks.picker.grep(grep_persistent_opts)
+end, { desc = 'Grep (persistent picker)' })
+
+Map('v', '<leader>fG', function()
+  local text = (Snacks.picker.util.visual() or {}).text or ''
+  local opts = vim.tbl_extend('force', grep_persistent_opts, {
+    on_show = function() vim.api.nvim_put({ text }, 'c', true, true) end,
+  })
+  if util.get_git_root() then
+    Snacks.picker.git_grep(opts)
+  else
+    Snacks.picker.grep(opts)
+  end
+  util.esc()
+end, { desc = 'Grep (persistent picker, visual)' })
+
 Map("n", "<leader>ff", function()
   local root = util.get_git_root()
   if not root or root == "" then
