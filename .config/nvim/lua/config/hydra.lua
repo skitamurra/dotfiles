@@ -15,15 +15,24 @@ local function smart_wincmd(dir)
   end
 end
 
--- When Hydra exits, restore picker focus and preview if we're in a picker window.
+-- When Hydra exits, restore picker focus and preview if a picker is open.
+-- Must use vim.schedule because on_exit fires during Hydra's exit flow.
 local function restore_picker_on_exit()
-  for _, picker in ipairs(Snacks.picker.get()) do
-    if picker:is_focused() then
-      picker:focus("input")
+  vim.schedule(function()
+    local pickers = Snacks.picker.get()
+    local picker = pickers[#pickers] -- latest picker (sorted by id ascending)
+    if not picker or picker.closed then return end
+
+    picker:focus("input", { show = true })
+    if picker.layout:is_hidden("preview") then
+      picker:toggle("preview", { enable = true })
+      vim.schedule(function()
+        if not picker.closed then picker:show_preview() end
+      end)
+    else
       picker:show_preview()
-      return
     end
-  end
+  end)
 end
 
 Hydra({
