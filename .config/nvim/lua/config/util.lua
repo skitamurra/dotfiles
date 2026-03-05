@@ -33,4 +33,36 @@ function M.esc()
   M.feedkeys("<Esc>")
 end
 
+-- Parse `-e pattern` from the search query and convert to exclude args.
+-- rg uses `-g !pattern`, git grep uses `:!pattern` pathspec.
+function M.open_grep(opts)
+  local Snacks = require("snacks")
+  local is_git = M.get_git_root() ~= nil
+  local full_opts = vim.tbl_deep_extend('force', opts or {}, {
+    filter = { transform = function(_, filter)
+      local excludes = {}
+      local clean = filter.search:gsub('%s*%-e%s+(%S+)', function(e)
+        table.insert(excludes, e)
+        return ''
+      end)
+      if #excludes > 0 then
+        local args = {}
+        for _, e in ipairs(excludes) do
+          if is_git then
+            args[#args + 1] = ':!' .. e
+          else
+            args[#args + 1] = '-g !' .. e
+          end
+        end
+        filter.search = vim.trim(clean) .. ' -- ' .. table.concat(args, ' ')
+      end
+    end },
+  })
+  if is_git then
+    Snacks.picker.git_grep(vim.tbl_extend('force', full_opts, { submodules = false, ignored = true }))
+    return
+  end
+  Snacks.picker.grep(full_opts)
+end
+
 return M

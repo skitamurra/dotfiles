@@ -92,51 +92,21 @@ Map("n", "<leader>p", function()
   Snacks.picker.files(opts)
 end, { desc = "File grep" })
 
-Map('n', '<leader>fg', function()
-  if util.get_git_root() then
-    Snacks.picker.git_grep({ submodules = false, ignored = true })
-    return
-  end
-  Snacks.picker.grep()
-end, { desc = 'Fuzzy find' })
-
-Map('v', '<leader>fg', function()
-  local function get_text()
-    local visual = Snacks.picker.util.visual()
-    return visual and visual.text or ""
-  end
-  local text = get_text()
-  local opts = { on_show = function() vim.api.nvim_put({ text }, "c", true, true) end }
-  if util.get_git_root() then
-    Snacks.picker.git_grep(opts, { submodules = false, ignored = true })
-  else
-    Snacks.picker.grep(opts)
-  end
-  util.esc()
-end, { desc = 'Fuzzy find' })
-
-local grep_persistent_opts = { layout = "right", jump = { close = false }, auto_close = false }
-
-Map('n', '<leader>fG', function()
-  if util.get_git_root() then
-    Snacks.picker.git_grep(grep_persistent_opts)
-    return
-  end
-  Snacks.picker.grep(grep_persistent_opts)
-end, { desc = 'Grep (persistent picker)' })
-
-Map('v', '<leader>fG', function()
+Map({ 'n', 'v' }, '<leader>fg', function()
   local text = (Snacks.picker.util.visual() or {}).text or ''
-  local opts = vim.tbl_extend('force', grep_persistent_opts, {
-    on_show = function() vim.api.nvim_put({ text }, 'c', true, true) end,
-  })
-  if util.get_git_root() then
-    Snacks.picker.git_grep(opts)
-  else
-    Snacks.picker.grep(opts)
-  end
+  util.open_grep({ on_show = function() vim.api.nvim_put({ text }, 'c', true, true) end })
   util.esc()
-end, { desc = 'Grep (persistent picker, visual)' })
+end, { desc = 'Fuzzy find' })
+
+local grep_persistent_opts = { layout = { preset = "right", layout = { width = 0.3 } }, jump = { close = false }, auto_close = false, format = "filename" }
+
+Map({ 'n', 'v' }, '<leader>fG', function()
+  local text = (Snacks.picker.util.visual() or {}).text or ''
+  util.open_grep(vim.tbl_extend('force', grep_persistent_opts, {
+    on_show = function() vim.api.nvim_put({ text }, 'c', true, true) end,
+  }))
+  util.esc()
+end, { desc = 'Grep (persistent picker)' })
 
 Map("n", "<leader>ff", function()
   local root = util.get_git_root()
