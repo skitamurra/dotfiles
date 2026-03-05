@@ -95,17 +95,14 @@ end, { desc = "File grep" })
 Map({ 'n', 'v' }, '<leader>fg', function()
   local text = (Snacks.picker.util.visual() or {}).text or ''
   util.open_grep({ on_show = function() vim.api.nvim_put({ text }, 'c', true, true) end })
-  util.esc()
 end, { desc = 'Fuzzy find' })
-
-local grep_persistent_opts = { layout = { preset = "right", layout = { width = 0.3 } }, jump = { close = false }, auto_close = false, format = "filename" }
 
 Map({ 'n', 'v' }, '<leader>fG', function()
   local text = (Snacks.picker.util.visual() or {}).text or ''
+  local grep_persistent_opts = { layout = { preset = "right", layout = { width = 0.3 } }, jump = { close = false }, auto_close = false, format = "filename" }
   util.open_grep(vim.tbl_extend('force', grep_persistent_opts, {
     on_show = function() vim.api.nvim_put({ text }, 'c', true, true) end,
   }))
-  util.esc()
 end, { desc = 'Grep (persistent picker)' })
 
 Map("n", "<leader>ff", function()
