@@ -13,7 +13,7 @@ Symlinks all files/dirs into `$HOME`, recursing into directories that already ex
 | Category | Tools |
 |---|---|
 | Terminal | WezTerm |
-| Shell | zsh, sheldon, zeno.zsh, Starship |
+| Shell | zsh, sheldon, zeno, Starship |
 | Editor | Neovim, lspmux |
 | Git | lazygit |
 
