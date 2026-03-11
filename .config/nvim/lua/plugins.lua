@@ -323,8 +323,8 @@ local plugins = {
     "A7Lavinraj/fyler.nvim",
     branch = "stable",
     cmd = { "Fyler" },
-    opts = function()
-      return require("config.fyler")
+    config = function()
+      require("config.fyler")
     end,
   },
   "MunifTanjim/nui.nvim",
