@@ -6,6 +6,13 @@ local module = {}
 -- 定数
 -- =============================================================================
 
+-- Claude state marks
+local CLAUDE_MARKS = {
+  waiting = { mark = "● ", color = "#ff6b6b" },
+  done    = { mark = "✓ ", color = "#57A143" },
+  idle    = { mark = "⋯ ", color = "#928c36" },
+}
+
 -- Icons
 local ICONS = {
   docker = wezterm.nerdfonts.md_docker,
@@ -258,6 +265,17 @@ function module.apply_to_config(config)
       claude_suffix = " " .. pane_title
     end
 
+    -- Claude 状態マーク (hooks から SetUserVar で書き込まれる)
+    local claude_state_mark = ""
+    local claude_state_color = foreground
+    if is_claude_process(process_name, pane_title) then
+      local state_info = CLAUDE_MARKS[user_vars.CLAUDE_STATE or ""]
+      if state_info then
+        claude_state_mark = state_info.mark
+        claude_state_color = state_info.color
+      end
+    end
+
     -- アイコン
     local icon, icon_color = get_icon_and_color(process_name, pane_title, cmdline, cached_cwd, is_ssh, tab.is_active)
 
@@ -287,6 +305,8 @@ function module.apply_to_config(config)
       { Text = title },
       { Attribute = { Intensity = "Normal" } },
       { Text = claude_title },
+      { Foreground = { Color = claude_state_color } },
+      { Text = claude_state_mark },
       { Background = { Color = edge_background } },
       { Foreground = { Color = edge_foreground } },
       { Text = right_circle },
