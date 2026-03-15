@@ -463,20 +463,6 @@ local plugins = {
     },
   },
   "folke/sidekick.nvim",
-  -- SKK
-  "vim-denops/denops.vim",
-  {
-    "vim-skk/skkeleton",
-    dependencies = {  },
-    event = "InsertEnter",
-    config = function()
-      require('config.skkeleton')
-    end,
-  },
-  {
-    "uga-rosa/cmp-skkeleton",
-    event = "InsertEnter",
-  },
 }
 
 require("lazy").setup(plugins, opts)
