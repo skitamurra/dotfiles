@@ -13,6 +13,10 @@ snippets:
   keyword: gs
   snippet: git status --short --branch
 
+- name: git log
+  keyword: gl
+  snippet: git log --oneline
+
 # snippet with placeholder
 - name: git commit message
   keyword: gcim
