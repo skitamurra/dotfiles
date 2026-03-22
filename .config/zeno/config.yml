@@ -75,11 +75,11 @@ completions:
 - name: chdir
   patterns:
     - "^cd $"
-  sourceCommand: "find . -path '*/.git' -prune -o -maxdepth 5 -type d -print0"
+  sourceCommand: "fd -t d --hidden --max-depth 5 --exclude '.git' -0"
   options:
     # Added --read0 if null termination is used in `sourceCommand` output.
     --read0: true
     --prompt: "'Chdir> '"
-    --preview: "cd {} && ls -a | sed '/^[.]*$/d'"
-  callback: "cut -z -c 3-"
+    --preview: "ls -AF --color=always {}"
+  callback: "batcat"
   callbackZero: true # null termination is used in `callback` I/O
