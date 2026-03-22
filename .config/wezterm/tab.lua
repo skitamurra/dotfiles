@@ -36,7 +36,7 @@ local TAB_COLORS = {
   foreground_inactive = "#a0a9cb",
   background_inactive = "none",
   foreground_active = "#313244",
-  background_active = "#928c36",
+  background_active = "#547367",
   background_ssh_active = "#ff6b6b",
   foreground_ssh_active = "#ffffff",
 }
@@ -45,7 +45,7 @@ local WORKSPACE_COLORS = {
   foreground_inactive = "#a0a9cb",
   background_inactive = "none",
   foreground_active = "#141414",
-  background_active = "#928c36",
+  background_active = "#6e7660",
   space_between = "#1a1a1a",
 }
 
@@ -188,32 +188,31 @@ function module.apply_to_config(config)
       for _, ws_key in ipairs(all_workspaces) do
         local ws_name = ws_key
 
-        -- アクティブなワークスペースはハイライト表示
         if ws_key == workspace then
+          table.insert(workspace_tabs, { Background = { Color = "transparent" } })
+          table.insert(workspace_tabs, { Foreground = { Color = WORKSPACE_COLORS.background_active } })
+          table.insert(workspace_tabs, { Text = DECORATIONS.left_circle })
+
           table.insert(workspace_tabs, { Background = { Color = WORKSPACE_COLORS.background_active } })
           table.insert(workspace_tabs, { Foreground = { Color = WORKSPACE_COLORS.foreground_active } })
-          table.insert(workspace_tabs, { Text = " " .. ws_name .. " " })
+          table.insert(workspace_tabs, { Attribute = { Intensity = "Bold" } })
+          table.insert(workspace_tabs, { Text = ws_name })
+          table.insert(workspace_tabs, { Attribute = { Intensity = "Normal" } })
+
+          table.insert(workspace_tabs, { Background = { Color = "transparent" } })
+          table.insert(workspace_tabs, { Foreground = { Color = WORKSPACE_COLORS.background_active } })
+          table.insert(workspace_tabs, { Text = DECORATIONS.right_circle })
         else
-          -- 非アクティブなワークスペースは暗い色で表示
-          table.insert(workspace_tabs, { Background = { Color = WORKSPACE_COLORS.background_inactive } })
+          table.insert(workspace_tabs, { Background = { Color = "transparent" } })
           table.insert(workspace_tabs, { Foreground = { Color = WORKSPACE_COLORS.foreground_inactive } })
           table.insert(workspace_tabs, { Text = " " .. ws_name .. " " })
         end
-
-        -- ワークスペース間のスペース
-        table.insert(workspace_tabs, { Background = { Color = WORKSPACE_COLORS.space_between } })
-        table.insert(workspace_tabs, { Text = "" })
       end
 
+      table.insert(workspace_tabs, { Foreground = { Color = WORKSPACE_COLORS.foreground_inactive } })
+      table.insert(workspace_tabs, { Text = " │ " })
       -- 左側のステータスバーにワークスペースタブを表示
       window:set_left_status(wezterm.format(workspace_tabs))
-
-      -- 右側のステータスバーにヘルプテキストを表示
-      -- window:set_right_status(wezterm.format({
-      -- 	{ Background = { Color = "#1a1a1a" } },
-      -- 	{ Foreground = { Color = "#606060" } },
-      -- 	{ Text = " Switch workspace: Cmd+S " },
-      -- }))
 
       window:set_config_overrides(overrides)
     end
@@ -291,8 +290,6 @@ function module.apply_to_config(config)
     local claude_title = wezterm.truncate_right(claude_suffix, max_width) .. " "
 
     return {
-      { Background = { Color = edge_background } },
-      { Text = " " },
       { Foreground = { Color = edge_foreground } },
       { Text = left_circle },
       { Background = { Color = background } },

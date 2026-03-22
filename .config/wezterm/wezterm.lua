@@ -15,12 +15,13 @@ config.automatically_reload_config = true
 config.default_cursor_style = "BlinkingBar"
 config.default_prog = { "wsl", "~", "zsh" }
 config.color_scheme = "Tokyo Night Moon"
-config.font = wezterm.font_with_fallback({
-  { family = 'HackGen Console', weight = 'Regular' },
-  { family = 'SauceCodePro Nerd Font Mono' }
-})
-config.font_size = 13.0
-config.window_frame = { active_titlebar_bg = "none" }
+config.font = wezterm.font('HackGen Console', { weight = 'Regular'})
+config.font_size = 13
+config.window_frame = {
+  active_titlebar_bg = "none",
+  font = wezterm.font('HackGen Console', { weight = 'Bold'}),
+  font_size = 10,
+}
 config.window_decorations = "RESIZE"
 config.window_close_confirmation = "NeverPrompt"
 config.window_background_gradient = { colors = { "#000000" } }
