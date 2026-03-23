@@ -36,7 +36,7 @@ local TAB_COLORS = {
   foreground_inactive = "#a0a9cb",
   background_inactive = "none",
   foreground_active = "#313244",
-  background_active = "#547367",
+  background_active = "#CBB001",
   background_ssh_active = "#ff6b6b",
   foreground_ssh_active = "#ffffff",
 }
@@ -45,7 +45,7 @@ local WORKSPACE_COLORS = {
   foreground_inactive = "#a0a9cb",
   background_inactive = "none",
   foreground_active = "#141414",
-  background_active = "#6e7660",
+  background_active = "#CE1283",
   space_between = "#1a1a1a",
 }
 
