@@ -47,4 +47,5 @@ config.colors = {
 
 require("workspace").apply_to_config(config)
 require("tab").apply_to_config(config)
+require("startup").apply_to_config(config)
 return config
