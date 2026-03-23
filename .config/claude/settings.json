@@ -1,0 +1,90 @@
+{
+  "env": {
+    "CLAUDE_CODE_ENABLE_TELEMETRY": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Bash",
+      "Read"
+    ],
+    "deny": [
+      "Bash(> /dev:*)",
+      "Bash(mkfs:*)",
+      "Bash(dd:*)",
+      "Bash(gh repo delete:*)",
+      "Bash(gh auth logout:*)",
+      "Bash(gh secret delete:*)",
+      "Bash(gh variable delete:*)",
+      "Read(./.zshrc.local)",
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(~/.ssh/id_*)",
+      "Read(./secrets/**)",
+      "Read(**/credentials.json)",
+      "Read(./private/**)",
+      "Read(**/*.pem)",
+      "Read(**/*.key)"
+    ],
+    "ask": [
+      "Bash(rm -rf:*)",
+      "Bash(sudo:*)",
+      "Bash(curl:*)",
+      "Bash(wget:*)",
+      "Bash(chmod 777:*)",
+      "Bash(git push:*)",
+      "Bash(git merge:*)",
+      "Bash(git rebase:*)",
+      "Bash(git reset:*)"
+    ],
+    "disableBypassPermissionsMode": "disable"
+  },
+  "enableAllProjectMcpServers": false,
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.config/claude/hooks/pre-code-check.sh",
+            "statusMessage": "ブランチを確認中..."
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "permission_prompt",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.config/claude/hooks/notify.sh 'Claude Code - waiting' '権限の確認が必要' waiting"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.config/claude/hooks/notify.sh 'Claude Code - done' '完了または入力待ち' done"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "$HOME/.config/claude/statusline.sh"
+  },
+  "enabledPlugins": {
+    "rust-analyzer-lsp@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true,
+    "github@claude-plugins-official": false,
+    "ralph-loop@claude-plugins-official": true,
+    "security-guidance@claude-plugins-official": true,
+    "lua-lsp@claude-plugins-official": true
+  },
+  "language": "japanese"
+}

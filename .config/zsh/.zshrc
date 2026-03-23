@@ -44,6 +44,7 @@ export FZF_DEFAULT_OPTS=' --layout=reverse --border=rounded --height=45% --margi
 export SHELDON_CONFIG_DIR="$HOME/.config/sheldon"
 export ZENO_HOME="$HOME/.config/zeno"
 export ZENO_COMPLETION_FALLBACK=fzf-tab-complete
+export CLAUDE_CONFIG_DIR="$HOME/.config/claude"
 
 export PATH="$HOME/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
