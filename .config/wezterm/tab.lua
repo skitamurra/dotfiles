@@ -1,5 +1,6 @@
 local wezterm = require("wezterm")
 local mux = wezterm.mux
+local ws_order = require("workspace_order")
 local module = {}
 
 -- =============================================================================
@@ -174,15 +175,9 @@ function module.apply_to_config(config)
       -- カラー設定を保持
       overrides.colors = config.colors
 
-      -- 全ワークスペースを収集
+      -- 全ワークスペースを作成順で収集
       local workspace_tabs = {}
-      local all_workspaces = {}
-      for _, w in ipairs(mux.get_workspace_names()) do
-        if w ~= "default" and w ~= "scratch" then
-          table.insert(all_workspaces, w)
-        end
-      end
-      table.insert(all_workspaces, 1, "default")
+      local all_workspaces = ws_order.get_ordered_workspaces()
 
       -- ワークスペースタブの作成
       for _, ws_key in ipairs(all_workspaces) do

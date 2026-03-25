@@ -24,6 +24,8 @@ config.window_frame = {
 }
 config.window_decorations = "RESIZE"
 config.window_close_confirmation = "NeverPrompt"
+config.unix_domains = { { name = "unix" } }
+config.default_gui_startup_args = { "connect", "unix" }
 config.window_background_gradient = { colors = { "#000000" } }
 config.background = {
   {

@@ -1,5 +1,6 @@
 local wezterm = require("wezterm")
 local act = wezterm.action
+local ws_order = require("workspace_order")
 
 local module = {}
 
@@ -23,21 +24,17 @@ local function toggle_scratch_workspace()
   end)
 end
 
+-- 作成順でワークスペース一覧を取得（scratch除外）
+local function get_ordered_workspaces()
+  return ws_order.get_ordered_workspaces()
+end
+
 -- Switch to next workspace, skipping scratch
 local function switch_to_next_workspace_skip_scratch()
   return wezterm.action_callback(function(window, pane)
-    local workspaces = wezterm.mux.get_workspace_names()
+    local filtered = get_ordered_workspaces()
     local current = wezterm.mux.get_active_workspace()
 
-    -- Filter out scratch workspace
-    local filtered = {}
-    for _, ws in ipairs(workspaces) do
-      if ws ~= "scratch" then
-        table.insert(filtered, ws)
-      end
-    end
-
-    -- Find current index
     local current_index = 1
     for i, ws in ipairs(filtered) do
       if ws == current then
@@ -46,7 +43,6 @@ local function switch_to_next_workspace_skip_scratch()
       end
     end
 
-    -- Get next workspace
     local next_index = current_index + 1
     if next_index > #filtered then
       next_index = 1
@@ -61,18 +57,9 @@ end
 -- Switch to previous workspace, skipping scratch
 local function switch_to_prev_workspace_skip_scratch()
   return wezterm.action_callback(function(window, pane)
-    local workspaces = wezterm.mux.get_workspace_names()
+    local filtered = get_ordered_workspaces()
     local current = wezterm.mux.get_active_workspace()
 
-    -- Filter out scratch workspace
-    local filtered = {}
-    for _, ws in ipairs(workspaces) do
-      if ws ~= "scratch" then
-        table.insert(filtered, ws)
-      end
-    end
-
-    -- Find current index
     local current_index = 1
     for i, ws in ipairs(filtered) do
       if ws == current then
@@ -81,7 +68,6 @@ local function switch_to_prev_workspace_skip_scratch()
       end
     end
 
-    -- Get previous workspace
     local prev_index = current_index - 1
     if prev_index < 1 then
       prev_index = #filtered
@@ -162,6 +148,8 @@ local key_tables = {
             window:perform_action(act.PopKeyTable, pane)
             return
           end
+
+          ws_order.track(line)
 
           window:perform_action(
             act.SwitchToWorkspace({
