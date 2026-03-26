@@ -7,9 +7,11 @@ set -u
 GHOST_HOME="${GHOST_HOME:-$HOME/.local/share/ghost}"
 GHOST_MEMORY_SCRIPT="${GHOST_MEMORY_SCRIPT:-$GHOST_HOME/memory.py}"
 GHOST_MEMORY_DB="${GHOST_MEMORY_DB:-$GHOST_HOME/memory.db}"
+GHOST_AUTO_CAPTURE_ON_STOP="${GHOST_AUTO_CAPTURE_ON_STOP:-1}"
+GHOST_AUTO_CAPTURE_MAX_CHARS="${GHOST_AUTO_CAPTURE_MAX_CHARS:-400}"
+GHOST_AUTO_SOURCE="${GHOST_AUTO_SOURCE:-claude-stop-hook}"
 
-# Read stdin from hook event to avoid broken pipes in Claude hooks.
-cat >/dev/null || true
+INPUT=$(cat || true)
 
 if ! command -v python3 >/dev/null 2>&1; then
   exit 0
@@ -17,6 +19,36 @@ fi
 
 if [ ! -f "$GHOST_MEMORY_SCRIPT" ]; then
   exit 0
+fi
+
+if [ "$GHOST_AUTO_CAPTURE_ON_STOP" = "1" ] && command -v jq >/dev/null 2>&1; then
+  SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // empty' 2>/dev/null || true)
+  CURRENT_DIR=$(echo "$INPUT" | jq -r '.workspace.current_dir // empty' 2>/dev/null || true)
+  MODEL=$(echo "$INPUT" | jq -r '.model.display_name // empty' 2>/dev/null || true)
+  SUMMARY=$(echo "$INPUT" | jq -r '.summary // .stop_hook_active_session.summary // empty' 2>/dev/null || true)
+
+  if [ -z "$SUMMARY" ]; then
+    SUMMARY="Claude session completed"
+  fi
+
+  if [ -n "$CURRENT_DIR" ]; then
+    SUMMARY="${SUMMARY} @${CURRENT_DIR}"
+  fi
+  if [ -n "$MODEL" ]; then
+    SUMMARY="${SUMMARY} [model:${MODEL}]"
+  fi
+  if [ -n "$SESSION_ID" ]; then
+    SUMMARY="${SUMMARY} [session:${SESSION_ID}]"
+  fi
+
+  SUMMARY_TRIMMED=$(echo "$SUMMARY" | tr '\n' ' ' | sed 's/[[:space:]]\+/ /g' | cut -c1-"$GHOST_AUTO_CAPTURE_MAX_CHARS")
+
+  if [ -n "$SUMMARY_TRIMMED" ]; then
+    python3 "$GHOST_MEMORY_SCRIPT" add \
+      --db "$GHOST_MEMORY_DB" \
+      --source "$GHOST_AUTO_SOURCE" \
+      --text "$SUMMARY_TRIMMED" >/dev/null 2>&1 || true
+  fi
 fi
 
 # Best-effort sync only. Never block Claude session finalization.

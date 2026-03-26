@@ -45,3 +45,5 @@ Ghost memory integration docs:
 ```bash
 cat ~/.config/claude/ghost/README.md
 ```
+
+Stop hook automatically stores a short session memory and runs sync (best-effort).

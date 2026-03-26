@@ -6,7 +6,7 @@ This dotfiles repo integrates a minimal subset of
 ## What is integrated
 
 - Environment variables for Ghost memory adapter path and DB path.
-- Stop hook (`hooks/ghost-memory-sync.sh`) to run best-effort `memory.py sync`.
+- Stop hook (`hooks/ghost-memory-sync.sh`) to run best-effort auto-capture (`add`) + `memory.py sync`.
 - A local Claude skill (`skills/ghost-memory/SKILL.md`) for add/search/sync workflows.
 
 ## Setup
@@ -22,9 +22,13 @@ You can override defaults with environment variables in Claude settings:
 - `GHOST_HOME`
 - `GHOST_MEMORY_SCRIPT`
 - `GHOST_MEMORY_DB`
+- `GHOST_AUTO_CAPTURE_ON_STOP` (`1` / `0`)
+- `GHOST_AUTO_CAPTURE_MAX_CHARS` (default `400`)
+- `GHOST_AUTO_SOURCE` (default `claude-stop-hook`)
 
 ## Safety
 
 - Hook is best-effort and never blocks Claude completion.
 - Missing Ghost install is treated as no-op.
 - Do not store secrets in memory entries.
+- Auto-capture text is intentionally short and metadata-focused.

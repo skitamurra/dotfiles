@@ -19,6 +19,7 @@ Use Ghost memory as a lightweight, local long-term memory for Claude sessions.
 Defaults:
 - `GHOST_MEMORY_SCRIPT=$HOME/.local/share/ghost/memory.py`
 - `GHOST_MEMORY_DB=$HOME/.local/share/ghost/memory.db`
+- `GHOST_AUTO_CAPTURE_ON_STOP=1` (automatic short memory on Claude Stop hook)
 
 ## Commands
 
@@ -51,3 +52,4 @@ python3 "$GHOST_MEMORY_SCRIPT" sync --db "$GHOST_MEMORY_DB"
 - Prefer concise, reusable memories (decision, trade-off, policy).
 - Avoid secrets (tokens, private keys, credentials).
 - If Ghost script is missing, skip gracefully and continue normal work.
+- To disable half-automatic memory capture, set `GHOST_AUTO_CAPTURE_ON_STOP=0`.

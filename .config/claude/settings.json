@@ -3,7 +3,10 @@
     "CLAUDE_CODE_ENABLE_TELEMETRY": "1",
     "GHOST_HOME": "$HOME/.local/share/ghost",
     "GHOST_MEMORY_SCRIPT": "$HOME/.local/share/ghost/memory.py",
-    "GHOST_MEMORY_DB": "$HOME/.local/share/ghost/memory.db"
+    "GHOST_MEMORY_DB": "$HOME/.local/share/ghost/memory.db",
+    "GHOST_AUTO_CAPTURE_ON_STOP": "1",
+    "GHOST_AUTO_CAPTURE_MAX_CHARS": "400",
+    "GHOST_AUTO_SOURCE": "claude-stop-hook"
   },
   "permissions": {
     "allow": [
