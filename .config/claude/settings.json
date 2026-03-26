@@ -6,7 +6,8 @@
     "GHOST_MEMORY_DB": "$HOME/.local/share/ghost/memory.db",
     "GHOST_AUTO_CAPTURE_ON_STOP": "1",
     "GHOST_AUTO_CAPTURE_MAX_CHARS": "400",
-    "GHOST_AUTO_SOURCE": "claude-stop-hook"
+    "GHOST_AUTO_SOURCE": "claude-stop-hook",
+    "GHOST_AUTO_CAPTURE_REQUIRE_SUMMARY": "1"
   },
   "permissions": {
     "allow": [

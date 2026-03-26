@@ -20,6 +20,7 @@ Defaults:
 - `GHOST_MEMORY_SCRIPT=$HOME/.local/share/ghost/memory.py`
 - `GHOST_MEMORY_DB=$HOME/.local/share/ghost/memory.db`
 - `GHOST_AUTO_CAPTURE_ON_STOP=1` (automatic short memory on Claude Stop hook)
+- `GHOST_AUTO_CAPTURE_REQUIRE_SUMMARY=1` (summaryが無いStopイベントでは保存しない)
 
 ## Commands
 
@@ -53,3 +54,4 @@ python3 "$GHOST_MEMORY_SCRIPT" sync --db "$GHOST_MEMORY_DB"
 - Avoid secrets (tokens, private keys, credentials).
 - If Ghost script is missing, skip gracefully and continue normal work.
 - To disable half-automatic memory capture, set `GHOST_AUTO_CAPTURE_ON_STOP=0`.
+- To allow fallback generic entries, set `GHOST_AUTO_CAPTURE_REQUIRE_SUMMARY=0`.
