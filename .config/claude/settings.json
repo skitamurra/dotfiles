@@ -1,6 +1,9 @@
 {
   "env": {
-    "CLAUDE_CODE_ENABLE_TELEMETRY": "1"
+    "CLAUDE_CODE_ENABLE_TELEMETRY": "1",
+    "GHOST_HOME": "$HOME/.local/share/ghost",
+    "GHOST_MEMORY_SCRIPT": "$HOME/.local/share/ghost/memory.py",
+    "GHOST_MEMORY_DB": "$HOME/.local/share/ghost/memory.db"
   },
   "permissions": {
     "allow": [
@@ -66,6 +69,10 @@
     "Stop": [
       {
         "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.config/claude/hooks/ghost-memory-sync.sh"
+          },
           {
             "type": "command",
             "command": "$HOME/.config/claude/hooks/notify.sh 'Claude Code - done' '完了または入力待ち' done"

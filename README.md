@@ -16,6 +16,7 @@ Symlinks all files/dirs into `$HOME`, recursing into directories that already ex
 | Shell | zsh, sheldon, zeno, Starship |
 | Editor | Neovim, lspmux |
 | Git | lazygit |
+| AI coding | Claude Code (+ Ghost memory integration) |
 
 ## Notes
 
@@ -35,4 +36,12 @@ chmod +x ~/.local/bin/win32yank.exe
 ```bash
 curl -L https://github.com/cordx56/rustowl/releases/download/v1.0.0-rc.1/rustowl-x86_64-unknown-linux-gnu -o ~/.cargo/bin/rustowl
 chmod +x ~/.cargo/bin/rustowl
+```
+
+## Claude Code + Ghost
+
+Ghost memory integration docs:
+
+```bash
+cat ~/.config/claude/ghost/README.md
 ```
