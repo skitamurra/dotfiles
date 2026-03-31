@@ -40,18 +40,6 @@
   },
   "enableAllProjectMcpServers": false,
   "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Edit|Write|NotebookEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/.config/claude/hooks/pre-code-check.sh",
-            "statusMessage": "ブランチを確認中..."
-          }
-        ]
-      }
-    ],
     "Notification": [
       {
         "matcher": "permission_prompt",
