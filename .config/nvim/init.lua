@@ -62,6 +62,7 @@ vim.diagnostic.config {
     end,
   },
 }
+vim.deprecate = function() end
 
 require("plugins")
 require("keymaps")
