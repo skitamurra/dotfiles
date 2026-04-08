@@ -1,5 +1,6 @@
 -- lua/config/util.lua
 local M = {}
+local Snacks = require("snacks")
 
 local git_root_cache = {}
 
@@ -33,10 +34,18 @@ function M.esc()
   M.feedkeys("<Esc>")
 end
 
+function M.grep_file()
+  local opts = { layout = "select"}
+  if M.get_git_root() then
+    Snacks.picker.git_files(opts, { submodules = false, ignored = false })
+    return
+  end
+  Snacks.picker.files(opts)
+end
+
 -- Parse `-e pattern` from the search query and convert to exclude args.
 -- rg uses `-g !pattern`, git grep uses `:!pattern` pathspec.
-function M.open_grep(opts)
-  local Snacks = require("snacks")
+function M.grep_text(opts)
   local is_git = M.get_git_root() ~= nil
   local full_opts = vim.tbl_deep_extend('force', opts or {}, {
     filter = { transform = function(_, filter)

@@ -83,24 +83,17 @@ Map("n", "<leader>y", function()
   vim.notify("Copied: " .. vim.fn.expand("%:p"))
 end, { desc = "Copy file path" })
 
-Map("n", "<leader>p", function()
-  local opts = { layout = "select"}
-  if util.get_git_root() then
-    Snacks.picker.git_files(opts, { submodules = false, ignored = true })
-    return
-  end
-  Snacks.picker.files(opts)
-end, { desc = "File grep" })
+Map("n", "<leader>p", function() util.grep_file() end, { desc = "File grep" })
 
 Map({ 'n', 'v' }, '<leader>fg', function()
   local text = (Snacks.picker.util.visual() or {}).text or ''
-  util.open_grep({ on_show = function() vim.api.nvim_put({ text }, 'c', true, true) end })
+  util.grep_text({ on_show = function() vim.api.nvim_put({ text }, 'c', true, true) end })
 end, { desc = 'Fuzzy find' })
 
 Map({ 'n', 'v' }, '<leader>fG', function()
   local text = (Snacks.picker.util.visual() or {}).text or ''
   local grep_persistent_opts = { layout = { preset = "right", layout = { width = 0.3 } }, jump = { close = false }, auto_close = false, format = "filename" }
-  util.open_grep(vim.tbl_extend('force', grep_persistent_opts, {
+  util.grep_text(vim.tbl_extend('force', grep_persistent_opts, {
     on_show = function() vim.api.nvim_put({ text }, 'c', true, true) end,
   }))
 end, { desc = 'Grep (persistent picker)' })
