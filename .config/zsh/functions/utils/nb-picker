@@ -11,18 +11,17 @@ local reload_action="reload($list_cmd)"
 local extract_id='id={1}; id=${id#\[}; id=${id%\]}'
 local bind_delete="ctrl-d:execute-silent(${extract_id}; nb delete \"\$id\" -f)+${reload_action}"
 # Rename uses zsh -c for reliable UTF-8 input via zsh's read builtin.
-local bind_rename=$'ctrl-r:execute(zsh -c \'id=$1; id=${id#\\[}; id=${id%\\]}; read "new?rename to: "; [[ -n "$new" ]] && nb move "$id" "$new" -f\' _ {1})+'"${reload_action}"
-local bind_reload="ctrl-l:${reload_action}"
+local bind_rename=$'ctrl-m:execute(zsh -c \'id=$1; id=${id#\\[}; id=${id%\\]}; read "new?rename to: "; [[ -n "$new" ]] && nb move "$id" "$new" -f\' _ {1})+'"${reload_action}"
+local bind_reload="ctrl-r:${reload_action}"
 local preview_cmd="${extract_id}; batcat --color=always --style=plain --paging=never \"\$(nb show \"\$id\" --path 2>/dev/null)\" 2>/dev/null"
 
 while :; do
   local line
   line=$(
     eval "$list_cmd" | fzf \
-      --reverse \
       --height=100% \
       --prompt='nb> ' \
-      --header 'enter:edit  C-d:del  C-r:rename  C-l:reload' \
+      --header 'enter:edit  C-d:del  C-m:rename  C-r:reload' \
       --preview "$preview_cmd" \
       --preview-window='right:40%' \
       --bind "$bind_delete" \
