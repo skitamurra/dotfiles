@@ -22,6 +22,9 @@ local function spawn_splits(pane, splits, tab_cwd)
       cwd = home_dir,
     })
     send_setup(new_pane, split_def.cwd or tab_cwd, split_def.command)
+    if split_def.post_spawn then
+      split_def.post_spawn(new_pane)
+    end
     if split_def.splits then
       spawn_splits(new_pane, split_def.splits, split_def.cwd or tab_cwd)
     end
@@ -85,6 +88,9 @@ function module.apply_to_config(_)
     --            {
     --              direction = "Right",
     --              command = "prt",
+    --              post_spawn = function(pane)
+    --                pane:send_text("echo " .. pane:pane_id() .. "\n")
+    --              end,
     --              splits = {
     --                { direction = "Bottom" },
     --              },
