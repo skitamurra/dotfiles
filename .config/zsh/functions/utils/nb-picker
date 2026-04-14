@@ -2,48 +2,97 @@
 
 emulate -L zsh
 local editor_sock="$HOME/.cache/wezterm/nb-editor.sock"
-local list_cmd='nb list --no-color -t note'
-local reload_action="reload($list_cmd)"
+local state_dir="$HOME/.cache/nb-picker"
+local default_file="$state_dir/type"
+mkdir -p "$state_dir"
 
-# ─── fzf action bindings ───
-# {1} expands to the first whitespace field = "[N]" (brackets included),
-# so strip them in the child shell before passing to nb.
-local extract_id='id={1}; id=${id#\[}; id=${id%\]}'
-local bind_delete="ctrl-d:execute-silent(${extract_id}; nb delete \"\$id\" -f)+${reload_action}"
-# Rename uses zsh -c for reliable UTF-8 input via zsh's read builtin.
-local bind_rename=$'ctrl-s:execute(zsh -c \'id=$1; id=${id#\\[}; id=${id%\\]}; read "new?rename to: "; [[ -n "$new" ]] && nb move "$id" "$new" -f\' _ {1})+'"${reload_action}"
-local bind_reload="ctrl-r:${reload_action}"
-local preview_cmd="${extract_id}; batcat --color=always --style=plain --paging=never \"\$(nb show \"\$id\" --path 2>/dev/null)\" 2>/dev/null"
+local type_file
+type_file=$(mktemp -t nb-picker.XXXXXX) || return 1
 
-while :; do
-  local line
-  line=$(
-    eval "$list_cmd" | fzf \
-      --height=100% \
-      --prompt='nb> ' \
-      --header 'enter:edit  C-d:del  C-s:rename  C-r:reload' \
-      --preview "$preview_cmd" \
-      --preview-window='right:40%' \
-      --bind "$bind_delete" \
-      --bind "$bind_rename" \
-      --bind "$bind_reload"
-  ) || return 0
-  [[ -z "$line" ]] && continue
+# Seed instance-local mode from the persisted default.
+local initial_mode=note saved
+saved=$(<"$default_file" 2>/dev/null)
+case "$saved" in
+  note|task) initial_mode=$saved ;;
+esac
+print -r -- "$initial_mode" > "$type_file"
 
-  local id="${${line%%\]*}#\[}"
-  [[ -z "$id" ]] && continue
+{
+  # Shell fragments run via `zsh -fc '<code>' _ <args>`. Must be single-line
+  # (fzf --bind can't handle embedded newlines) and must not contain a literal
+  # single quote, since the outer bind string wraps them in '...'.
+  local list_sh='if [[ "$(cat "$1")" = note ]]; then nb list --no-color -t note; else NO_COLOR=1 nb tasks open 2>/dev/null | sed -E "s/\x1b[^a-zA-Z]*[a-zA-Z]//g" | grep -E "^\[[0-9]+ [0-9]+\]"; fi'
 
-  local note_path
-  note_path=$(nb show "$id" --path 2>/dev/null) || continue
+  local header_sh='if [[ "$(cat "$1")" = note ]]; then print -r -- "note>  enter:edit  C-d:del  C-s:rename  C-r:reload  Tab:toggle"; else print -r -- "task>  enter:done  C-d:remove  C-r:reload  Tab:toggle"; fi'
 
-  nvim --server "$editor_sock" --remote "$note_path" </dev/null >/dev/null 2>&1
+  local toggle_sh='if [[ "$(cat "$1")" = note ]]; then print -r -- task > "$1"; else print -r -- note > "$1"; fi'
 
-  # Drain any stale terminal responses (e.g., DA1 from nvim's TTY probe)
-  # otherwise they get interpreted as fzf query input on the next iteration
-  local _drain
-  while read -t 0 -k 1 -s _drain 2>/dev/null; do :; done
+  local delete_sh='if [[ "$(cat "$1")" = note ]]; then id="${2#\[}"; id="${id%\]}"; nb delete "$id" -f; else p="${2#\[}"; i="${3%\]}"; nb todo remove "$p" "$i" -f; fi'
 
-  local editor_pane_id
-  editor_pane_id=$(<"$HOME/.cache/wezterm/nb-editor.pane-id")
-  [[ -n "$editor_pane_id" ]] && wezterm.exe cli activate-pane --pane-id "$editor_pane_id" 2>/dev/null
-done
+  # Rename is note-only; ctrl-s is a no-op in task mode.
+  local rename_sh='[[ "$(cat "$1")" = note ]] || exit 0; id="${2#\[}"; id="${id%\]}"; read "new?rename to: "; [[ -n "$new" ]] && nb move "$id" "$new" -f'
+
+  # Preview: stripping "[" and "]" from {1} works for both modes
+  # (note: "[11]" → "11"; task: "[11" → "11"); nb show finds the parent.
+  local preview_sh='id="${1#\[}"; id="${id%\]}"; batcat --color=always --style=plain --paging=never "$(nb show "$id" --path 2>/dev/null)" 2>/dev/null'
+
+  local list_cmd="zsh -fc '$list_sh' _ '$type_file'"
+  local header_cmd="zsh -fc '$header_sh' _ '$type_file'"
+  local toggle_cmd="zsh -fc '$toggle_sh' _ '$type_file'"
+  local delete_cmd="zsh -fc '$delete_sh' _ '$type_file' {1} {2}"
+  local rename_cmd="zsh -fc '$rename_sh' _ '$type_file' {1}"
+  local preview_cmd="zsh -fc '$preview_sh' _ {1}"
+
+  while :; do
+    local initial_header
+    initial_header=$(zsh -fc "$header_sh" _ "$type_file")
+
+    local line
+    line=$(
+      zsh -fc "$list_sh" _ "$type_file" | fzf \
+        --height=100% \
+        --prompt='nb> ' \
+        --header "$initial_header" \
+        --preview "$preview_cmd" \
+        --preview-window='right:40%' \
+        --bind "ctrl-d:execute-silent($delete_cmd)+reload($list_cmd)" \
+        --bind "ctrl-s:execute($rename_cmd)+reload($list_cmd)" \
+        --bind "ctrl-r:reload($list_cmd)" \
+        --bind "tab:execute-silent($toggle_cmd)+reload($list_cmd)+transform-header($header_cmd)"
+    ) || return 0
+    [[ -z "$line" ]] && continue
+
+    local current_type
+    current_type=$(<"$type_file")
+
+    if [[ "$current_type" = note ]]; then
+      local id="${line#\[}"
+      id="${id%%\]*}"
+      [[ -z "$id" ]] && continue
+
+      local note_path
+      note_path=$(nb show "$id" --path 2>/dev/null) || continue
+
+      nvim --server "$editor_sock" --remote "$note_path" </dev/null >/dev/null 2>&1
+
+      # Drain stale terminal responses (e.g. DA1 from nvim's TTY probe);
+      # otherwise they'd be read as fzf query input on the next iteration.
+      local _drain
+      while read -t 0 -k 1 -s _drain 2>/dev/null; do :; done
+
+      local editor_pane_id
+      editor_pane_id=$(<"$HOME/.cache/wezterm/nb-editor.pane-id")
+      [[ -n "$editor_pane_id" ]] && wezterm.exe cli activate-pane --pane-id "$editor_pane_id" 2>/dev/null
+    else
+      local rest="${line#\[}"
+      local id_part="${rest%%\]*}"
+      local parent_id="${id_part%% *}"
+      local task_id="${id_part##* }"
+      [[ -z "$parent_id" || -z "$task_id" ]] && continue
+      nb todo do "$parent_id" "$task_id" 2>/dev/null
+    fi
+  done
+} always {
+  [[ -r "$type_file" ]] && cp "$type_file" "$default_file" 2>/dev/null
+  rm -f "$type_file"
+}
