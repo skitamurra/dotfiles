@@ -1,0 +1,18 @@
+#!/bin/zsh
+
+# nb-todo - Append a TODO item to TODO.md (create if missing)
+# Usage: nbt <todo-text...>
+if [ $# -lt 1 ]; then
+  echo "Usage: nbt <todo-text...>"
+  return 1
+fi
+
+local item="- [ ] $*"
+
+if nb show TODO.md >/dev/null 2>&1; then
+  nb edit TODO.md --content "$item"
+else
+  nb add TODO.md --content "# TODO
+
+$item"
+fi

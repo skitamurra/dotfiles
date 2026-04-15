@@ -48,6 +48,10 @@ snippets:
   keyword: nbar
   snippet: nb-article {{}}
 
+- name: nb todo
+  keyword: nbt
+  snippet: nb-todo {{todo}}
+
 - name: "docker compose"
   keyword: "dc"
   snippet: "docker compose"
