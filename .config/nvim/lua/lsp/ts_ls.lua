@@ -11,6 +11,7 @@ local vue_plugin = {
 
 return {
   cmd = { mason_bin .. "/typescript-language-server", "--stdio" },
+  root_dir = require("config.util").get_git_root() or vim.fn.getcwd(),
   filetypes = {
     'javascript',
     'javascriptreact',
