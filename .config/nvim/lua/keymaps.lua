@@ -76,7 +76,8 @@ Map("n", "<leader>sf", function() require("sidekick.cli").send({ msg = "{file}",
 Map("x", "<leader>sv", function() require("sidekick.cli").send({ msg = "{selection}", name = "claude" }) end, { desc = "Send Visual Selection" })
 Map({ "n", "x" }, "<leader>sp", function() require("sidekick.cli").prompt({ name = "claude"}) end, { desc = "Sidekick Select Prompt" })
 Map({ "n", "x" }, "<leader>sd", function() require("sidekick.cli").close() end, { desc = "Detach CLI Session" })
-Map({ "n", "x" }, "<C-l>", function() require("sidekick.cli").focus({ name = "claude"}) end, { desc = "Focus sidekick" })
+Map({ "n", "t" }, "<C-h>", "<cmd>wincmd h<cr>", { desc = "Move to left window" })
+Map({ "n", "t" }, "<C-l>", "<cmd>wincmd l<cr>", { desc = "Move to right window" })
 
 Map("n", "<leader>y", function()
   vim.fn.setreg("+", vim.fn.expand("%:p"))
