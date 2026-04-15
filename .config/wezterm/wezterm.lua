@@ -7,7 +7,7 @@ package.path = table.concat({
   package.path,
 }, ";")
 
-config.leader = { key = " ", mods = "SHIFT", timeout_milliseconds = 2000 }
+config.leader = { key = " ", mods = "SHIFT", timeout_milliseconds = 300 }
 config.disable_default_key_bindings = true
 config.keys = require("keybinds").keys
 config.key_tables = require("keybinds").key_tables
