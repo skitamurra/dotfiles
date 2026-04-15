@@ -21,7 +21,7 @@ print -r -- "$initial_mode" > "$type_file"
   # Shell fragments run via `zsh -fc '<code>' _ <args>`. Must be single-line
   # (fzf --bind can't handle embedded newlines) and must not contain a literal
   # single quote, since the outer bind string wraps them in '...'.
-  local list_sh='if [[ "$(cat "$1")" = note ]]; then nb list --no-color -t note; else NO_COLOR=1 nb tasks open 2>/dev/null | sed -E "s/\x1b[^a-zA-Z]*[a-zA-Z]//g" | grep -E "^\[[0-9]+ [0-9]+\]"; fi'
+  local list_sh='if [[ "$(cat "$1")" = note ]]; then nb list --no-color -t note; else NO_COLOR=1 nb tasks open 2>/dev/null | sed -E "s/\x1b[^a-zA-Z]*[a-zA-Z]//g" | grep -E "^\[[0-9]+ [0-9]+\]" || true; fi'
 
   local header_sh='if [[ "$(cat "$1")" = note ]]; then print -r -- "note>  enter:edit  C-d:del  C-s:rename  C-r:reload  Tab:toggle"; else print -r -- "task>  enter:done  C-d:remove  C-r:reload  Tab:toggle"; fi'
 
