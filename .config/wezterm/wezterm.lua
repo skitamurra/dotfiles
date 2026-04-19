@@ -46,6 +46,7 @@ config.colors = {
     inactive_tab_edge = "none",
   },
 }
+config.max_fps = 120
 
 require("workspace").apply_to_config(config)
 require("tab").apply_to_config(config)
