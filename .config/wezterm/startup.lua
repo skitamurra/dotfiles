@@ -74,6 +74,15 @@ local function apply_setup(setup)
 end
 
 function module.apply_to_config(_)
+  wezterm.on("gui-attached", function()
+    local workspace = mux.get_active_workspace()
+    for _, window in ipairs(mux.all_windows()) do
+      if window:get_workspace() == workspace then
+        window:gui_window():maximize()
+      end
+    end
+  end)
+
   wezterm.on("mux-startup", function()
     local ok, setup = pcall(require, "startup_local")
     --  ~/.config/wezterm/startup_local.lua
