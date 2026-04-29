@@ -62,10 +62,10 @@ local plugins = {
   ---------------------------------------------------------------------------
   -- LSP / Mason
   ---------------------------------------------------------------------------
-  {
-    "neovim/nvim-lspconfig",
-    event = { "BufReadPre", "BufNewFile" },
-  },
+  -- {
+  --   "neovim/nvim-lspconfig",
+  --   event = { "BufReadPre", "BufNewFile" },
+  -- },
   {
     "williamboman/mason.nvim",
     cmd = "Mason",
@@ -187,8 +187,7 @@ local plugins = {
   "nvim-tree/nvim-web-devicons",
   {
     "akinsho/bufferline.nvim",
-    version = "*",
-    event = "VeryLazy",
+    event = "BufReadPre",
     config = function()
       require("bufferline").setup({
         options = {
@@ -196,9 +195,9 @@ local plugins = {
           numbers = "none",
           separator_style = { "/", "/" },
           show_buffer_close_icons = false,
-          offsets = {
-            { filetype = "NvimTree" },
-          },
+          -- offsets = {
+          --   { filetype = "NvimTree" },
+          -- },
           custom_filter = function(buf)
             return vim.bo[buf].filetype ~= "help"
           end,
@@ -420,10 +419,6 @@ local plugins = {
     end,
   },
   "vim-jp/vimdoc-ja",
-  {
-    "shortcuts/no-neck-pain.nvim",
-    event = { "BufReadPre", "BufNewFile" },
-  },
   {
     "ysmb-wtsg/in-and-out.nvim",
     event = { "BufReadPre", "BufNewFile" },
