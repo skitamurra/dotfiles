@@ -42,9 +42,9 @@ Hydra({
   mode = "n",
   body = "<leader>l",
   heads = {
-    { "h", function() vim.cmd("BufferLineCyclePrev") end, { desc = "prev" } },
-    { "l", function() vim.cmd("BufferLineCycleNext") end, { desc = "next" } },
-    { "w", function() require("snacks").bufdelete() end, { desc = "close" } },
+    { "h", "<cmd>bprevious<CR>", { desc = "prev" } },
+    { "l", "<cmd>bnext<CR>", { desc = "next" } },
+    { "w", "<cmd>bdelete<CR>", { desc = "close" } },
     { "q", nil, { exit = true }, },
   },
 })
