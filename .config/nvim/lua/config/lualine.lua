@@ -54,6 +54,14 @@ local config = {
     lualine_c = {},
     lualine_x = {},
   },
+  winbar = {
+    lualine_a = {},
+    lualine_b = {},
+    lualine_c = {},
+    lualine_x = {},
+    lualine_y = {},
+    lualine_z = {}
+  },
 }
 
 local function ins_left(component)
@@ -63,6 +71,22 @@ end
 local function ins_right(component)
   table.insert(config.sections.lualine_x, component)
 end
+
+local function ins_winbar(component)
+  table.insert(config.winbar.lualine_c, component)
+end
+
+ins_winbar {
+  function()
+    local navic = require("nvim-navic")
+    return navic.is_available() and navic.get_location() or ''
+  end,
+  cond = function()
+    local ok, navic = pcall(require, "nvim-navic")
+    return ok and navic.is_available()
+  end,
+  color = { fg = colors.fg },
+}
 
 ins_left {
   function()

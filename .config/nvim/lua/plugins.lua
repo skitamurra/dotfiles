@@ -207,6 +207,10 @@ local plugins = {
     end,
   },
   {
+    "SmiteshP/nvim-navic",
+    event = "BufReadPre",
+  },
+  {
     "RRethy/vim-illuminate",
     event = { "BufReadPost", "BufNewFile" },
   },
