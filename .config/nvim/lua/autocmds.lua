@@ -1,3 +1,11 @@
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("vim-treesitter-start", {}),
+  callback = function(ctx)
+    pcall(require, "nvim-treesitter")
+    pcall(vim.treesitter.start)
+  end,
+})
+
 vim.api.nvim_create_autocmd("BufRead", {
   callback = function()
     local git_root = require("config.util").get_git_root()

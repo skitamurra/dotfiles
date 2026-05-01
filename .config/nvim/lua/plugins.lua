@@ -38,13 +38,22 @@ local plugins = {
   ---------------------------------------------------------------------------
   -- Syntax / Treesitter
   ---------------------------------------------------------------------------
-  "nvim-treesitter/nvim-treesitter-context",
   {
     "nvim-treesitter/nvim-treesitter",
-    build = ":TSUpdate",
-    config = function()
-      require("config.nvim-treesitter")
-    end,
+    branch = "main",
+  },
+  {
+    "nvim-treesitter/nvim-treesitter-context",
+    event = { "BufReadPre", "BufNewFile" },
+    config = function ()
+      require("treesitter-context").setup({
+        enable = true,
+        max_lines = 2,
+        trim_scope = "inner",
+        mode = "cursor",
+        separator = nil,
+      })
+    end
   },
 
   ---------------------------------------------------------------------------
