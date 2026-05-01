@@ -1,10 +1,5 @@
 vim.lsp.config("*", {
   capabilities = require("cmp_nvim_lsp").default_capabilities(),
-  on_attach = function(client, bufnr)
-    if client.server_capabilities.documentSymbolProvider then
-      require("nvim-navic").attach(client, bufnr)
-    end
-  end,
 })
 
 local dirname = vim.fn.stdpath('config') .. '/lua/lsp'
