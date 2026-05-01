@@ -99,41 +99,62 @@ local plugins = {
   ---------------------------------------------------------------------------
   -- Completion / Snippets / Icons
   ---------------------------------------------------------------------------
+  "L3MON4D3/LuaSnip",
   {
-    "hrsh7th/nvim-cmp",
-    event = "InsertEnter",
-    config = function()
-      require("config.cmp")
-    end,
+    "saghen/blink.cmp",
+    version = "*",
+    build = "cargo build --release",
+    event = { "InsertEnter", "CmdLineEnter" },
+    opts = {
+      keymap = {
+        preset = "super-tab",
+      },
+      sources = {
+        default = { "snippets", "lsp", "path", "buffer" },
+      },
+      snippets = { preset = "luasnip" },
+      completion = {
+        menu = { border = 'single' },
+        documentation = { window = { border = 'single' } },
+      },
+      signature = { window = { border = 'single' } },
+    },
   },
-  {
-    "hrsh7th/cmp-nvim-lsp",
-    event = "InsertEnter",
-  },
-  {
-    "hrsh7th/cmp-buffer",
-    event = "InsertEnter",
-  },
-  {
-    "hrsh7th/cmp-path",
-    event = "InsertEnter",
-  },
-  {
-    "hrsh7th/cmp-cmdline",
-    event = "CmdlineEnter",
-  },
-  {
-    "saadparwaiz1/cmp_luasnip",
-    event = "InsertEnter",
-  },
-  {
-    "L3MON4D3/LuaSnip",
-    event = "InsertEnter",
-  },
-  {
-    "onsails/lspkind.nvim",
-    event = "InsertEnter",
-  },
+  -- {
+  --   "hrsh7th/nvim-cmp",
+  --   event = "InsertEnter",
+  --   config = function()
+  --     require("config.cmp")
+  --   end,
+  -- },
+  -- {
+  --   "hrsh7th/cmp-nvim-lsp",
+  --   event = "InsertEnter",
+  -- },
+  -- {
+  --   "hrsh7th/cmp-buffer",
+  --   event = "InsertEnter",
+  -- },
+  -- {
+  --   "hrsh7th/cmp-path",
+  --   event = "InsertEnter",
+  -- },
+  -- {
+  --   "hrsh7th/cmp-cmdline",
+  --   event = "CmdlineEnter",
+  -- },
+  -- {
+  --   "saadparwaiz1/cmp_luasnip",
+  --   event = "InsertEnter",
+  -- },
+  -- {
+  --   "L3MON4D3/LuaSnip",
+  --   event = "InsertEnter",
+  -- },
+  -- {
+  --   "onsails/lspkind.nvim",
+  --   event = "InsertEnter",
+  -- },
 
   ---------------------------------------------------------------------------
   -- Colorscheme
@@ -245,10 +266,10 @@ local plugins = {
     event = { "BufReadPost", "BufNewFile" },
     opts = { tint = -55}
   },
-  {
-    "dstein64/vim-startuptime",
-    cmd = "StartupTime",
-  },
+  -- {
+  --   "dstein64/vim-startuptime",
+  --   cmd = "StartupTime",
+  -- },
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
@@ -298,20 +319,16 @@ local plugins = {
   ---------------------------------------------------------------------------
   -- Diff / Hop / Git UI
   ---------------------------------------------------------------------------
-  {
-    "sindrets/diffview.nvim",
-    cmd = {
-      "DiffviewOpen",
-    },
-  },
-  {
-    "folke/flash.nvim",
-  },
+  -- {
+  --   "sindrets/diffview.nvim",
+  --   cmd = {
+  --     "DiffviewOpen",
+  --   },
+  -- },
+  "folke/flash.nvim",
   {
     "kdheepak/lazygit.nvim",
-    cmd = {
-      "LazyGit",
-    },
+    cmd = { "LazyGit" },
   },
 
   ---------------------------------------------------------------------------
@@ -428,7 +445,7 @@ local plugins = {
       require("config.pantran")
     end,
   },
-  "vim-jp/vimdoc-ja",
+  -- "vim-jp/vimdoc-ja",
   {
     "ysmb-wtsg/in-and-out.nvim",
     event = { "BufReadPre", "BufNewFile" },

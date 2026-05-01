@@ -1,6 +1,18 @@
-vim.lsp.config("*", {
-  capabilities = require("cmp_nvim_lsp").default_capabilities(),
-})
+-- vim.lsp.config("*", {
+--   capabilities = require("blink.cmp").get_lsp_capabilities({
+--     textDocument = {
+--       completion = {
+--         completionItem = {
+--           snippetSupport = true,
+--         },
+--       },
+--       foldingRange = {
+--         dynamicRegistration = false,
+--         lineFoldingOnly = true,
+--       },
+--     },
+--   }),
+-- })
 
 local dirname = vim.fn.stdpath('config') .. '/lua/lsp'
 local lsp_names = {}
