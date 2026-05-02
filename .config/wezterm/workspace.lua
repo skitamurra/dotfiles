@@ -83,8 +83,8 @@ local keys = {
   -- Toggle scratch workspace with CTRL+ALT+s
   { key = "s", mods = "CTRL|ALT", action = toggle_scratch_workspace() },
   -- Skip scratch workspace when switching workspaces
-  { key = "n", mods = "CTRL|ALT", action = switch_to_next_workspace_skip_scratch() },
-  { key = "p", mods = "CTRL|ALT", action = switch_to_prev_workspace_skip_scratch() },
+  { key = "h", mods = "CTRL|ALT", action = switch_to_next_workspace_skip_scratch() },
+  { key = "l", mods = "CTRL|ALT", action = switch_to_prev_workspace_skip_scratch() },
 
   {
     mods = "LEADER",
