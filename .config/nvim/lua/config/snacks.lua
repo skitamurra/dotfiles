@@ -1,6 +1,5 @@
 local Snacks = require("snacks")
 local util = require("config.util")
-math.randomseed(os.time())
 
 local logo = [[
 ░░░    ░░ ░░░░░░░  ░░░░░░  ░░    ░░ ░░ ░░░    ░░░
@@ -9,11 +8,6 @@ local logo = [[
 ▓▓  ▓▓ ▓▓ ▓▓      ▓▓    ▓▓  ▓▓  ▓▓  ▓▓ ▓▓  ▓▓  ▓▓
 ██   ████ ███████  ██████    ████   ██ ██      ██
 ]]
-local effects = {
-  'middleout --center-movement-speed 0.8 --full-movement-speed 0.2',
-  'slide --merge --movement-speed 0.8',
-  'beams --beam-delay 1 --beam-row-speed-range 80-100 --beam-column-speed-range 45-60',
-}
 
 Snacks.setup({
   dashboard = {
@@ -33,34 +27,10 @@ Snacks.setup({
         { icon = " ", key = "q", desc = "Quit", action = ":qa" },
       },
     },
-    formats = {
-      icon = function(item)
-        if item.file and item.icon == "file" or item.icon == "directory" then
-          return Snacks.dashboard.icon(item.file, item.icon)
-        end
-        return { item.icon, width = 2, hl = "icon" }
-      end,
-      footer = { "%s", align = "left" },
-      header = { "%s", align = "right" },
-      file = function(item, ctx)
-        local fname = vim.fn.fnamemodify(item.file, ":~")
-        fname = ctx.width and #fname > ctx.width and vim.fn.pathshorten(fname) or fname
-        if #fname > ctx.width then
-          local dir = vim.fn.fnamemodify(fname, ":h")
-          local file = vim.fn.fnamemodify(fname, ":t")
-          if dir and file then
-            file = file:sub(-(ctx.width - #dir - 2))
-            fname = dir .. "/…" .. file
-          end
-        end
-        local dir, file = fname:match("^(.*)/(.+)$")
-        return dir and { { dir .. "/", hl = "dir" }, { file, hl = "file" } } or { { fname, hl = "file" } }
-      end,
-    },
     sections = {
       {
         section = "terminal",
-        cmd = 'echo -e ' .. vim.fn.shellescape(vim.trim(logo)) .. ' | tte --anchor-canvas s ' .. effects[math.random(#effects)] .. ' --final-gradient-direction diagonal; sleep infinity',
+        cmd = 'echo -e ' .. vim.fn.shellescape(vim.trim(logo)) .. ' | tte --anchor-canvas s beams --beam-delay 1 --final-gradient-direction diagonal; sleep infinity',
         ttl = 0,
         height = 8,
       },
@@ -76,10 +46,5 @@ Snacks.setup({
   },
   indent = { enabled = true },
   notifier = { enabled = true },
-  image = {
-    enabled = true,
-    math = { enabled = false },
-    mermaid = { enabled = false },
-  },
   picker = { enabled = true},
 })
