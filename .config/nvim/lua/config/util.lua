@@ -20,18 +20,8 @@ function M.get_git_root(path)
   return root
 end
 
-function M.feedkeys(keys, mode)
-  vim.schedule(function()
-    vim.api.nvim_feedkeys(
-      vim.api.nvim_replace_termcodes(keys, true, false, true),
-      mode or "n",
-      false
-    )
-  end)
-end
-
 function M.esc()
-  M.feedkeys("<Esc>")
+  vim.api.nvim_input("<Esc>")
 end
 
 function M.grep_file()
