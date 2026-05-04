@@ -69,16 +69,20 @@ local function close_all_floats()
   float_state.windows = {}
 end
 
-function M.centered_float_definition()
-  local clients = vim.lsp.get_clients({ bufnr = 0 })
+local function centered_float_lsp(method, no_result_msg)
+  local clients = vim.lsp.get_clients({ bufnr = 0, method = method })
+  if #clients == 0 then
+    vim.notify(no_result_msg, vim.log.levels.INFO)
+    return
+  end
   local client = clients[1]
   local enc = (client and client.offset_encoding) or "utf-16"
 
   local params = vim.lsp.util.make_position_params(0, enc)
 
-  vim.lsp.buf_request(0, "textDocument/definition", params, function(err, result, _, _)
+  vim.lsp.buf_request(0, method, params, function(err, result, _, _)
     if err or not result or vim.tbl_isempty(result) then
-      vim.notify("No definition found", vim.log.levels.INFO)
+      vim.notify(no_result_msg, vim.log.levels.INFO)
       return
     end
 
@@ -222,6 +226,14 @@ function M.centered_float_definition()
       vim.cmd("normal! zz")
     end, { buffer = bufnr, nowait = true })
   end)
+end
+
+function M.centered_float_definition()
+  centered_float_lsp("textDocument/definition", "No definition found")
+end
+
+function M.centered_float_implementation()
+  centered_float_lsp("textDocument/implementation", "No implementation found")
 end
 
 return M
