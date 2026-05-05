@@ -38,6 +38,7 @@
     ],
     "disableBypassPermissionsMode": "disable"
   },
+  "model": "opus",
   "enableAllProjectMcpServers": false,
   "hooks": {
     "Notification": [
@@ -85,5 +86,7 @@
     "security-guidance@claude-plugins-official": true,
     "lua-lsp@claude-plugins-official": true
   },
-  "language": "japanese"
+  "language": "japanese",
+  "awaySummaryEnabled": false,
+  "autoUpdatesChannel": "stable"
 }
