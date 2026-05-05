@@ -47,3 +47,9 @@ vim.api.nvim_create_autocmd("BufWritePre", {
       vim.lsp.buf.format({ buffer = ev.buf, async = false })
     end,
   })
+
+vim.api.nvim_create_autocmd('LspAttach', {
+	callback = function()
+		vim.lsp.document_color.enable(false)
+	end,
+})
