@@ -69,7 +69,7 @@ local function close_all_floats()
   float_state.windows = {}
 end
 
-local function centered_float_lsp(method, no_result_msg)
+local function centered_float_lsp(method, no_result_msg, picker_fn)
   local clients = vim.lsp.get_clients({ bufnr = 0, method = method })
   if #clients == 0 then
     vim.notify(no_result_msg, vim.log.levels.INFO)
@@ -83,6 +83,11 @@ local function centered_float_lsp(method, no_result_msg)
   vim.lsp.buf_request(0, method, params, function(err, result, _, _)
     if err or not result or vim.tbl_isempty(result) then
       vim.notify(no_result_msg, vim.log.levels.INFO)
+      return
+    end
+
+    if #result > 1 and picker_fn then
+      vim.schedule(picker_fn)
       return
     end
 
@@ -229,11 +234,17 @@ local function centered_float_lsp(method, no_result_msg)
 end
 
 function M.centered_float_definition()
-  centered_float_lsp("textDocument/definition", "No definition found")
+  centered_float_lsp("textDocument/definition", "No definition found", function()
+    require("snacks").picker.lsp_definitions({ include_current = true, auto_confirm = false })
+    require("config.util").esc()
+  end)
 end
 
 function M.centered_float_implementation()
-  centered_float_lsp("textDocument/implementation", "No implementation found")
+  centered_float_lsp("textDocument/implementation", "No implementation found", function()
+    require("snacks").picker.lsp_implementations({ include_current = true, auto_confirm = false })
+    require("config.util").esc()
+  end)
 end
 
 return M
