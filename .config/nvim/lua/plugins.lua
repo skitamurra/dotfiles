@@ -26,7 +26,6 @@ local opts = {
         "tutor",
         "zipPlugin",
         "editorconfig",
-        "man",
         "osc52",
         "spellfile",
       },

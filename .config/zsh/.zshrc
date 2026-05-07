@@ -38,6 +38,7 @@ key_conf () {
 # export
 # =========================================================
 export EDITOR=nvim
+export MANPAGER='nvim +Man!'
 export BROWSER=wslview
 export FZF_DEFAULT_COMMAND="rg --files --hidden --follow --glob '!.git/*'"
 export FZF_DEFAULT_OPTS=' --layout=reverse --border=rounded --height=45% --margin=0.5% --bind=tab:down --bind=shift-tab:up '
