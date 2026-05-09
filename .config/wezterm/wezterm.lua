@@ -15,9 +15,9 @@ config.automatically_reload_config = true
 config.default_cursor_style = "BlinkingBar"
 config.default_prog = { "wsl", "~", "zsh" }
 config.color_scheme = "Tokyo Night Moon"
-local font = 'Hack Nerd Font'
+local font = 'Moralerspace Argon HW'
 config.font = wezterm.font(font, { weight = 'Regular'})
-config.font_size = 12
+config.font_size = 13
 config.window_frame = {
   active_titlebar_bg = "none",
   font = wezterm.font(font, { weight = 'Bold'}),
