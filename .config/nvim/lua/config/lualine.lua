@@ -1,17 +1,15 @@
 -- lua/config/lualine
 local lualine = require('lualine')
+vim.api.nvim_set_hl(0, 'StatusLine', { bg = 'NONE' })
+vim.api.nvim_set_hl(0, 'StatusLineNC', { bg = 'NONE' })
 
 local colors = {
-  bg       = '#202328',
-  fg       = '#bbc2cf',
   yellow   = '#ECBE7B',
   cyan     = '#008080',
-  darkblue = '#081633',
   green    = '#98be65',
   orange   = '#FF8800',
   violet   = '#a9a1e1',
   magenta  = '#c678dd',
-  blue     = '#51afef',
   red      = '#ec5f67',
 }
 
@@ -33,149 +31,44 @@ local config = {
   options = {
     component_separators = '',
     section_separators = '',
-    theme = {
-      normal = { c = { fg = colors.fg, bg = colors.bg } },
-      inactive = { c = { fg = colors.fg, bg = colors.bg } },
-    },
+    theme = { normal = {} },
   },
   sections = {
-    lualine_a = {},
-    lualine_b = {},
+    lualine_a = {{
+      'branch',
+      icon = '',
+      color = { fg = colors.violet, gui = 'bold' },
+      cond = conditions.buffer_not_empty,
+    }},
+    lualine_b = {{
+      function()
+        local fullpath = vim.fn.expand("%:p")
+        local relpath = vim.fn.expand("%:.")
+        local git_root = require("config.util").get_git_root()
+        if vim.v.shell_error ~= 0 or not git_root or git_root == "" then
+          return relpath
+        end
+        local src_root = git_root .. "/src/"
+        if fullpath:sub(1, #src_root) == src_root then
+          return fullpath:sub(#src_root + 1)
+        end
+        return relpath
+      end,
+      icon = ' ',
+      color = { fg = colors.magenta, gui = 'bold' },
+      cond = conditions.buffer_not_empty,
+      path = 1,
+    }},
+    lualine_c = {},
     lualine_y = {},
     lualine_z = {},
-    lualine_c = {},
     lualine_x = {},
-  },
-  inactive_sections = {
-    lualine_a = {},
-    lualine_b = {},
-    lualine_y = {},
-    lualine_z = {},
-    lualine_c = {},
-    lualine_x = {},
-  },
-  winbar = {
-    lualine_a = {},
-    lualine_b = {},
-    lualine_c = {},
-    lualine_x = {},
-    lualine_y = {},
-    lualine_z = {}
   },
 }
 
 local function ins_left(component)
   table.insert(config.sections.lualine_c, component)
 end
-
-local function ins_right(component)
-  table.insert(config.sections.lualine_x, component)
-end
-
-local function ins_winbar(component)
-  table.insert(config.winbar.lualine_c, component)
-end
-
-ins_winbar {
-  function()
-    local navic = require("nvim-navic")
-    return navic.is_available() and navic.get_location() or ''
-  end,
-  cond = function()
-    local ok, navic = pcall(require, "nvim-navic")
-    return ok and navic.is_available()
-  end,
-  color = { fg = colors.fg },
-}
-
-ins_left {
-  function()
-    return '▊'
-  end,
-  color = { fg = colors.blue },
-  padding = { left = 0, right = 1 },
-}
-
-local function mode()
-  local mode_map = {
-    n = 'N', -- Normal mode
-    i = 'I', -- Insert mode
-    v = 'V', -- Visual mode
-    [''] = 'V', -- Visual block mode
-    V = 'V', -- Visual line mode
-    c = 'C', -- Command-line mode
-    no = 'N', -- NInsert mode
-    s = 'S', -- Select mode
-    S = 'S', -- Select line mode
-    ic = 'I', -- Insert mode (completion)
-    R = 'R', -- Replace mode
-    Rv = 'R', -- Virtual Replace mode
-    cv = 'C', -- Command-line mode
-    ce = 'C', -- Ex mode
-    r = 'R', -- Prompt mode
-    rm = 'M', -- More mode
-    ['r?'] = '?', -- Confirm mode
-    ['!'] = '!', -- Shell mode
-    t = 'T', -- Terminal mode
-  }
-  return mode_map[vim.fn.mode()] or '[UNKNOWN]'
-end
-
-ins_left {
-  mode,
-  color = function()
-    local mode_color = {
-      n = colors.red,
-      i = colors.green,
-      v = colors.blue,
-      [''] = colors.blue,
-      V = colors.blue,
-      c = colors.magenta,
-      no = colors.red,
-      s = colors.orange,
-      S = colors.orange,
-      [''] = colors.orange,
-      ic = colors.yellow,
-      R = colors.violet,
-      Rv = colors.violet,
-      cv = colors.red,
-      ce = colors.red,
-      r = colors.cyan,
-      rm = colors.cyan,
-      ['r?'] = colors.cyan,
-      ['!'] = colors.red,
-      t = colors.red,
-    }
-    return { fg = mode_color[vim.fn.mode()] }
-  end,
-  padding = { right = 1 },
-}
-
-ins_left {
-  'branch',
-  icon = '',
-  color = { fg = colors.violet, gui = 'bold' },
-}
-
-
-ins_left {
-  function()
-    local fullpath = vim.fn.expand("%:p")
-    local relpath = vim.fn.expand("%:.")
-    local git_root = require("config.util").get_git_root()
-    if vim.v.shell_error ~= 0 or not git_root or git_root == "" then
-      return relpath
-    end
-    local src_root = git_root .. "/src/"
-    if fullpath:sub(1, #src_root) == src_root then
-      return fullpath:sub(#src_root + 1)
-    end
-    return relpath
-  end,
-  cond = conditions.buffer_not_empty,
-  color = { fg = colors.magenta, gui = 'bold' },
-  path = 1,
-}
 
 ins_left {
   'diagnostics',
@@ -199,13 +92,16 @@ ins_left {
   cond = conditions.hide_in_width,
 }
 
-ins_right { 'location' }
-ins_right { 'progress', color = { fg = colors.fg, gui = 'bold' } }
-ins_right { 'fileformat', icons_enabled = true, color = { fg = colors.magenta, gui = 'bold' } }
+ins_left {
+  'progress',
+  icon = '󱨶 ',
+  color = { fg = colors.cyan, gui = 'bold' },
+  cond = conditions.buffer_not_empty,
+}
 
-ins_right {
+ins_left {
   function()
-    local msg = '-'
+    local msg = ''
     local buf_ft = vim.api.nvim_get_option_value('filetype', { buf = 0 })
     local clients = vim.lsp.get_clients()
     if next(clients) == nil then
@@ -219,16 +115,8 @@ ins_right {
     end
     return msg
   end,
-  icon = ' :',
+  icon = ' ',
   color = { fg = colors.violet, gui = 'bold' },
-}
-
-ins_right {
-  function()
-    return '▊'
-  end,
-  color = { fg = colors.blue },
-  padding = { left = 1 },
 }
 
 lualine.setup(config)
