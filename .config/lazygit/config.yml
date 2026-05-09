@@ -4,6 +4,9 @@ git:
   paging:
     colorArg: always
     pager: delta --dark --paging=never --line-numbers --hyperlinks
+  branchLogCmd: git log --graph --color=always --date=format:"%Y-%m-%d %H:%M" --pretty=format:"%C(#a0a0a0)%h%Creset %C(cyan)%ad%Creset %C(#dd4814)%ae%Creset %C(yellow)%d%Creset %n%C(white bold)%s%Creset%n" {{branchName}} --
+  allBranchesLogCmds:
+    - git log --graph --color=always --date=format:"%Y-%m-%d %H:%M" --pretty=format:"%C(#a0a0a0)%h%Creset %C(cyan)%ad%Creset %C(#dd4814)%ae%Creset %C(yellow)%d%Creset %n%C(white bold)%s%Creset%n" --
 # customCommands:
 #   - key: "<enter>"
 #     context: "files"
