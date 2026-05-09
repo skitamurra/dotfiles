@@ -28,14 +28,8 @@ config.window_close_confirmation = "NeverPrompt"
 config.unix_domains = { { name = "unix" } }
 config.default_gui_startup_args = { "connect", "unix" }
 config.window_background_gradient = { colors = { "#000000" } }
-config.background = {
-  {
-    source = { File = wezterm.config_dir .. "/backgrounds/background.jpg" },
-    opacity = 0.2,
-    width = "100%",
-    height = "100%",
-  }
-}
+config.window_background_opacity = 0.4
+config.win32_system_backdrop = 'Acrylic'
 config.show_new_tab_button_in_tab_bar = false
 config.show_close_tab_button_in_tabs = false
 config.inactive_pane_hsb = {
