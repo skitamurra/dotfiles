@@ -49,7 +49,6 @@ local function apply_setup(setup)
     local first_tab = tabs[1]
     local first_tab_obj, first_pane, window = mux.spawn_window({
       workspace = ws_def.workspace,
-      cwd = home_dir,
     })
     send_setup(first_pane, first_tab.cwd, first_tab.command)
     spawn_splits(first_pane, first_tab.splits, first_tab.cwd)
@@ -91,11 +90,11 @@ function module.apply_to_config(_)
     --      workspace = "home",
     --      tabs = {
     --        {
-    --          cwd = "~",
     --          command = "note",
     --          splits = {
     --            {
     --              direction = "Right",
+    --              size = 0.5,
     --              command = "prt",
     --              post_spawn = function(pane)
     --                pane:send_text("echo " .. pane:pane_id() .. "\n")
@@ -112,20 +111,7 @@ function module.apply_to_config(_)
     --    {
     --      workspace = "src",
     --      tabs = {
-    --        {
-    --          cwd = "~/ghq/github.com/example/repo",
-    --          splits = {
-    --            {
-    --              direction = "Right",
-    --              size = 0.5,
-    --              splits = {
-    --                { direction = "Bottom" },
-    --              },
-    --            },
-    --            { direction = "Bottom" },
-    --          },
-    --        },
-    --      },
+    --        {},  -- spawn default tab
     --    },
     --  }
     if not ok or type(setup) ~= "table" then

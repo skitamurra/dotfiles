@@ -7,13 +7,16 @@ package.path = table.concat({
   package.path,
 }, ";")
 
+config.default_domain = "WSL:Ubuntu"
+config.default_mux_server_domain = "WSL:Ubuntu"
+config.unix_domains = { { name = "unix" } }
+config.default_gui_startup_args = { "connect", "unix" }
 config.leader = { key = " ", mods = "SHIFT", timeout_milliseconds = 300 }
 config.disable_default_key_bindings = true
 config.keys = require("keybinds").keys
 config.key_tables = require("keybinds").key_tables
 config.automatically_reload_config = true
 config.default_cursor_style = "BlinkingBar"
-config.default_prog = { "wsl", "~", "zsh" }
 config.color_scheme = "Tokyo Night Moon"
 local font = 'Moralerspace Argon HW'
 config.font = wezterm.font(font, { weight = 'Regular'})
@@ -25,8 +28,6 @@ config.window_frame = {
 }
 config.window_decorations = "RESIZE"
 config.window_close_confirmation = "NeverPrompt"
-config.unix_domains = { { name = "unix" } }
-config.default_gui_startup_args = { "connect", "unix" }
 config.window_background_gradient = { colors = { "#000000" } }
 config.window_background_opacity = 0.4
 config.win32_system_backdrop = 'Acrylic'
