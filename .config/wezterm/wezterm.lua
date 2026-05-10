@@ -21,6 +21,8 @@ config.color_scheme = "Tokyo Night Moon"
 local font = 'Moralerspace Argon HW'
 config.font = wezterm.font(font, { weight = 'Regular'})
 config.font_size = 13
+config.command_palette_font = wezterm.font(font, { weight = "Regular" })
+config.command_palette_font_size = 13
 config.window_frame = {
   active_titlebar_bg = "none",
   font = wezterm.font(font, { weight = 'Bold'}),
