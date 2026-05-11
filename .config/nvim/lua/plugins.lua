@@ -294,7 +294,9 @@ local plugins = {
         icons = {},
       },
       code = {
-        width = "block",
+        disable_background = true,
+        highlight_border = false,
+        language_border = '-',
       },
     },
   },
