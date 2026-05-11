@@ -2,10 +2,7 @@ local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 local cfg_file = wezterm.config_file
 local cfg_dir  = cfg_file:gsub("[^/\\]+$", ""):gsub("\\", "/")
-package.path = table.concat({
-  cfg_dir .. "?.lua",
-  package.path,
-}, ";")
+package.path = table.concat({ cfg_dir .. "?.lua", package.path }, ";")
 
 local default_domain = wezterm.default_wsl_domains()[1].name
 config.default_domain = default_domain
@@ -32,14 +29,11 @@ config.window_frame = {
 config.window_decorations = "RESIZE"
 config.window_close_confirmation = "NeverPrompt"
 config.window_background_gradient = { colors = { "#000000" } }
-config.window_background_opacity = 0.4
+config.window_background_opacity = 0.5
 config.win32_system_backdrop = 'Acrylic'
 config.show_new_tab_button_in_tab_bar = false
 config.show_close_tab_button_in_tabs = false
-config.inactive_pane_hsb = {
-  saturation = 0.4,
-  brightness = 0.4,
-}
+config.inactive_pane_hsb = { saturation = 0.4, brightness = 0.4 }
 config.colors = {
   tab_bar = {
     inactive_tab_edge = "none",
