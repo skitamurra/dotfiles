@@ -82,13 +82,14 @@ ins_left {
 }
 
 ins_left {
-  'diff',
-  symbols = { added = ' ', modified = '󰝤 ', removed = ' ' },
-  diff_color = {
-    added = { fg = colors.green },
-    modified = { fg = colors.orange },
-    removed = { fg = colors.red },
-  },
+  function()
+    local gs = vim.b.gitsigns_status_dict
+    if gs and ((gs.added or 0) + (gs.changed or 0) + (gs.removed or 0)) > 0 then
+      return '󱞿 '
+    end
+    return ''
+  end,
+  color = { fg = colors.orange },
   cond = conditions.hide_in_width,
 }
 
