@@ -7,8 +7,9 @@ package.path = table.concat({
   package.path,
 }, ";")
 
-config.default_domain = "WSL:Ubuntu"
-config.default_mux_server_domain = "WSL:Ubuntu"
+local default_domain = wezterm.default_wsl_domains()[1].name
+config.default_domain = default_domain
+config.default_mux_server_domain = default_domain
 config.unix_domains = { { name = "unix" } }
 config.default_gui_startup_args = { "connect", "unix" }
 config.leader = { key = " ", mods = "SHIFT", timeout_milliseconds = 300 }
