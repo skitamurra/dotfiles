@@ -240,6 +240,7 @@ local plugins = {
   {
     'nacro90/numb.nvim',
     event = { "BufReadPre", "BufNewFile" },
+    opts = {},
   },
   {
     "levouh/tint.nvim",
