@@ -47,4 +47,10 @@ Snacks.setup({
   indent = { enabled = true },
   notifier = { enabled = true },
   picker = { enabled = true},
+  styles = {
+    scratch = {
+      width = 0.8,
+      height = 0.8,
+    },
+  }  ,
 })
