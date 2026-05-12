@@ -84,7 +84,6 @@ alias la='ls -A'
 alias l='ls -CF'
 alias note='nvim ~/NOTE.md'
 alias gia='create_gitignore'
-alias bat='batcat --color=always'
 
 run_startup
 zsh-defer key_conf

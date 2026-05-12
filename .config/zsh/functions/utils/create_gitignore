@@ -7,11 +7,11 @@ fi
 
 local selected=$(gibo list | fzf \
     --multi \
-    --preview "gibo dump {} | batcat --style=numbers --color=always --paging=never")
+    --preview "gibo dump {} | bat --style=numbers --color=always --paging=never")
 if [[ -z "$selected" ]]; then
     echo "No templates selected. Exiting."
     return
 fi
 
 echo "$selected" | xargs gibo dump >> "$input_file"
-batcat "$input_file"
+bat "$input_file"

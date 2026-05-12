@@ -101,7 +101,7 @@ completions:
     --read0: true
     --prompt: "'Chdir> '"
     --preview: "ls -AF --color=always {}"
-  callback: "batcat"
+  callback: "bat"
   callbackZero: true # null termination is used in `callback` I/O
 
 - name: nb edit

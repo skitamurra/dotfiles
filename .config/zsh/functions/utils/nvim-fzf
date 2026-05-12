@@ -6,7 +6,7 @@
   while true; do
     local out
     out=$(find . -maxdepth 1 ! -path . | fzf \
-      --preview "if [ -d {} ]; then ls -AF --color=always {}; else batcat --color=always {}; fi" \
+      --preview "if [ -d {} ]; then ls -AF --color=always {}; else bat --color=always {}; fi" \
       --header "PWD: $PWD | ^: Up" \
       --expect="^")
 

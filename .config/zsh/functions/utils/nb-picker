@@ -34,7 +34,7 @@ print -r -- "$initial_mode" > "$type_file"
 
   # Preview: stripping "[" and "]" from {1} works for both modes
   # (note: "[11]" → "11"; task: "[11" → "11"); nb show finds the parent.
-  local preview_sh='id="${1#\[}"; id="${id%\]}"; batcat --color=always --style=plain --paging=never "$(nb show "$id" --path 2>/dev/null)" 2>/dev/null'
+  local preview_sh='id="${1#\[}"; id="${id%\]}"; bat --color=always --style=plain --paging=never "$(nb show "$id" --path 2>/dev/null)" 2>/dev/null'
 
   local list_cmd="zsh -fc '$list_sh' _ '$type_file'"
   local header_cmd="zsh -fc '$header_sh' _ '$type_file'"
