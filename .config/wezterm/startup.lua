@@ -74,9 +74,15 @@ end
 
 function module.apply_to_config(_)
   wezterm.on("gui-attached", function()
-    local workspace = mux.get_active_workspace()
+    local active_workspcace = mux.get_active_workspace()
+    local ordered = ws_order.get_ordered_workspaces()
+    if active_workspcace == "default" and #ordered > 0 then
+      mux.set_active_workspace(ordered[1])
+      active_workspcace = ordered[1]
+    end
+
     for _, window in ipairs(mux.all_windows()) do
-      if window:get_workspace() == workspace then
+      if window:get_workspace() == active_workspcace then
         window:gui_window():maximize()
       end
     end

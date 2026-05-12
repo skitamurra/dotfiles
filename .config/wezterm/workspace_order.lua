@@ -54,13 +54,13 @@ function M.get_ordered_workspaces()
   local filtered = {}
   local added = {}
   for _, w in ipairs(read_order()) do
-    if w ~= "scratch" and existing[w] then
+    if w ~= "scratch" and w ~= "default" and existing[w] then
       table.insert(filtered, w)
       added[w] = true
     end
   end
   for _, w in ipairs(mux.get_workspace_names()) do
-    if w ~= "scratch" and not added[w] then
+    if w ~= "scratch" and w ~= "default" and not added[w] then
       table.insert(filtered, w)
     end
   end
