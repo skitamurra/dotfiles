@@ -5,7 +5,7 @@ history:
     deleteSoft: ctrl-d
     deleteHard: alt-d
     toggleScope: ctrl-r
-    togglePreview: ?
+    togglePreview: "?"
 
 snippets:
 # snippet and keyword abbrev
