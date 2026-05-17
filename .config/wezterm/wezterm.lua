@@ -40,8 +40,8 @@ config.colors = {
   },
 }
 config.max_fps = 120
+config.floating_overlay = { bg_color = "#000000" }
 
-require("workspace").apply_to_config(config)
 require("tab").apply_to_config(config)
 require("startup").apply_to_config(config)
 return config

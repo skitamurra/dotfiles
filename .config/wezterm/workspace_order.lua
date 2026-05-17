@@ -5,22 +5,30 @@ local M = {}
 
 local state_dir = (os.getenv("HOME") or os.getenv("USERPROFILE")) .. "/.local/state/wezterm"
 local state_file = state_dir .. "/workspace_order.json"
+local cached_order = nil
 
 local function read_order()
+  if cached_order then
+    return cached_order
+  end
+
   local f = io.open(state_file, "r")
   if not f then
+    cached_order = {}
     return {}
   end
   local content = f:read("*a")
   f:close()
   local ok, data = pcall(wezterm.json_parse, content)
   if ok and type(data) == "table" then
+    cached_order = data
     return data
   end
+  cached_order = {}
   return {}
 end
 
-local function write_order(order)
+local function write_order_sync(order)
   os.execute('mkdir -p "' .. state_dir .. '"')
   local f = io.open(state_file, "w")
   if not f then
@@ -31,6 +39,24 @@ local function write_order(order)
   f:close()
 end
 
+local function write_order_async(order)
+  local ok = pcall(function()
+    wezterm.background_child_process({
+      "sh",
+      "-c",
+      'mkdir -p "$1" && tmp="$3.tmp.$$" && printf "%s" "$2" > "$tmp" && mv "$tmp" "$3"',
+      "wezterm-workspace-order",
+      state_dir,
+      wezterm.json_encode(order),
+      state_file,
+    })
+  end)
+
+  if not ok then
+    write_order_sync(order)
+  end
+end
+
 function M.track(name)
   local order = read_order()
   for _, v in ipairs(order) do
@@ -39,11 +65,13 @@ function M.track(name)
     end
   end
   table.insert(order, name)
-  write_order(order)
+  cached_order = order
+  write_order_async(order)
 end
 
 function M.reset(names)
-  write_order(names)
+  cached_order = names
+  write_order_sync(names)
 end
 
 function M.get_ordered_workspaces()

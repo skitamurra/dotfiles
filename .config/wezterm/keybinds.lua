@@ -1,14 +1,15 @@
 local wezterm = require 'wezterm'
 local act = wezterm.action
+local workspace = require 'workspace'
 
 return {
   keys = {
     { key = 'Tab', mods = 'CTRL', action = act.ActivateTabRelative(1) },
     { key = 'Tab', mods = 'SHIFT|CTRL', action = act.ActivateTabRelative(-1) },
-    { key = 'Enter', mods = 'CTRL', action = wezterm.action.SendString '\x1b[13;5u' },
-    { key = "Enter", mods = "SHIFT", action = wezterm.action.SendString("\n") },
-    { key = ".", mods = "CTRL", action = wezterm.action.SendString("\x1b[46;5u") },
-    { key = 't', mods = 'CTRL', action = wezterm.action.SpawnCommandInNewTab { cwd = '~', }, },
+    { key = 'Enter', mods = 'CTRL', action = act.SendString '\x1b[13;5u' },
+    { key = "Enter", mods = "SHIFT", action = act.SendString("\n") },
+    { key = ".", mods = "CTRL", action = act.SendString("\x1b[46;5u") },
+    { key = 't', mods = 'CTRL', action = act.SpawnCommandInNewTab { cwd = '~', }, },
     { key = 'w', mods = 'CTRL', action = act.CloseCurrentTab{ confirm = false } },
     { key = 'C', mods = 'CTRL', action = act.CopyTo 'Clipboard' },
     { key = 'F', mods = 'CTRL', action = act.SendString '\x1b[70;5u' },
@@ -24,17 +25,22 @@ return {
     { key = 'V', mods = 'CTRL', action = act.PasteFrom 'Clipboard' },
     { key = 'X', mods = 'CTRL', action = act.ActivateCopyMode },
     { key = 'Z', mods = 'CTRL', action = act.TogglePaneZoomState },
-    { key = 'h', mods = 'ALT', action = wezterm.action.SendKey { key = "LeftArrow" }},
-    { key = 'j', mods = 'ALT', action = wezterm.action.SendKey { key = "DownArrow" }},
-    { key = 'k', mods = 'ALT', action = wezterm.action.SendKey { key = "UpArrow" }},
-    { key = 'l', mods = 'ALT', action = wezterm.action.SendKey { key = "RightArrow" }},
-    { key = 'H', mods = 'ALT', action = wezterm.action.SendKey { key = "Home" }},
-    { key = 'L', mods = 'ALT', action = wezterm.action.SendKey { key = "End" }},
+    { key = 'h', mods = 'ALT', action = act.SendKey { key = "LeftArrow" }},
+    { key = 'j', mods = 'ALT', action = act.SendKey { key = "DownArrow" }},
+    { key = 'k', mods = 'ALT', action = act.SendKey { key = "UpArrow" }},
+    { key = 'l', mods = 'ALT', action = act.SendKey { key = "RightArrow" }},
+    { key = 'H', mods = 'ALT', action = act.SendKey { key = "Home" }},
+    { key = 'L', mods = 'ALT', action = act.SendKey { key = "End" }},
     { key = '/', mods = 'LEADER', action = act.Search 'CurrentSelectionOrEmptyString' },
-    { key = "h", mods = "LEADER", action = wezterm.action.SplitVertical { domain = "CurrentPaneDomain" } },
-    { key = "v", mods = "LEADER", action = wezterm.action.SplitHorizontal { domain = "CurrentPaneDomain" } },
-    { key = "q", mods = "LEADER", action = wezterm.action.CloseCurrentPane { confirm = false } },
+    { key = "h", mods = "LEADER", action = act.SplitVertical { domain = "CurrentPaneDomain" } },
+    { key = "v", mods = "LEADER", action = act.SplitHorizontal { domain = "CurrentPaneDomain" } },
+    { key = "q", mods = "LEADER", action = act.CloseCurrentPane { confirm = false } },
     { key = 'phys:Space', mods = 'SHIFT|CTRL', action = act.QuickSelect },
+    -- Workspace
+    { key = 's', mods = 'CTRL|ALT', action = act.ToggleFloatingPane },
+    { key = 'l', mods = 'CTRL|ALT', action = workspace.switch_to_workspace('next') },
+    { key = 'h', mods = 'CTRL|ALT', action = workspace.switch_to_workspace('prev') },
+    { key = 'w', mods = 'LEADER', action = workspace.workspace_selector() },
   },
 
   key_tables = {
@@ -106,5 +112,9 @@ return {
       { key = 'DownArrow', mods = 'NONE', action = act.CopyMode 'NextMatch' },
     },
 
+    workspace_mode = {
+      { key = 'c', mods = 'SHIFT', action = workspace.create_workspace() },
+      { key = 'Escape', action = act.Multiple({ 'PopKeyTable', act.SendKey({ key = 'Escape' }) }) },
+    },
   }
 }
