@@ -9,7 +9,7 @@ config.default_domain = default_domain
 config.default_mux_server_domain = default_domain
 config.unix_domains = { { name = "unix" } }
 config.default_gui_startup_args = { "connect", "unix" }
-config.leader = { key = " ", mods = "SHIFT", timeout_milliseconds = 300 }
+config.leader = { key = " ", mods = "SHIFT", timeout_milliseconds = 500 }
 config.disable_default_key_bindings = true
 config.keys = require("keybinds").keys
 config.key_tables = require("keybinds").key_tables
