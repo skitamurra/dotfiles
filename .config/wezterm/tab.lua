@@ -1,5 +1,4 @@
 local wezterm = require("wezterm")
-local mux = wezterm.mux
 local ws_order = require("workspace_order")
 local module = {}
 
@@ -59,10 +58,6 @@ local DECORATIONS = {
 -- =============================================================================
 -- ヘルパー関数
 -- =============================================================================
-
-local function basename(path)
-  return string.gsub(path or "", "(.*[/\\])(.*)", "%2")
-end
 
 local function is_nb_process(process_name, cmdline, cwd)
   return process_name == "nb"
@@ -219,13 +214,7 @@ function module.apply_to_config(config)
     local pane_id = pane.pane_id
     local pane_title = pane.title or ""
     local user_vars = pane.user_vars or {}
-    -- WSL workaround: foreground_process_name returns wslhost.exe
-    -- Use WEZTERM_PROG user-var (set by zsh wezterm shell integration) instead
-    local raw_process = basename(pane.foreground_process_name)
-    local process_name = raw_process
-    if raw_process == "wslhost.exe" then
-      process_name = user_vars.WEZTERM_PROG
-    end
+    local process_name = user_vars.WEZTERM_PROG or ""  -- require Shell Integration
     local cmdline = pane.foreground_process_name or ""
     local cached_cwd = title_cache[pane_id] or ""
 
@@ -255,14 +244,10 @@ function module.apply_to_config(config)
 
     -- Claude Code のタイトル追加
     local claude_suffix = ""
-    if is_claude_process(process_name, pane_title) and pane_title ~= "" then
-      claude_suffix = " " .. pane_title
-    end
-
-    -- Claude 状態マーク (hooks から SetUserVar で書き込まれる)
     local claude_state_mark = ""
     local claude_state_color = foreground
-    if is_claude_process(process_name, pane_title) then
+    if is_claude_process(process_name, pane_title) and pane_title ~= "" then
+      claude_suffix = " " .. pane_title
       local state_info = CLAUDE_MARKS[user_vars.CLAUDE_STATE or ""]
       if state_info then
         claude_state_mark = state_info.mark
