@@ -24,7 +24,6 @@ return {
       workspace = {
         library = {
           vim.api.nvim_get_runtime_file("lua", true),
-          '${3rd}/luv/library',
         },
         checkThirdParty = false,
       },
