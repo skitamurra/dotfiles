@@ -22,6 +22,10 @@ snippets:
   keyword: gcim
   snippet: git commit -m '{{commit_message}}'
 
+- name: gh pr open from commit
+  keyword: pr
+  snippet: gh-pr-open {{commit_hash}}
+
 - name: "null"
   keyword: "null"
   snippet: ">/dev/null 2>&1"

@@ -1,0 +1,10 @@
+#!/bin/zsh
+
+local hash="${1:-$(git rev-parse --short HEAD 2>/dev/null)}"
+local url
+url=$(gh pr list --search "$hash" --state closed \
+        --json title,url --jq '.[] | "\(.title)\t\(.url)"' \
+  | fzf -d '\t' --with-nth=1 \
+  | cut -f2)
+
+[ -n "$url" ] && ${BROWSER:-xdg-open} "$url"
