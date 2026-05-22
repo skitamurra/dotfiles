@@ -42,8 +42,8 @@ Hydra({
   mode = "n",
   body = "<leader>l",
   heads = {
-    { "h", "<cmd>bprevious<CR>", { desc = "prev" } },
-    { "l", "<cmd>bnext<CR>", { desc = "next" } },
+    { "h", "<cmd>BufferLineCyclePrev<CR>", { desc = "prev" } },
+    { "l", "<cmd>BufferLineCycleNext<CR>", { desc = "next" } },
     { "w", "<cmd>bdelete<CR>", { desc = "close" } },
     { "q", nil, { exit = true }, },
   },
