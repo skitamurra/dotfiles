@@ -116,5 +116,12 @@ return {
       { key = 'c', mods = 'SHIFT', action = workspace.create_workspace() },
       { key = 'Escape', action = act.Multiple({ 'PopKeyTable', act.SendKey({ key = 'Escape' }) }) },
     },
+
+    floating_modal = {
+      { key = 'h', mods = 'ALT', action = act.SendKey { key = 'LeftArrow' } },
+      { key = 'j', mods = 'ALT', action = act.SendKey { key = 'DownArrow' } },
+      { key = 'k', mods = 'ALT', action = act.SendKey { key = 'UpArrow' } },
+      { key = 'l', mods = 'ALT', action = act.SendKey { key = 'RightArrow' } },
+    },
   }
 }
