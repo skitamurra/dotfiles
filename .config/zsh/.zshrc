@@ -17,7 +17,7 @@ typeset -gU fpath=("$ZSH_HOME/completions" $func_dir(N/) $func_dir/**/*(N/) $fpa
 autoload -Uz compinit smart-insert-last-word edit-command-line $func_dir/**/*(N.:t)
 compinit -C -d "$HOME/.zcompdump"
 zle -N nvim-fzf
-zle -N ghq-fzf
+zle -N cd-fzf
 zle -N smart-insert-last-word
 zle -N edit-command-line
 
@@ -26,7 +26,7 @@ key_conf () {
   bindkey '^]' smart-insert-last-word
   bindkey '^e' edit-command-line
   bindkey '^n' nvim-fzf
-  bindkey '^g' ghq-fzf
+  bindkey '^g' cd-fzf
   if [[ -n $ZENO_LOADED ]]; then
     ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(zeno-auto-snippet-and-accept-line)
     bindkey ' '  zeno-auto-snippet

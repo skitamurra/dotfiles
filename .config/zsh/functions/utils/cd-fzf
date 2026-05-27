@@ -1,0 +1,17 @@
+#!/bin/zsh
+
+local result=$({
+  zoxide query --list 2>/dev/null
+  ghq list -p
+  fd -H -d 2 . "$HOME"
+} | awk '!seen[$0]++' | fzf \
+  --layout=reverse \
+  --no-sort \
+  --query="$LBUFFER" \
+  --preview "bat --color=always --style=header,grid --line-range :80 {}/README.* 2>/dev/null")
+
+if [ -n "$result" ]; then
+  BUFFER="cd $result"
+  zle accept-line
+fi
+zle reset-prompt
