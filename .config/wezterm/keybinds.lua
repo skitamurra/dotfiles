@@ -118,10 +118,10 @@ return {
     },
 
     floating_modal = {
-      { key = 'h', mods = 'ALT', action = act.SendKey { key = 'LeftArrow' } },
-      { key = 'j', mods = 'ALT', action = act.SendKey { key = 'DownArrow' } },
-      { key = 'k', mods = 'ALT', action = act.SendKey { key = 'UpArrow' } },
-      { key = 'l', mods = 'ALT', action = act.SendKey { key = 'RightArrow' } },
+      { key = 'h', mods = 'ALT', action = act.FloatingModal 'MoveLeft' },
+      { key = 'j', mods = 'ALT', action = act.FloatingModal 'MoveDown' },
+      { key = 'k', mods = 'ALT', action = act.FloatingModal 'MoveUp' },
+      { key = 'l', mods = 'ALT', action = act.FloatingModal 'MoveRight' },
     },
   }
 }
