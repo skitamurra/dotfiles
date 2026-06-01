@@ -95,6 +95,11 @@ function M.blame_line_picker(win, buf)
         confirm = function(picker, item)
           picker:close()
           vim.ui.open(item.url)
+          vim.schedule(function()
+            if vim.api.nvim_win_is_valid(win) then
+              vim.api.nvim_set_current_win(win)
+            end
+          end)
         end,
       })
     end)
