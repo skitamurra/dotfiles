@@ -13,6 +13,7 @@ function Map(mode, lhs, rhs, opts)
   )
 end
 
+Map("n", "_", "\"_")
 Map("n", "Y", "y$")
 Map("n", "X", "_d")
 Map("n", "X", "_D")
