@@ -52,5 +52,12 @@ Snacks.setup({
       width = 0.8,
       height = 0.8,
     },
+    blame_line = {
+      keys = {
+        pr_picker = { "<C-o>", function(self)
+          util.blame_line_picker(self.win, self.buf)
+        end, mode = { "n" }, desc = "PRs for this commit" },
+      },
+    },
   }  ,
 })

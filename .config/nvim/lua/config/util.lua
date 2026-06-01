@@ -64,4 +64,41 @@ function M.grep_text(opts)
   Snacks.picker.grep(full_opts)
 end
 
+function M.blame_line_picker(win, buf)
+  local cur = vim.api.nvim_win_get_cursor(win)[1]
+  local hash
+  for ln = cur, 1, -1 do
+    local text = vim.api.nvim_buf_get_lines(buf, ln - 1, ln, false)[1] or ""
+    hash = text:match("^commit (%x+)")
+    if hash then break end
+  end
+
+  vim.system({
+    "gh", "pr", "list", "--search", hash, "--state", "closed",
+    "--json", "title,url",
+  }, { text = true }, function(result)
+    vim.schedule(function()
+      local items = vim.tbl_map(function(pr)
+        return { text = pr.title, title = pr.title, url = pr.url }
+      end, vim.json.decode(result.stdout))
+
+      if #items == 0 then
+        vim.notify("No PRs found for " .. hash:sub(1, 8), vim.log.levels.INFO)
+        return
+      end
+      Snacks.picker.pick({
+        source = "gh_pr_list",
+        items = items,
+        format = function(item)
+          return { { item.title, "Title" } }
+        end,
+        confirm = function(picker, item)
+          picker:close()
+          vim.ui.open(item.url)
+        end,
+      })
+    end)
+  end)
+end
+
 return M
