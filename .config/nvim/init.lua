@@ -24,18 +24,6 @@ vim.opt.titlestring = "%t"
 vim.g.clever_f_smart_case = 1
 vim.opt.exrc = true
 vim.opt.clipboard = 'unnamedplus'
-vim.g.clipboard = {
-  name = "win32yank-wsl",
-  copy = {
-    ["+"] = "win32yank.exe -i --crlf",
-    ["*"] = "win32yank.exe -i --crlf",
-  },
-  paste = {
-    ["+"] = "win32yank.exe -o --lf",
-    ["*"] = "win32yank.exe -o --lf",
-  },
-  cache_enabled = 0,
-}
 vim.opt.sessionoptions = {
   "buffers",
   "curdir",
