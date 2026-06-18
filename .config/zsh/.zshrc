@@ -48,28 +48,28 @@ export ZENO_HOME="$HOME/.config/zeno"
 export ZENO_COMPLETION_FALLBACK=fzf-tab-complete
 export CLAUDE_CONFIG_DIR="$HOME/.config/claude"
 
-export PATH="$HOME/bin:$PATH"
-export PATH="$HOME/.local/bin:$PATH"
-export PATH="/usr/local/bin:$PATH"
-export PATH="$HOME/go/bin:$PATH"
-export PATH="$HOME/.cargo/bin:$PATH"
-export PATH="$HOME/.local/share/fnm:$PATH"
-export PATH="$HOME/.pyenv/bin:$PATH"
+export PATH="$PATH:$HOME/bin"
+export PATH="$PATH:$HOME/.local/bin"
+export PATH="$PATH:/usr/local/bin"
+export PATH="$PATH:$HOME/go/bin"
+export PATH="$PATH:$HOME/.cargo/bin"
+export PATH="$PATH:$HOME/.local/share/fnm"
+export PATH="$PATH:$HOME/.pyenv/bin"
 export JAVA_HOME="/usr/lib/jvm/java-21-openjdk-amd64"
-export PATH="$JAVA_HOME/bin:$PATH"
-export PATH="$HOME/dev/flutter/bin:$PATH"
+export PATH="$PATH:$JAVA_HOME/bin"
+export PATH="$PATH:$HOME/dev/flutter/bin"
 export ANDROID_HOME="$HOME/Android/Sdk"
 export ANDROID_SDK_ROOT="$ANDROID_HOME"
-export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
-export PATH="$ANDROID_HOME/platform-tools:$PATH"
-export PATH="$HOME/.pub-cache/bin:$PATH"
+export PATH="$PATH:$ANDROID_HOME/cmdline-tools/latest/bin"
+export PATH="$PATH:$ANDROID_HOME/platform-tools"
+export PATH="$PATH:$HOME/.pub-cache/bin"
 
 export HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew";
 export HOMEBREW_CELLAR="/home/linuxbrew/.linuxbrew/Cellar";
 export HOMEBREW_REPOSITORY="/home/linuxbrew/.linuxbrew/Homebrew";
 fpath[1,0]="/home/linuxbrew/.linuxbrew/share/zsh/site-functions";
 export FPATH;
-export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin${PATH+:$PATH}";
+export PATH="$PATH:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin";
 [ -z "${MANPATH-}" ] || export MANPATH=":${MANPATH#:}";
 export INFOPATH="/home/linuxbrew/.linuxbrew/share/info:${INFOPATH:-}";
 # =========================================================
