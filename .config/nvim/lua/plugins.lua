@@ -143,6 +143,11 @@ local plugins = {
         },
         dim_inactive = true,
         cache = true,
+        on_highlights = function(hl, c)
+          hl.LineNr = { fg = c.dark5 }
+          hl.LineNrAbove = { fg = c.dark5 }
+          hl.LineNrBelow = { fg = c.dark5 }
+        end,
       })
       vim.cmd.colorscheme("tokyonight")
     end,
