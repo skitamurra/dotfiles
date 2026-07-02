@@ -41,6 +41,7 @@ config.colors = {
 }
 config.max_fps = 120
 config.floating_overlay = { bg_color = "#000000" }
+config.remember_window_display = true
 
 require("tab").apply_to_config(config)
 require("startup").apply_to_config(config)
