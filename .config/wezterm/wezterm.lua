@@ -1,7 +1,6 @@
 local wezterm = require("wezterm")
 local config = wezterm.config_builder()
-local cfg_file = wezterm.config_file
-local cfg_dir  = cfg_file:gsub("[^/\\]+$", ""):gsub("\\", "/")
+local cfg_dir  = wezterm.config_file:gsub("[^/\\]+$", ""):gsub("\\", "/")
 package.path = table.concat({ cfg_dir .. "?.lua", package.path }, ";")
 
 local default_domain = wezterm.default_wsl_domains()[1].name
