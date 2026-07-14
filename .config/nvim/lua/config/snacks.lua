@@ -21,7 +21,7 @@ Snacks.setup({
         { icon = " ", key = "f", desc = "Find File", action = function () util.grep_file() end },
         { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
         { icon = " ", key = "g", desc = "Find Text", action = function() util.grep_text() end },
-        { icon = " ", key = "p", desc = "Projects", action = function() Snacks.picker.projects({ui_select = true}) util.esc() end },
+        { icon = " ", key = "p", desc = "Projects", action = function() Snacks.picker.projects({ui_select = true}) end },
         { icon = "󰒲 ", key = "l", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
         { icon = " ", key = "c", desc = "Config", action = function() Snacks.picker.files({hidden = true, follow = true, cwd = vim.fn.fnamemodify(vim.fn.stdpath('config'), ":h") }) end },
         { icon = " ", key = "q", desc = "Quit", action = ":qa" },
