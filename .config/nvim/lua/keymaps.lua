@@ -107,5 +107,5 @@ Map("n", "<leader>ff", function()
   if not root or root == "" then
     root = vim.fn.getcwd()
   end
-  require("fyler").open({ dir = root, kind = "float" })
+  require("fyler").open({ root_path = root, kind = "floating" })
 end, { desc = "Fyler" })

@@ -107,7 +107,6 @@ local plugins = {
   },
   {
     "A7Lavinraj/fyler.nvim",
-    branch = "stable",
     cmd = { "Fyler" },
     config = function()
       require("config.fyler")
