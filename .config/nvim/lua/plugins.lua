@@ -118,6 +118,10 @@ local plugins = {
     cmd = { "LazyGit" },
   },
   {
+    "justinmk/guh.nvim",
+    cmd = { "Guh"}
+  },
+  {
     "lewis6991/gitsigns.nvim",
     event = { "BufReadPre", "BufNewFile" },
     config = function()
