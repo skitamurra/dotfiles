@@ -49,6 +49,14 @@ local function preview_file(explorer)
 end
 
 fyler.setup({
+  extensions = {
+    git = {
+      enabled = true,
+      inline = true
+    },
+    trash = { enabled = true },
+    watcher = { enabled = true },
+  },
   kind = 'floating',
   integrations = {
     icon = 'nvim_web_devicons',
