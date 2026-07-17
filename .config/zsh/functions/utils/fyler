@@ -1,0 +1,9 @@
+#!/bin/zsh
+
+local opts="kind = 'replace'"
+
+if [ "$#" -gt 0 ]; then
+  opts="root_path = vim.fn.fnamemodify('$1', ':p'), $opts"
+fi
+
+nvim -c "lua require('fyler').open({ $opts }); vim.keymap.set('n', 'q', '<cmd>qa<CR>', { buffer = true })"

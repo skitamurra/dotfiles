@@ -20,6 +20,7 @@ zle -N nvim-fzf
 zle -N cd-fzf
 zle -N smart-insert-last-word
 zle -N edit-command-line
+zle -N fyler
 
 key_conf () {
   bindkey '^q' push-line
@@ -27,6 +28,7 @@ key_conf () {
   bindkey '^e' edit-command-line
   bindkey '^n' nvim-fzf
   bindkey '^g' cd-fzf
+  bindkey '^f' fyler
   if [[ -n $ZENO_LOADED ]]; then
     ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(zeno-auto-snippet-and-accept-line)
     bindkey ' '  zeno-auto-snippet
