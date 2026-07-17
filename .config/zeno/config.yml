@@ -17,6 +17,10 @@ snippets:
   keyword: gl
   snippet: git log --oneline
 
+- name: git pull
+  keyword: gp
+  snippet: git pull --prune
+
 # snippet with placeholder
 - name: git commit message
   keyword: gcim
