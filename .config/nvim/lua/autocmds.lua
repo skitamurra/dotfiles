@@ -40,14 +40,6 @@ vim.api.nvim_create_autocmd('QuitPre', {
   desc = 'Close all special buffers and quit Neovim',
 })
 
-vim.api.nvim_create_autocmd("BufWritePre", {
-    group = vim.api.nvim_create_augroup("UserAutoFormat", { clear = true }),
-    pattern = { "*.rs" },
-    callback = function(ev)
-      vim.lsp.buf.format({ buffer = ev.buf, async = false })
-    end,
-  })
-
 vim.api.nvim_create_autocmd('LspAttach', {
 	callback = function()
 		vim.lsp.document_color.enable(false)

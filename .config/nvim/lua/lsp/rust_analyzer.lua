@@ -4,8 +4,12 @@ return {
   root_markers = { "Cargo.toml", ".git"},
   settings = {
     ["rust-analyzer"] = {
-      check = { command = "clippy" },
+      check = {
+        command = "check",
+        workspace = false,
+      },
       diagnostics = { enable = true },
+      cachePriming = { enable = false },
     }
   },
 }
