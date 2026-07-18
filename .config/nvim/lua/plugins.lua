@@ -205,7 +205,18 @@ local plugins = {
     ft = { "lua" },
   },
   "folke/flash.nvim",
-  "folke/sidekick.nvim",
+  {
+    "folke/sidekick.nvim",
+    opts = {
+      cli = {
+        tools = {
+          omp = {
+            cmd = { "omp" },
+          },
+        },
+      },
+    },
+  },
   {
     "max397574/better-escape.nvim",
     lazy = false,
@@ -323,15 +334,6 @@ local plugins = {
     config = function()
         require('crates').setup()
     end,
-  },
-  {
-    'cordx56/rustowl',
-    ft = { "rust" },
-    build = 'cargo install rustowl',
-    opts = {
-      auto_enable = true,
-      highlight_style = "underline",
-    },
   },
   {
     "nvim-flutter/flutter-tools.nvim",
