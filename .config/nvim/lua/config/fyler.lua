@@ -52,7 +52,7 @@ fyler.setup({
   extensions = {
     git = {
       enabled = true,
-      inline = true
+      inline = false,
     },
     trash = { enabled = true },
     watcher = { enabled = true },
