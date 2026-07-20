@@ -1,0 +1,2 @@
+instance_timeout = 5
+gc_interval = 1

@@ -45,3 +45,18 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		vim.lsp.document_color.enable(false)
 	end,
 })
+
+vim.api.nvim_create_autocmd("LspDetach", {
+  callback = function(args)
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    if not client then return end
+    vim.schedule(function ()
+      for buf in pairs(client.attached_buffers) do
+        if buf ~= args.buf and vim.api.nvim_buf_is_loaded(buf) then
+          return
+        end
+      end
+      client:stop()
+    end)
+  end,
+})
