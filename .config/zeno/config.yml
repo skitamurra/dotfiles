@@ -30,6 +30,10 @@ snippets:
   keyword: pr
   snippet: gh-pr-open {{commit_hash}}
 
+- name: lazygit
+  keyword: lg
+  snippet: lazygit
+
 - name: "null"
   keyword: "null"
   snippet: ">/dev/null 2>&1"
