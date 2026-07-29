@@ -3,7 +3,14 @@
 local name="$1"
 local cmd="$2"
 local cache_file="${XDG_CACHE_HOME:-$HOME/.cache}/${name}.zsh"
-if [[ ! -f "$cache_file" ]]; then
-  eval "$cmd" > "$cache_file"
+
+if [[ ! -s "$cache_file" ]]; then
+  mkdir -p "${cache_file:h}"
+  if ! eval "$cmd" > "$cache_file"; then
+    rm -f "$cache_file" "$cache_file.zwc"
+    return 1
+  fi
 fi
+
+ensure_zcompiled "$cache_file"
 source "$cache_file"

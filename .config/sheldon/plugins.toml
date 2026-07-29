@@ -20,11 +20,6 @@ apply = ["defer"]
 
 [plugins.zsh-completions]
 github = "zsh-users/zsh-completions"
-apply = ["defer"]
-
-[plugins.docker-zsh-completion]
-github = "greymd/docker-zsh-completion"
-apply = ["defer"]
 
 [plugins.zsh-autopair]
 github = "hlissner/zsh-autopair"

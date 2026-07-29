@@ -1,0 +1,16 @@
+#!/bin/zsh
+
+local cache_dir=${XDG_CACHE_HOME:-$HOME/.cache}
+local sheldon_cache="$cache_dir/sheldon.zsh"
+local sheldon_conf="$SHELDON_CONFIG_DIR/plugins.toml"
+
+if [[ ! -s "$sheldon_cache" || "$sheldon_conf" -nt "$sheldon_cache" ]]; then
+  mkdir -p "$cache_dir"
+  if ! sheldon source > "$sheldon_cache"; then
+    rm -f "$sheldon_cache" "$sheldon_cache.zwc"
+    return 1
+  fi
+fi
+
+ensure_zcompiled "$sheldon_cache"
+source "$sheldon_cache"

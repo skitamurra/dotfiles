@@ -11,11 +11,58 @@ setopt hist_ignore_space
 setopt hist_reduce_blanks
 setopt hist_no_store
 
+# =========================================================
+# export
+# =========================================================
+export EDITOR=nvim
+export MANPAGER='nvim +Man!'
+export BROWSER=wslview
+export FZF_DEFAULT_COMMAND="rg --files --hidden --follow --glob '!.git/*'"
+export FZF_DEFAULT_OPTS=' --layout=reverse --border=rounded --height=45% --margin=0.5% --bind=tab:down --bind=shift-tab:up '
+export SHELDON_CONFIG_DIR="$HOME/.config/sheldon"
+export ZENO_HOME="$HOME/.config/zeno"
+export ZENO_COMPLETION_FALLBACK=fzf-tab-complete
+export CLAUDE_CONFIG_DIR="$HOME/.config/claude"
+export JAVA_HOME="/usr/lib/jvm/java-21-openjdk-amd64"
+export ANDROID_HOME="$HOME/Android/Sdk"
+export ANDROID_SDK_ROOT="$ANDROID_HOME"
+export HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
+export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
+export HOMEBREW_REPOSITORY="$HOMEBREW_PREFIX/Homebrew"
+
+typeset -gU path PATH
+path=(
+  $HOME/bin
+  $HOME/.local/bin
+  /usr/local/bin
+  $HOMEBREW_PREFIX/bin
+  $HOMEBREW_PREFIX/sbin
+  $HOME/go/bin
+  $HOME/.cargo/bin
+  $HOME/.local/share/fnm
+  $HOME/.pyenv/bin
+  $JAVA_HOME/bin
+  $HOME/dev/flutter/bin
+  $ANDROID_HOME/cmdline-tools/latest/bin
+  $ANDROID_HOME/platform-tools
+  $HOME/.pub-cache/bin
+  $path
+)
+
+# =========================================================
+# functions / completion
+# =========================================================
 ZSH_HOME="$HOME/.config/zsh"
 local func_dir="$ZSH_HOME/functions"
-typeset -gU fpath=("$ZSH_HOME/completions" $func_dir(N/) $func_dir/**/*(N/) $fpath)
-autoload -Uz compinit smart-insert-last-word edit-command-line $func_dir/**/*(N.:t)
+typeset -gU fpath=("$ZSH_HOME/completions" $func_dir/*(N/) $fpath)
+autoload -Uz compinit smart-insert-last-word edit-command-line $func_dir/*/*(N.:t)
+load_plugins
 compinit -C -d "$HOME/.zcompdump"
+ensure_zcompiled "$HOME/.zcompdump"
+
+# =========================================================
+# keybind
+# =========================================================
 zle -N nvim-fzf
 zle -N cd-fzf
 zle -N smart-insert-last-word
@@ -37,43 +84,8 @@ key_conf () {
     bindkey '^r' zeno-smart-history-selection
   fi
 }
-# =========================================================
-# export
-# =========================================================
-export EDITOR=nvim
-export MANPAGER='nvim +Man!'
-export BROWSER=wslview
-export FZF_DEFAULT_COMMAND="rg --files --hidden --follow --glob '!.git/*'"
-export FZF_DEFAULT_OPTS=' --layout=reverse --border=rounded --height=45% --margin=0.5% --bind=tab:down --bind=shift-tab:up '
-export SHELDON_CONFIG_DIR="$HOME/.config/sheldon"
-export ZENO_HOME="$HOME/.config/zeno"
-export ZENO_COMPLETION_FALLBACK=fzf-tab-complete
-export CLAUDE_CONFIG_DIR="$HOME/.config/claude"
+zsh-defer key_conf
 
-export PATH="$PATH:$HOME/bin"
-export PATH="$PATH:$HOME/.local/bin"
-export PATH="$PATH:/usr/local/bin"
-export PATH="$PATH:$HOME/go/bin"
-export PATH="$PATH:$HOME/.cargo/bin"
-export PATH="$PATH:$HOME/.local/share/fnm"
-export PATH="$PATH:$HOME/.pyenv/bin"
-export JAVA_HOME="/usr/lib/jvm/java-21-openjdk-amd64"
-export PATH="$PATH:$JAVA_HOME/bin"
-export PATH="$PATH:$HOME/dev/flutter/bin"
-export ANDROID_HOME="$HOME/Android/Sdk"
-export ANDROID_SDK_ROOT="$ANDROID_HOME"
-export PATH="$PATH:$ANDROID_HOME/cmdline-tools/latest/bin"
-export PATH="$PATH:$ANDROID_HOME/platform-tools"
-export PATH="$PATH:$HOME/.pub-cache/bin"
-
-export HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew";
-export HOMEBREW_CELLAR="/home/linuxbrew/.linuxbrew/Cellar";
-export HOMEBREW_REPOSITORY="/home/linuxbrew/.linuxbrew/Homebrew";
-fpath[1,0]="/home/linuxbrew/.linuxbrew/share/zsh/site-functions";
-export FPATH;
-export PATH="$PATH:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin";
-[ -z "${MANPATH-}" ] || export MANPATH=":${MANPATH#:}";
-export INFOPATH="/home/linuxbrew/.linuxbrew/share/info:${INFOPATH:-}";
 # =========================================================
 # alias
 # =========================================================
@@ -88,8 +100,3 @@ alias note='nvim ~/NOTE.md'
 alias gia='create_gitignore'
 
 run_startup
-zsh-defer key_conf
-if [[ -f "$HOME/.zshrc.local" ]] then
-  source "$HOME/.zshrc.local"
-fi
-ensure_zcompiled "$HOME/.config/zsh/.zshrc"
