@@ -1,16 +1,22 @@
 format = """
-$os\
-$username\
-$hostname\
+[╭─ ](purple)\
+$os \
+$username \
+$hostname \
 $directory\
-$git_branch\
+$git_branch
+[╰ ](purple)\
+$python\
+$rust\
+$nodejs \
+${env_var.VIRTUAL_ENV}  \
 $character
 """
 
 right_format = "$ruby"
 
 [os]
-format = "[$symbol ]($style)"
+format = "[$symbol]($style)"
 style = "purple"
 disabled = false
 
@@ -24,15 +30,14 @@ show_always = true
 disabled = false
 
 [hostname]
-ssh_only = false
+ssh_only = true
 trim_at = "."
 detect_env_vars = []
-format = "[@$hostname ]($style)"
+format = "[@$hostname]($style)"
 disabled = false
 
 [directory]
-truncation_length = 2
-truncate_to_repo = false
+truncate_to_repo = true
 truncation_symbol = "…/"
 style = "white"
 
@@ -42,15 +47,24 @@ style = "purple"
 
 [git_status]
 style = "purple"
-[git_metrics]
 
+[git_metrics]
 disabled = false
 added_style = "green"
 deleted_style = "red"
 
-[ruby]
-format = "[$symbol($version )]($style) "
-style = "red"
+[python]
+format = "[$symbol($version)]($style)"
+
+[rust]
+format = "[$symbol($version)]($style)"
+
+[nodejs]
+format = "[$symbol($version)]($style)"
+
+[env_var.VIRTUAL_ENV]
+format = "[󰆧]($style)"
+style = "yellow"
 
 [character]
 success_symbol = '[\$](bold green) '
