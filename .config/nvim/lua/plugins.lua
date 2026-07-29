@@ -343,6 +343,14 @@ local plugins = {
       root_patterns = { ".git", "pubspec.yaml" },
     }
   },
+  {
+    "karb94/neoscroll.nvim",
+    event = "VeryLazy",
+    opts = {
+      hide_cursor = false,
+      performance_mode = true,
+    },
+  },
 }
 
 require("lazy").setup(plugins, opts)
