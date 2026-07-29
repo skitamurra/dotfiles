@@ -1,22 +1,22 @@
 format = """
 [╭─ ](purple)\
-$os \
-$username \
-$hostname \
+$os\
+$username\
+$hostname\
 $directory\
 $git_branch
 [╰ ](purple)\
 $python\
 $rust\
-$nodejs \
-${env_var.VIRTUAL_ENV}  \
+$nodejs\
+${env_var.VIRTUAL_ENV}\
 $character
 """
 
 right_format = "$ruby"
 
 [os]
-format = "[$symbol]($style)"
+format = "[$symbol ]($style)"
 style = "purple"
 disabled = false
 
@@ -25,7 +25,7 @@ Ubuntu = "󰕈"
 Windows = "󰖳"
 
 [username]
-format = "[$user]($style)"
+format = "[$user ]($style)"
 show_always = true
 disabled = false
 
@@ -33,7 +33,7 @@ disabled = false
 ssh_only = true
 trim_at = "."
 detect_env_vars = []
-format = "[@$hostname]($style)"
+format = "[@$hostname ]($style)"
 disabled = false
 
 [directory]
@@ -54,16 +54,16 @@ added_style = "green"
 deleted_style = "red"
 
 [python]
-format = "[$symbol($version)]($style)"
+format = "[$symbol($version) ]($style)"
 
 [rust]
-format = "[$symbol($version)]($style)"
+format = "[$symbol($version) ]($style)"
 
 [nodejs]
-format = "[$symbol($version)]($style)"
+format = "[$symbol($version) ]($style)"
 
 [env_var.VIRTUAL_ENV]
-format = "[󰆧]($style)"
+format = "[󰆧  ]($style)"
 style = "yellow"
 
 [character]
