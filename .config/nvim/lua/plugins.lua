@@ -118,10 +118,6 @@ local plugins = {
     cmd = { "LazyGit" },
   },
   {
-    "justinmk/guh.nvim",
-    cmd = { "Guh"}
-  },
-  {
     "lewis6991/gitsigns.nvim",
     event = { "BufReadPre", "BufNewFile" },
     config = function()
@@ -209,10 +205,12 @@ local plugins = {
     "folke/sidekick.nvim",
     opts = {
       cli = {
+        win = {
+          layout = "left",
+          split = { width = 65 },
+        },
         tools = {
-          omp = {
-            cmd = { "omp" },
-          },
+          omp = { cmd = { "omp" } },
         },
       },
     },
@@ -345,11 +343,8 @@ local plugins = {
   },
   {
     "karb94/neoscroll.nvim",
-    event = "VeryLazy",
-    opts = {
-      hide_cursor = false,
-      performance_mode = true,
-    },
+    event = "BufReadPre",
+    opts = { hide_cursor = false },
   },
 }
 
