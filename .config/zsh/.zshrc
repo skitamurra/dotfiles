@@ -22,7 +22,6 @@ export FZF_DEFAULT_OPTS=' --layout=reverse --border=rounded --height=45% --margi
 export SHELDON_CONFIG_DIR="$HOME/.config/sheldon"
 export ZENO_HOME="$HOME/.config/zeno"
 export ZENO_COMPLETION_FALLBACK=fzf-tab-complete
-export ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 export CLAUDE_CONFIG_DIR="$HOME/.config/claude"
 export JAVA_HOME="/usr/lib/jvm/java-21-openjdk-amd64"
 export ANDROID_HOME="$HOME/Android/Sdk"
