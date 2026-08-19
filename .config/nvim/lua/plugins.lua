@@ -207,7 +207,7 @@ local plugins = {
       cli = {
         win = {
           layout = "left",
-          split = { width = 65 },
+          split = { width = 60 },
         },
         tools = {
           omp = { cmd = { "omp" } },
