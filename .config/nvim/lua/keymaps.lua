@@ -2,6 +2,8 @@ local lsp_def = require("config.definition")
 local util = require("config.util")
 local Snacks = require("snacks")
 local undo_glow = require("undo-glow")
+local root = util.get_git_root()
+local git_base = util.get_git_base()
 
 function Map(mode, lhs, rhs, opts)
   vim.keymap.set(mode, lhs, rhs,
@@ -63,9 +65,11 @@ Map("n", "gh", function() require("treesitter-context").go_to_context(vim.v.coun
 Map("n", "gs", function() Snacks.picker.lsp_symbols() end, { desc = "Lsp symbols" })
 Map("n", "<leader>b", function() Snacks.picker.buffers() end, { desc = "Buffers list" })
 Map('n', '<leader>d', vim.diagnostic.open_float, { desc = "Show diagnostics" })
-Map("n", "<leader>gg", "<cmd>LazyGit<CR>", { desc = "LazyGit" })
-Map("n", "<leader>gd", function() Snacks.picker.git_diff() end, { desc = "Diff" })
+Map("n", "<leader>g", "", { desc = "Git" })
+Map("n", "<leader>gl", "<cmd>LazyGit<CR>", { desc = "LazyGit" })
 Map("n", "<leader>gb", function() Snacks.git.blame_line() end, { desc = "Blame line" })
+Map("n", "<leader>gd", function() Snacks.terminal.open({ "hunk", "diff" }, { cwd = root }) end, { desc = "against branch" })
+Map("n", "<leader>gb", function() Snacks.terminal.open({ "hunk", "diff", git_base }, { cwd = root }) end, { desc = "against base" })
 Map("n", "<leader>a", function() require("flash").jump() end, { desc = "Flash" } )
 Map({ "n", "t" }, "<leader>\\", function() Snacks.terminal.toggle() end, { desc = "ToggleTerm" })
 Map({"n", "v"}, "<leader>t", "<cmd>Pantran<CR>", { desc = "Show Translate Window" })
@@ -103,7 +107,6 @@ Map({ 'n', 'v' }, '<leader>fG', function()
 end, { desc = 'Grep (persistent picker)' })
 
 Map("n", "<leader>ff", function()
-  local root = util.get_git_root()
   if not root or root == "" then
     root = vim.fn.getcwd()
   end

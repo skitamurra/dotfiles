@@ -60,3 +60,15 @@ vim.api.nvim_create_autocmd("LspDetach", {
     end)
   end,
 })
+
+vim.api.nvim_create_autocmd("TermClose", {
+  callback = function()
+    local tint = package.loaded.tint
+    if not tint then
+      return
+    end
+    vim.schedule(function()
+      tint.untint(vim.api.nvim_get_current_win())
+    end)
+  end,
+})

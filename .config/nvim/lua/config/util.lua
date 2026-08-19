@@ -20,6 +20,14 @@ function M.get_git_root(path)
   return root
 end
 
+function M.get_git_base()
+  local base = vim.fn.systemlist([[git show-branch | grep '*' | grep -v "$(git rev-parse --abbrev-ref HEAD)" | head -1 | awk -F'[]~^[]' '{print $2}']])[1]
+  if vim.v.shell_error ~= 0 then
+    return nil
+  end
+  return base
+end
+
 function M.esc()
   vim.api.nvim_input("<Esc>")
 end
