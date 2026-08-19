@@ -91,18 +91,9 @@ local plugins = {
   {
     "akinsho/bufferline.nvim",
     event = "BufReadPre",
+    dependencies = { "j-morano/buffer_manager.nvim" },
     config = function()
-      require("bufferline").setup({
-        options = {
-          mode = "buffers",
-          numbers = "none",
-          separator_style = { "/", "/" },
-          show_buffer_close_icons = false,
-          custom_filter = function(buf)
-            return vim.bo[buf].filetype ~= "help"
-          end,
-        },
-      })
+      require("config.bufferline")
     end,
   },
   {
