@@ -12,6 +12,7 @@ require("buffer_manager").setup({
 })
 
 local util = require("config.util")
+local devicons = require("nvim-web-devicons")
 
 local path_namespace = vim.api.nvim_create_namespace("BufferManagerPath")
 vim.api.nvim_set_hl(0, "BufferManagerPath", { default = true, link = "Comment" })
@@ -36,8 +37,14 @@ local function render_buffer_manager_paths(buf)
       path = "."
     end
     path = path .. "/"
+    local filename = vim.fs.basename(mark.buf_name)
+    local extension = vim.fn.fnamemodify(filename, ":e")
+    local icon, icon_hl = devicons.get_icon(filename, extension, { default = true })
     vim.api.nvim_buf_set_extmark(buf, path_namespace, index - 1, 0, {
-      virt_text = { { path .. " ", "BufferManagerPath" } },
+      virt_text = {
+        { icon .. " ", icon_hl },
+        { path .. " ", "BufferManagerPath" },
+      },
       virt_text_pos = "inline",
       hl_mode = "combine",
       invalidate = true,
