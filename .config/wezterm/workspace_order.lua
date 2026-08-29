@@ -28,33 +28,18 @@ local function read_order()
   return {}
 end
 
-local function write_order_sync(order)
-  os.execute('mkdir -p "' .. state_dir .. '"')
+local function write_order(order)
   local f = io.open(state_file, "w")
+  if not f then
+    os.execute('mkdir -p "' .. state_dir .. '"')
+    f = io.open(state_file, "w")
+  end
   if not f then
     wezterm.log_error("Failed to write workspace order: " .. state_file)
     return
   end
   f:write(wezterm.json_encode(order))
   f:close()
-end
-
-local function write_order_async(order)
-  local ok = pcall(function()
-    wezterm.background_child_process({
-      "sh",
-      "-c",
-      'mkdir -p "$1" && tmp="$3.tmp.$$" && printf "%s" "$2" > "$tmp" && mv "$tmp" "$3"',
-      "wezterm-workspace-order",
-      state_dir,
-      wezterm.json_encode(order),
-      state_file,
-    })
-  end)
-
-  if not ok then
-    write_order_sync(order)
-  end
 end
 
 function M.track(name)
@@ -66,12 +51,12 @@ function M.track(name)
   end
   table.insert(order, name)
   cached_order = order
-  write_order_async(order)
+  write_order(order)
 end
 
 function M.reset(names)
   cached_order = names
-  write_order_sync(names)
+  write_order(names)
 end
 
 function M.get_ordered_workspaces()
