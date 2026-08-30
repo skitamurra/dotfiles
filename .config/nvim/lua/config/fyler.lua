@@ -54,7 +54,6 @@ fyler.setup({
       enabled = true,
       inline = false,
     },
-    trash = { enabled = true },
     watcher = { enabled = true },
   },
   kind = 'floating',
