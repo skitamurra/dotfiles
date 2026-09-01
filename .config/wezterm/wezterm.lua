@@ -44,6 +44,7 @@ config.floating_overlay = { bg_color = "#000000" }
 config.remember_window_display = true
 config.cursor_smear = true
 
+require("pane")
 require("tab").apply_to_config(config)
 require("startup").apply_to_config(config)
 return config

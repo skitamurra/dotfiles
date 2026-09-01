@@ -34,7 +34,7 @@ return {
     { key = '/', mods = 'LEADER', action = act.Search 'CurrentSelectionOrEmptyString' },
     { key = "h", mods = "LEADER", action = act.SplitVertical { domain = "CurrentPaneDomain" } },
     { key = "v", mods = "LEADER", action = act.SplitHorizontal { domain = "CurrentPaneDomain" } },
-    { key = 'p', mods = "LEADER", action = act.ActivateKeyTable { name = "resize_pane", one_shot = false, prevent_fallback = true } },
+    { key = 'p', mods = "LEADER", action = act.ActivateKeyTable { name = "pane_mode", one_shot = false, prevent_fallback = true } },
     { key = "q", mods = "LEADER", action = act.CloseCurrentPane { confirm = false } },
     { key = 'phys:Space', mods = 'SHIFT|CTRL', action = act.QuickSelect },
     { key = 's', mods = 'CTRL|ALT', action = act.ToggleFloatingPane },
@@ -113,7 +113,7 @@ return {
       { key = 'DownArrow', mods = 'NONE', action = act.CopyMode 'NextMatch' },
     },
 
-    resize_pane = {
+    pane_mode = {
       { key = 'h', action = act.ActivatePaneDirection 'Left' },
       { key = 'j', action = act.ActivatePaneDirection 'Down' },
       { key = 'k', action = act.ActivatePaneDirection 'Up' },
