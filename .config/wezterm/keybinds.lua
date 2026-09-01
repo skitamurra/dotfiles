@@ -34,10 +34,11 @@ return {
     { key = '/', mods = 'LEADER', action = act.Search 'CurrentSelectionOrEmptyString' },
     { key = "h", mods = "LEADER", action = act.SplitVertical { domain = "CurrentPaneDomain" } },
     { key = "v", mods = "LEADER", action = act.SplitHorizontal { domain = "CurrentPaneDomain" } },
+    { key = 'p', mods = "LEADER", action = act.ActivateKeyTable { name = "resize_pane", one_shot = false, prevent_fallback = true } },
     { key = "q", mods = "LEADER", action = act.CloseCurrentPane { confirm = false } },
     { key = 'phys:Space', mods = 'SHIFT|CTRL', action = act.QuickSelect },
-    -- Workspace
     { key = 's', mods = 'CTRL|ALT', action = act.ToggleFloatingPane },
+    -- Workspace
     { key = 'l', mods = 'CTRL|ALT', action = workspace.switch_to_workspace('next') },
     { key = 'h', mods = 'CTRL|ALT', action = workspace.switch_to_workspace('prev') },
     { key = 'w', mods = 'LEADER', action = workspace.workspace_selector() },
@@ -110,6 +111,22 @@ return {
       { key = 'PageDown', mods = 'NONE', action = act.CopyMode 'NextMatchPage' },
       { key = 'UpArrow', mods = 'NONE', action = act.CopyMode 'PriorMatch' },
       { key = 'DownArrow', mods = 'NONE', action = act.CopyMode 'NextMatch' },
+    },
+
+    resize_pane = {
+      { key = 'h', action = act.ActivatePaneDirection 'Left' },
+      { key = 'j', action = act.ActivatePaneDirection 'Down' },
+      { key = 'k', action = act.ActivatePaneDirection 'Up' },
+      { key = 'l', action = act.ActivatePaneDirection 'Right' },
+      { key = 'v', mods = 'CTRL', action = act.SplitVertical },
+      { key = 'h', mods = 'CTRL', action = act.SplitHorizontal },
+      { key = 'h', mods = 'ALT', action = act.AdjustPaneSize { 'Left', 1 } },
+      { key = 'j', mods = 'ALT', action = act.AdjustPaneSize { 'Down', 1 } },
+      { key = 'k', mods = 'ALT', action = act.AdjustPaneSize { 'Up', 1 } },
+      { key = 'l', mods = 'ALT', action = act.AdjustPaneSize { 'Right', 1 } },
+      { key = "w", action = act.CloseCurrentPane { confirm = false } },
+      { key = "q", action = 'PopKeyTable' },
+      { key = 'Escape', action = act.Multiple({ 'PopKeyTable', act.SendKey({ key = 'Escape' }) }) },
     },
 
     workspace_mode = {
